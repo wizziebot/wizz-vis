@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @widget.name %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @widget.title %>
+</p>
+
+<p>
+  <strong>Row:</strong>
+  <%= @widget.row %>
+</p>
+
+<p>
+  <strong>Col:</strong>
+  <%= @widget.col %>
+</p>
+
+<p>
+  <strong>Size x:</strong>
+  <%= @widget.size_x %>
+</p>
+
+<p>
+  <strong>Size y:</strong>
+  <%= @widget.size_y %>
+</p>
+
+<p>
+  <strong>Dashboard:</strong>
+  <%= @widget.dashboard %>
+</p>
+
+<%= link_to 'Edit', edit_widget_path(@widget) %> |
+<%= link_to 'Back', widgets_path %>

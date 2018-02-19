@@ -1,0 +1,3 @@
+<h1><%= @dashboard.name %></h1>
+
+<%= react_component("Dashboard", props: @dashboard.to_json, prerender: true) %>
