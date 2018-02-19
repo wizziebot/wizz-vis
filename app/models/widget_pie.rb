@@ -1,0 +1,2 @@
+class WidgetPie < Widget
+end

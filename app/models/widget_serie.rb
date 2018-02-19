@@ -1,0 +1,2 @@
+class WidgetSerie < Widget
+end

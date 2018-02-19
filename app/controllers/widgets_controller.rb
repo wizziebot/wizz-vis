@@ -5,7 +5,7 @@ class WidgetsController < ApplicationController
   # GET /widgets
   # GET /widgets.json
   def index
-    @widgets = @dashboard.widgets
+    render json: @dashboard.widgets
   end
 
   # GET /widgets/1

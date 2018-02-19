@@ -1,9 +1,12 @@
 import React from 'react';
 import request from 'axios';
-import Immutable from 'immutable';
 import {Responsive, WidthProvider} from 'react-grid-layout';
+import WidgetBase from './WidgetBase';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
+const BREAKPOINTS = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
+const COLS = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
+const ROWHEIGHT = 100;
 
 export default class Dashboard extends React.Component {
 
@@ -33,7 +36,7 @@ export default class Dashboard extends React.Component {
   render () {
     const lg_layout =
       this.state.$$widgets.map((w) => {
-        return { i: w.id.toString(), x: w.row, y: w.col, w: w.size_x, h: w.size_y }
+        return { i: w.id.toString(), x: w.col, y: w.row, w: w.size_x, h: w.size_y }
       });
 
 
@@ -41,14 +44,15 @@ export default class Dashboard extends React.Component {
     const layout = { lg: (lg_layout || []) };
 
     const widgets = this.state.$$widgets.map((w) => {
-                      return <div key={ w.id }>{ w.name }</div>;
+                      return <div key={ w.id }>
+                              <WidgetBase type={ w.type } />
+                             </div>;
                     });
 
     return (
       <ResponsiveReactGridLayout className="layout" layouts={layout}
-        cols={12} rowHeight={30}
-        breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-        cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}>
+        rowHeight={ROWHEIGHT} breakpoints={BREAKPOINTS}
+        cols={COLS}>
 
         { widgets }
 

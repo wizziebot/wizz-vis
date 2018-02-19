@@ -1,0 +1,2 @@
+class WidgetBar < Widget
+end

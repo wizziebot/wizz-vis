@@ -1,0 +1,2 @@
+class WidgetArea < Widget
+end

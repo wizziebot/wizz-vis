@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_02_15_152400) do
+ActiveRecord::Schema.define(version: 2018_02_16_105802) do
 
   create_table "dashboards", force: :cascade do |t|
     t.string "name"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 2018_02_15_152400) do
     t.integer "dashboard_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "type"
     t.index ["dashboard_id"], name: "index_widgets_on_dashboard_id"
   end
 
