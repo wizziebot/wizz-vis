@@ -1,3 +1,3 @@
-<h1><%= @dashboard.name %></h1>
+<% breadcrumb :dashboard, @dashboard %>
 
 <%= react_component("Dashboard", props: @dashboard.to_json, prerender: true) %>

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>WizzVis</title>
-    <%= csrf_meta_tags %>
+  <%= render partial: 'layouts/head' %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application' %>
-  </head>
+  <body class='content-color'>
+    <%= render partial: 'layouts/header' %>
 
-  <body>
     <%= yield %>
+
+    <% flash.each do |message_type, message| %>
+      <%= javascript_tag "Materialize.toast('#{escape_javascript(message)}', 4000)" %>
+    <% end %>
   </body>
 </html>

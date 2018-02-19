@@ -1,0 +1,16 @@
+.card {
+  .card-title {
+    font-weight: 500;
+    letter-spacing: .005em;
+    padding: 10px;
+    border-bottom: 1px solid rgba(0,0,0,.12);
+    position: relative;
+  }
+
+  .card-content {
+    .card-entry {
+      display: inline-block;
+      font-weight: 500;
+    }
+  }
+}

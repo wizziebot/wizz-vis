@@ -1,0 +1,76 @@
+.primary-color {
+  background-color: $primary-color !important;
+}
+
+.content-color {
+  background-color: $content-color !important;
+}
+
+// Margin top
+.margin-ts {
+  margin-top: $margin_small;
+}
+
+.margin-tm {
+  margin-top: $margin_medium;
+}
+
+.margin-tl {
+  margin-top: $margin_large;
+}
+
+.margin-txl {
+  margin-top: $margin_xlarge;
+}
+
+// Margin bottom
+.margin-bs {
+  margin-bottom: $margin_small;
+}
+
+.margin-bm {
+  margin-bottom: $margin_medium;
+}
+
+.margin-bl {
+  margin-bottom: $margin_large;
+}
+
+// Full margin
+.margin-s {
+  margin: $margin_small 0;
+}
+
+.margin-m {
+  margin: $margin_medium 0;
+}
+
+.margin-l {
+  margin: $margin_large 0;
+}
+
+// Margin top
+.margin-nts {
+  margin-top: -$margin_small;
+}
+
+.margin-ntm {
+  margin-top: -$margin_medium;
+}
+
+.margin-ntl {
+  margin-top: -$margin_large;
+}
+
+// Margin bottom
+.margin-nbs {
+  margin-bottom: -$margin_small;
+}
+
+.margin-nbm {
+  margin-bottom: -$margin_medium;
+}
+
+.margin-nbl {
+  margin-bottom: -$margin_large;
+}

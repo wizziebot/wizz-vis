@@ -10,7 +10,26 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require jquery
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
+//= require materialize
 //= require_tree .
+
+$(document).ready(function(){
+  $('.button-collapse').sideNav({
+    menuWidth: 200, // Default is 300
+    edge: 'left', // Choose the horizontal origin
+    closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+    draggable: true, // Choose whether you can drag to open on touch screens
+    onOpen: function(e) {
+      $('div.container').css({'padding-left': '200px', 'width': '85%'})
+      $('div#sidenav-overlay').remove()
+    },
+    onClose: function(e) {
+      $('div.container').css({'padding-left': '0px', 'width': '70%'})
+    }
+  });
+  $('select').material_select();
+});

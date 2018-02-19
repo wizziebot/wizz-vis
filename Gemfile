@@ -40,6 +40,13 @@ gem 'jbuilder', '~> 2.5'
 # React gem
 gem 'react_on_rails', '10.0.2'
 
+# Material Design
+gem 'materialize-sass', '~> 0.100.2'
+gem 'material_icons', '~> 2.2'
+
+# Breadcrumbs helper
+gem 'gretel', '~> 3.0'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 

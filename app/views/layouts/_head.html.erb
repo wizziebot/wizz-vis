@@ -1,0 +1,16 @@
+<head>
+  <title>Wizz-Vis</title>
+  <%= csrf_meta_tags %>
+
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_pack_tag 'application' %>
+  <%= javascript_include_tag 'application' %>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="<%= asset_path "apple-touch-icon.png" %>">
+  <link rel="icon" type="image/png" href="<%= asset_path "favicon-32x32.png" %>" sizes="32x32">
+  <link rel="icon" type="image/png" href="<%= asset_path "favicon-16x16.png" %>" sizes="16x16">
+  <link rel="manifest" href="<%= asset_path "manifest.json" %>">
+  <link rel="mask-icon" href="<%= asset_path "safari-pinned-tab.svg" %>" color="#ff9016">
+  <link rel="shortcut icon" href="<%= asset_path "favicon.ico" %>">
+  <meta name="msapplication-config" content="<%= asset_path "browserconfig.xml" %>">
+</head>
