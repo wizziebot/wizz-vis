@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 2018_02_16_105802) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "dashboards", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -25,11 +28,12 @@ ActiveRecord::Schema.define(version: 2018_02_16_105802) do
     t.integer "col"
     t.integer "size_x"
     t.integer "size_y"
-    t.integer "dashboard_id"
+    t.bigint "dashboard_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
     t.index ["dashboard_id"], name: "index_widgets_on_dashboard_id"
   end
 
+  add_foreign_key "widgets", "dashboards"
 end
