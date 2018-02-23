@@ -1,5 +1,6 @@
 class DashboardsController < ApplicationController
-  before_action :set_dashboard, only: [:show, :edit, :update, :destroy]
+  before_action :set_dashboard, only: [:show, :edit, :update, :destroy, :update_layout]
+  skip_before_action :verify_authenticity_token, only: :update_layout
 
   # GET /dashboards
   # GET /dashboards.json
@@ -49,6 +50,18 @@ class DashboardsController < ApplicationController
         format.json { render json: @dashboard.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  # PUT /dashboard/1/layout.json
+  def update_layout
+    layout_positions = params[:layout]
+
+    layout_positions.each do |w|
+      widget = @dashboard.widgets.find(w[:i])
+      widget.update_attributes(row: w[:y], col: w[:x], size_x: w[:w], size_y: w[:h])
+    end
+
+    head :ok
   end
 
   # DELETE /dashboards/1

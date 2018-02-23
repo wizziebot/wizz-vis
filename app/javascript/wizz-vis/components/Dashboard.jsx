@@ -15,8 +15,9 @@ export default class Dashboard extends React.Component {
 
     this.state = {
       $$widgets: [],
-      dashboard_id: this.props.id,
-      fetchWidgetsError: null
+      layout: null,
+      fetchWidgetsError: null,
+      updateLayoutError: null
     };
   }
 
@@ -27,21 +28,33 @@ export default class Dashboard extends React.Component {
   fetchWidgets() {
     return (
       request
-        .get('/dashboards/' + this.state.dashboard_id + '/widgets.json', { responseType: 'json' })
-        .then(res => this.setState({ $$widgets: res.data }))
+        .get('/dashboards/' + this.props.id + '/widgets.json', { responseType: 'json' })
+        .then(res => this.setState({
+          $$widgets: res.data,
+          layout: res.data.map((w) => {
+            return { i: w.id.toString(), x: w.col, y: w.row, w: w.size_x, h: w.size_y }
+          })
+        }))
         .catch(error => this.setState({ fetchWidgetsError: error }))
     );
   }
 
+  onLayoutChange(layout) {
+    fetch(
+      '/dashboards/' + this.props.id + '/layout.json',
+      {
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ layout: layout })
+      }
+    )
+    .then(response => this.setState({ layout: layout }))
+    .catch(error => this.setState({ updateLayoutError: error }));
+  }
+
   render () {
-    const lg_layout =
-      this.state.$$widgets.map((w) => {
-        return { i: w.id.toString(), x: w.col, y: w.row, w: w.size_x, h: w.size_y }
-      });
-
-
     // layout is an array of objects, see the demo for more complete usage
-    const layout = { lg: (lg_layout || []) };
+    const layout = { lg: (this.state.layout || []) };
 
     const widgets = this.state.$$widgets.map((w) => {
                       return <div key={ w.id }>
@@ -52,7 +65,8 @@ export default class Dashboard extends React.Component {
     return (
       <ResponsiveReactGridLayout className="layout" layouts={layout}
         rowHeight={ROWHEIGHT} breakpoints={BREAKPOINTS}
-        cols={COLS}>
+        cols={COLS}
+        onLayoutChange={ (layout) => this.onLayoutChange(layout) }>
 
         { widgets }
 
