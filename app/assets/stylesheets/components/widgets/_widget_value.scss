@@ -1,0 +1,29 @@
+.widget-value {
+  height: 95%;
+  width: 99%;
+
+  .card {
+    height: 100%;
+    background-color: transparent;
+    box-shadow: none;
+    border-bottom: none;
+
+    .card-stacked {
+      height: 100%;
+
+      .card-content {
+        font-size: 3em;
+        font-weight: 700;
+
+        p {
+          width: 100%;
+        }
+      }
+
+      .card-title {
+        padding: 0px;
+        border-bottom: 0px;
+      }
+    }
+  }
+}
