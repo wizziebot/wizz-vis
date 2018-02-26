@@ -50,6 +50,9 @@ gem 'gretel', '~> 3.0'
 # Sidekiq
 gem 'sidekiq', '~> 5.1'
 
+# Druid
+gem 'ruby-druid', '~> 0.10.0'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
@@ -59,7 +62,8 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails', '~> 3.7'
-  gem 'dotenv', '~> 2.2'
+  gem 'dotenv-rails', '~> 2.2'
+  gem 'pry-byebug', '~> 3.6'
 end
 
 group :development do

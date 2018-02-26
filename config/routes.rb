@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 
-  resources :widgets, except: :index
+  resources :widgets, except: [:index] do
+    get :data, on: :member
+  end
 
   resources :dashboards do
     resources :widgets, only: :index

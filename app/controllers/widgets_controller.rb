@@ -1,6 +1,6 @@
 class WidgetsController < ApplicationController
   before_action :set_dashboard, only: [:index]
-  before_action :set_widget, only: [:show, :edit, :update, :destroy]
+  before_action :set_widget, only: [:show, :edit, :update, :destroy, :data]
 
   # GET /widgets
   # GET /widgets.json
@@ -60,6 +60,11 @@ class WidgetsController < ApplicationController
       format.html { redirect_to widgets_url, notice: 'Widget was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  # Get /widgets/1/data.json
+  def data
+    render json: @widget.data
   end
 
   private

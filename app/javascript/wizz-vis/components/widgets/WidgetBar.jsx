@@ -5,31 +5,36 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
 export default class WidgetSerie extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      $$data: [],
+      fetchDataError: null
+    };
   }
 
-  componentDidMount() { }
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData() {
+    return (
+      fetch('/widgets/' + this.props.widget_id + '/data.json')
+        .then(response => response.json())
+        .then(data => this.setState({ $$data: data }))
+    );
+  }
 
   render () {
-    const data = [
-      { name: 'Page A', pv: 2400 },
-      { name: 'Page B', pv: 1398 },
-      { name: 'Page C', pv: 9800 },
-      { name: 'Page D', pv: 3908 },
-      { name: 'Page E', pv: 4800 },
-      { name: 'Page F', pv: 3800 },
-      { name: 'Page G', pv: 4300 },
-    ];
-
     return (
       <ResponsiveContainer>
-        <BarChart data={data}
+        <BarChart data={this.state.$$data}
               margin={{top: 5, right: 30, left: 20, bottom: 5}}>
            <CartesianGrid strokeDasharray="3 3"/>
-           <XAxis dataKey="name"/>
+           <XAxis dataKey="timestamp"/>
            <YAxis/>
            <Tooltip/>
            <Legend />
-           <Bar dataKey="pv" fill="#8884d8"/>
+           <Bar dataKey="events" fill="#8884d8"/>
         </BarChart>
       </ResponsiveContainer>
     )

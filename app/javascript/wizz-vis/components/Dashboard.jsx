@@ -58,7 +58,7 @@ export default class Dashboard extends React.Component {
 
     const widgets = this.state.$$widgets.map((w) => {
                       return <div key={ w.id }>
-                              <WidgetBase type={ w.type } />
+                              <WidgetBase widget_id={w.id} type={ w.type } />
                              </div>;
                     });
 

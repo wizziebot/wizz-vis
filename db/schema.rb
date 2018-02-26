@@ -10,15 +10,49 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_02_16_105802) do
+ActiveRecord::Schema.define(version: 2018_02_20_204822) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "aggregators", force: :cascade do |t|
+    t.string "name"
+    t.string "aggregator_type"
+    t.bigint "datasource_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["datasource_id"], name: "index_aggregators_on_datasource_id"
+  end
+
+  create_table "aggregators_widgets", id: false, force: :cascade do |t|
+    t.bigint "aggregator_id", null: false
+    t.bigint "widget_id", null: false
+  end
 
   create_table "dashboards", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "datasources", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "dimensions", force: :cascade do |t|
+    t.string "name"
+    t.string "dimension_type"
+    t.bigint "datasource_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["datasource_id"], name: "index_dimensions_on_datasource_id"
+  end
+
+  create_table "dimensions_widgets", id: false, force: :cascade do |t|
+    t.bigint "dimension_id", null: false
+    t.bigint "widget_id", null: false
   end
 
   create_table "widgets", force: :cascade do |t|
@@ -32,8 +66,17 @@ ActiveRecord::Schema.define(version: 2018_02_16_105802) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
+    t.bigint "datasource_id"
+    t.string "range"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string "granularity"
     t.index ["dashboard_id"], name: "index_widgets_on_dashboard_id"
+    t.index ["datasource_id"], name: "index_widgets_on_datasource_id"
   end
 
+  add_foreign_key "aggregators", "datasources"
+  add_foreign_key "dimensions", "datasources"
   add_foreign_key "widgets", "dashboards"
+  add_foreign_key "widgets", "datasources"
 end
