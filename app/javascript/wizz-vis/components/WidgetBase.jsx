@@ -27,7 +27,7 @@ export default class WidgetBase extends React.Component {
     const Type = this.components[this.props.type || 'WidgetArea'];
 
     return (
-      <Type widget_id={this.props.widget_id}/>
+      <Type {...this.props}/>
     )
   }
 }

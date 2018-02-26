@@ -17,23 +17,13 @@ class Widget < ApplicationRecord
   validates :name, :row, :col, :size_x, :size_y, presence: true
 
   def data
-    data_source = Druid::DataSource.new(datasource.name, ENV['DRUID_URL'])
-    data_source.post(query_execution)
-  end
+    query = Datastore::Query.new(
+      datasource: datasource.name,
+      properties: attributes.merge(interval: interval),
+      dimensions: dimensions,
+      aggregators: aggregators
+    )
 
-  private
-
-  def query_execution
-    query = Druid::Query::Builder.new
-    query.interval(*interval)
-    query.long_sum([:events])
-    query.granularity(granularity || :all)
-    if dimensions.count == 1
-      query.topn(dimensions.first.name.to_sym, aggregators.first.name.to_sym, 5)
-    elsif dimensions.count > 1
-      query.group_by(dimensions.map(&:name).map(&:to_sym))
-    end
-
-    query
+    query.run
   end
 end

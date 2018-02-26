@@ -1,27 +1,36 @@
 import React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
          Tooltip, Legend } from 'recharts';
+import Colors from './../../utils/colors';
 
-export default class WidgetSerie extends React.Component {
+export default class WidgetBar extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       $$data: [],
+      aggregators: [],
       fetchDataError: null
     };
   }
 
   componentDidMount() {
     this.fetchData();
+    this.setAggregators();
   }
 
   fetchData() {
     return (
-      fetch('/widgets/' + this.props.widget_id + '/data.json')
+      fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
         .then(data => this.setState({ $$data: data }))
     );
+  }
+
+  setAggregators() {
+    this.setState({
+      aggregators: this.props.aggregators.map((a) => (a.name))
+    })
   }
 
   render () {
@@ -34,7 +43,11 @@ export default class WidgetSerie extends React.Component {
            <YAxis/>
            <Tooltip/>
            <Legend />
-           <Bar dataKey="events" fill="#8884d8"/>
+           {
+             this.state.aggregators.map((a, index) => (
+               <Bar key={ index } dataKey={ a } fill={ Colors.get(index) }/>
+             ))
+           }
         </BarChart>
       </ResponsiveContainer>
     )

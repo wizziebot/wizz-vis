@@ -1,6 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid,
          Tooltip, Legend } from 'recharts';
+import Colors from './../../utils/colors';
 
 export default class WidgetSerie extends React.Component {
   constructor(props) {
@@ -8,20 +9,28 @@ export default class WidgetSerie extends React.Component {
 
     this.state = {
       $$data: [],
+      aggregators: [],
       fetchDataError: null
     };
   }
 
   componentDidMount() {
     this.fetchData();
+    this.setAggregators();
   }
 
   fetchData() {
     return (
-      fetch('/widgets/' + this.props.widget_id + '/data.json')
+      fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
         .then(data => this.setState({ $$data: data }))
     );
+  }
+
+  setAggregators() {
+    this.setState({
+      aggregators: this.props.aggregators.map((a) => (a.name))
+    })
   }
 
   render () {
@@ -37,7 +46,11 @@ export default class WidgetSerie extends React.Component {
            <CartesianGrid strokeDasharray="3 3"/>
            <Tooltip/>
            <Legend />
-           <Line type="monotone" dataKey="events" stroke="#8884d8" dot={false}/>
+           {
+             this.state.aggregators.map((a, index) => (
+               <Line key={ index } type="monotone" dataKey={ a } stroke={ Colors.get(index) } dot={false}/>
+             ))
+           }
         </LineChart>
       </ResponsiveContainer>
     )

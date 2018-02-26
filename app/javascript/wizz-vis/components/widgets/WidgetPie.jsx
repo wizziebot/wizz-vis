@@ -1,7 +1,6 @@
 import React from 'react';
 import { ResponsiveContainer, PieChart, Pie, Legend, Tooltip, Cell } from 'recharts';
-
-const COLORS = ['#3DCC91', '#FFB366', '#FF7373', '#FFCC00', '#3B22FF'];
+import Colors from './../../utils/colors';
 
 export default class WidgetPie extends React.Component {
   constructor(props) {
@@ -9,20 +8,36 @@ export default class WidgetPie extends React.Component {
 
     this.state = {
       $$data: [],
+      dimension: null,
+      aggregator: '',
       fetchDataError: null
     };
   }
 
   componentDidMount() {
     this.fetchData();
+    this.setDimension();
+    this.setAggregator();
   }
 
   fetchData() {
     return (
-      fetch('/widgets/' + this.props.widget_id + '/data.json')
+      fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
         .then(data => this.setState({ $$data: data }))
     );
+  }
+
+  setDimension() {
+    this.setState({
+      dimension: this.props.dimensions[0].name
+    })
+  }
+
+  setAggregator() {
+    this.setState({
+      aggregator: this.props.aggregators[0].name
+    })
   }
 
   render () {
@@ -30,11 +45,13 @@ export default class WidgetPie extends React.Component {
       <ResponsiveContainer>
         <PieChart>
           <Pie data={this.state.$$data}
-               dataKey="events" fill="#8884d8"
+               dataKey={this.state.aggregator}
+               nameKey={this.state.dimension}
+               ill="#8884d8"
                innerRadius="50">
             {
               this.state.$$data.map((element, index) => (
-                <Cell key={index} fill={COLORS[index % COLORS.length]}/>
+                <Cell key={index} fill={Colors.get(index)}/>
               ))
             }
           </Pie>
