@@ -49,6 +49,7 @@ gem 'gretel', '~> 3.0'
 
 # Sidekiq
 gem 'sidekiq', '~> 5.1'
+gem 'sidekiq-cron', '~> 0.6.3'
 
 # Druid
 gem 'ruby-druid', '~> 0.10.0'

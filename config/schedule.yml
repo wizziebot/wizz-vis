@@ -1,0 +1,3 @@
+datasource_job:
+  cron: "*/5 * * * *"
+  class: 'DatasourceWorker'
