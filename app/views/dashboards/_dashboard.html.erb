@@ -1,0 +1,12 @@
+<tr>
+  <td><%= link_to dashboard.name, dashboard_path(dashboard) %></td>
+  <td class="tooltipped" data-tooltip="<%= dashboard.created_at.to_formatted_s(:rfc822) %>"><%= time_ago_in_words dashboard.created_at %></td>
+  <td class="tooltipped" data-tooltip="<%= dashboard.updated_at.to_formatted_s(:rfc822) %>"><%= time_ago_in_words dashboard.updated_at %></td>
+  <td class="right">
+    <a class='dropdown-button tooltipped' href='#' data-activates="options_<%= dashboard.id %>" data-tooltip="Actions"><%= material_icon.more_vert %></a>
+    <ul id="options_<%= dashboard.id %>" class='dropdown-content'>
+      <li><%= link_to 'Edit', edit_dashboard_path(dashboard) %></li>
+      <li><%= link_to 'Delete', dashboard_path(dashboard), method: :delete, data: { confirm: "Are you sure?" } %></li>
+    </ul>
+  </td>
+</tr>

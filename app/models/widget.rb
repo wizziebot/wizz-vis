@@ -6,7 +6,7 @@ class Widget < ApplicationRecord
   # ==========================================================
   # Relations
   # ==========================================================
-  belongs_to :dashboard
+  belongs_to :dashboard, touch: true
   belongs_to :datasource
   has_and_belongs_to_many :dimensions
   has_and_belongs_to_many :aggregators
