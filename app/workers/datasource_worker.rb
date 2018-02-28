@@ -16,8 +16,9 @@ class DatasourceWorker
       raise "Request failed: #{response.code}: #{response.body}"
     end
 
-    JSON.parse(response.body).each do |datasource|
-      Datasource.find_or_create_by(name: datasource)
+    JSON.parse(response.body).each do |datasource_name|
+      datasource = Datasource.find_or_create_by(name: datasource_name)
+      DimensionAggregatorWorker.perform_async(datasource.id)
     end
   end
 end
