@@ -59,8 +59,9 @@ module Datastore
     end
 
     def set_aggregators
-      aggs = @aggregators.where(aggregator_type: 'longSum').map(&:name)
-      @query.long_sum(aggs)
+      @aggregators.group_by(&:aggregator_type).each do |type, aggregators|
+        @query.send(type.underscore, aggregators.map(&:name))
+      end
     end
 
     def convert_top_n_data(result)
