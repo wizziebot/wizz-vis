@@ -9,6 +9,7 @@ module Datastore
       @query = Druid::Query::Builder.new
       @interval = properties[:interval]
       @granularity = properties[:granularity] || 'all'
+      @limit = properties[:limit] || 5
       @dimensions = dimensions || []
       @aggregators = aggregators || []
       build
@@ -50,9 +51,10 @@ module Datastore
       if multiseries?
         # TODO
       elsif top_n?
-        @query.topn(@dimensions.first.name.to_sym, @aggregators.first.name.to_sym, 5)
+        @query.topn(@dimensions.first.name.to_sym, @aggregators.first.name.to_sym, @limit)
       elsif group_by?
-        @query.group_by(@dimensions.map(&:name).map(&:to_sym))
+        @query.group_by(*@dimensions.map(&:name))
+        @query.limit(@limit, @dimensions.map { |d| [d.name, :desc] })
       else
         # timeserie
       end
