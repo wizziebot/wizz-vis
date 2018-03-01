@@ -34,14 +34,18 @@ class DimensionAggregatorWorker
 
   def update_dimensions_aggregators(datasource, last_event_time)
     data = segment_metadata_query(datasource.name, last_event_time)
+    dimensions = data['columns']
+    aggregators = data['aggregators']
 
-    data['columns'].each do |name, properties|
+    dimensions.keep_if { |k, _v| !aggregators.key?(k) }
+
+    dimensions.each do |name, properties|
       Dimension.where(datasource: datasource, name: name).first_or_create do |dimension|
         dimension.dimension_type = properties['type']
       end
     end
 
-    data['aggregators'].each do |name, properties|
+    aggregators.each do |name, properties|
       Aggregator.where(datasource: datasource, name: name).first_or_create do |aggregator|
         aggregator.aggregator_type = properties['type']
       end
