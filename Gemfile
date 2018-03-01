@@ -44,6 +44,9 @@ gem 'react_on_rails', '10.0.2'
 gem 'materialize-sass', '~> 0.100.2'
 gem 'material_icons', '~> 2.2'
 
+# Simple form
+gem 'simple_form', '~> 3.5.1'
+
 # Breadcrumbs helper
 gem 'gretel', '~> 3.0'
 
