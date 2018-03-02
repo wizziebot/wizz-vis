@@ -27,7 +27,7 @@ module Intervalable
     when 'last_1_day'
       [@time_now - 1.day, @time_now]
     when 'last_7_days'
-      [time_now - 7.days, @time_now]
+      [@time_now - 7.days, @time_now]
     when 'last_30_days'
       [@time_now - 30.days, @time_now]
     end

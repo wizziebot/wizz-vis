@@ -19,6 +19,8 @@ module Datastore
       result = @datasource.post(@query)
       if top_n?
         convert_top_n_data(result)
+      elsif group_by?
+        convert_group_by_data(result)
       else
         convert_timeserie_data(result)
       end
@@ -70,6 +72,13 @@ module Datastore
       result.map do |row|
         row['result']
       end.flatten
+    end
+
+    def convert_group_by_data(result)
+      result.map do |row|
+        row.merge!(row['event']).delete('event')
+        row
+      end
     end
 
     def convert_timeserie_data(result)
