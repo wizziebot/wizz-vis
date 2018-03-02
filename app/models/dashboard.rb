@@ -1,4 +1,11 @@
 class Dashboard < ApplicationRecord
+  include Defaults
+
+  # ==========================================================
+  # Default values
+  # ==========================================================
+  default :theme, 'light'
+
   # ==========================================================
   # Relations
   # ==========================================================
@@ -8,4 +15,5 @@ class Dashboard < ApplicationRecord
   # Validations
   # ==========================================================
   validates :name, presence: true
+  validates :theme, inclusion: { in: %w[light dark] }
 end

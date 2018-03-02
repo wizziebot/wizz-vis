@@ -1,6 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer, PieChart, Pie, Legend, Tooltip, Cell } from 'recharts';
 import Colors from './../../utils/colors';
+import Theme from './../../utils/theme';
 
 export default class WidgetPie extends React.Component {
   constructor(props) {
@@ -51,7 +52,11 @@ export default class WidgetPie extends React.Component {
                innerRadius="50">
             {
               this.state.$$data.map((element, index) => (
-                <Cell key={index} fill={Colors.get(index)}/>
+                <Cell
+                  key={index}
+                  fill={Colors.get(index)}
+                  stroke={Theme.grid(this.props.theme)} 
+                />
               ))
             }
           </Pie>

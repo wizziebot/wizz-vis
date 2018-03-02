@@ -82,6 +82,6 @@ class DashboardsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def dashboard_params
-      params.require(:dashboard).permit(:name)
+      params.require(:dashboard).permit(:name, :theme)
     end
 end

@@ -1,2 +1,25 @@
 @import "widget_value";
 @import "widget_location";
+
+.layout.light .react-grid-item {
+  color: #555;
+  border: 1px solid #f4f5f8;
+  background-color: #fbfbfb;
+}
+
+.layout.dark .react-grid-item {
+  color: #d8d9da;
+  background-color: #1f1d1d;
+  border: 1px solid #292929;
+
+  &:hover > .react-resizable-handle::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 5px;
+    height: 5px;
+    border-right: 2px solid rgba(255, 255, 255, 0.4);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+  }
+}

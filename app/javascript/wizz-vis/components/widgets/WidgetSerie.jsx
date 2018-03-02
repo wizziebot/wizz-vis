@@ -2,6 +2,7 @@ import React from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid,
          Tooltip, Legend } from 'recharts';
 import Colors from './../../utils/colors';
+import Theme from './../../utils/theme';
 
 export default class WidgetSerie extends React.Component {
   constructor(props) {
@@ -41,10 +42,11 @@ export default class WidgetSerie extends React.Component {
            <XAxis
              dataKey = "timestamp"
              domain = {['auto', 'auto']}
+             stroke = { Theme.text(this.props.theme) }
            />
-           <YAxis/>
-           <CartesianGrid strokeDasharray="3 3"/>
-           <Tooltip/>
+           <YAxis stroke = { Theme.text(this.props.theme) } />
+           <CartesianGrid stroke = { Theme.grid(this.props.theme) } />
+           <Tooltip />
            <Legend />
            {
              this.state.aggregators.map((a, index) => (

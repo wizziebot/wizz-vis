@@ -19,6 +19,11 @@
               <%= f.input :name, required: true %>
             </div>
           </div>
+          <div class='row'>
+            <div class='col s12'>
+              <%= f.input :theme, collection: %w[light dark], include_blank: false %>
+            </div>
+          </div>
         </div>
         <div class='card-action'>
           <div class='row'>

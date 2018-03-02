@@ -58,13 +58,13 @@ export default class Dashboard extends React.Component {
 
     const widgets = this.state.$$widgets.map((w) => {
                       return <div key={ w.id }>
-                              <WidgetBase {...w} />
+                              <WidgetBase {...w} theme={this.props.theme} />
                              </div>;
                     });
 
     return (
       <ResponsiveReactGridLayout
-        className="layout"
+        className={'layout ' + this.props.theme}
         layouts={layout}
         rowHeight={ROWHEIGHT} breakpoints={BREAKPOINTS}
         cols={COLS}
