@@ -1,0 +1,2 @@
+class WidgetHeatmap < Widget
+end

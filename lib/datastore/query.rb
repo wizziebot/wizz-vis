@@ -12,10 +12,12 @@ module Datastore
       @limit = properties[:limit] || 5
       @dimensions = dimensions || []
       @aggregators = aggregators || []
+
       build
     end
 
     def run
+      Rails.logger.debug '  Druid Query  ' + @query.to_json
       result = @datasource.post(@query)
       if top_n?
         convert_top_n_data(result)
