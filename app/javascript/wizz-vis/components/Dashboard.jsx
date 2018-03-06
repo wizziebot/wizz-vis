@@ -1,11 +1,12 @@
 import React from 'react';
+import ReactDOM from "react-dom";
 import request from 'axios';
 import {Responsive, WidthProvider} from 'react-grid-layout';
 import WidgetBase from './WidgetBase';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const BREAKPOINTS = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
-const COLS = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
+const COLS = { lg: 12, md: 12, sm: 12, xs: 1, xxs: 1 };
 const ROWHEIGHT = 100;
 
 export default class Dashboard extends React.Component {
@@ -23,6 +24,9 @@ export default class Dashboard extends React.Component {
 
   componentDidMount() {
     this.fetchWidgets();
+    this.setState({
+      isDraggable: this.isDraggable()
+    })
   }
 
   fetchWidgets() {
@@ -40,6 +44,8 @@ export default class Dashboard extends React.Component {
   }
 
   onLayoutChange(layout) {
+    if (!this.isDraggable()) return true;
+
     fetch(
       '/dashboards/' + this.props.id + '/layout.json',
       {
@@ -50,6 +56,11 @@ export default class Dashboard extends React.Component {
     )
     .then(response => this.setState({ layout: layout }))
     .catch(error => this.setState({ updateLayoutError: error }));
+  }
+
+  isDraggable() {
+    const node = ReactDOM.findDOMNode(this);
+    return node.offsetWidth >= BREAKPOINTS.sm && !Modernizr.touchevents
   }
 
   render () {
@@ -65,8 +76,11 @@ export default class Dashboard extends React.Component {
     return (
       <ResponsiveReactGridLayout
         className={'layout ' + this.props.theme}
+        isDraggable={ this.state.isDraggable }
+        isResizable={ this.state.isDraggable }
         layouts={layout}
-        rowHeight={ROWHEIGHT} breakpoints={BREAKPOINTS}
+        rowHeight={ROWHEIGHT}
+        breakpoints={BREAKPOINTS}
         cols={COLS}
         onLayoutChange={ (layout) => this.onLayoutChange(layout) }>
 

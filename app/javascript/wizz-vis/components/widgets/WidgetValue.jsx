@@ -32,7 +32,7 @@ export default class WidgetValue extends React.Component {
 
   getValue() {
     const data_length = this.state.$$data.length;
-    return data_length == 0 ? 0 : this.state.$$data[data_length - 1][this.state.aggregator];
+    return data_length == 0 ? 0 : Math.round(this.state.$$data[data_length - 1][this.state.aggregator]);
   }
 
   render () {
