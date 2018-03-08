@@ -82,6 +82,7 @@ export default class Dashboard extends React.Component {
         rowHeight={ROWHEIGHT}
         breakpoints={BREAKPOINTS}
         cols={COLS}
+        draggableHandle=".widget-title"
         onLayoutChange={ (layout) => this.onLayoutChange(layout) }>
 
         { widgets }

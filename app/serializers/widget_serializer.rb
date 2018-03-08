@@ -2,7 +2,6 @@ class WidgetSerializer < ActiveModel::Serializer
   attributes(
     :id,
     :type,
-    :name,
     :title,
     :row,
     :col,

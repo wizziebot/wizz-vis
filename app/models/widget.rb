@@ -14,7 +14,7 @@ class Widget < ApplicationRecord
   # ==========================================================
   # Validations
   # ==========================================================
-  validates :name, :row, :col, :size_x, :size_y, presence: true
+  validates :row, :col, :size_x, :size_y, presence: true
 
   def data
     query = Datastore::Query.new(

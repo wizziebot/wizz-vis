@@ -43,9 +43,6 @@ export default class WidgetValue extends React.Component {
     <div className='widget-value'>
       <div className='card horizontal'>
         <div className='card-stacked'>
-          <div className='card-title center-align'>
-            {this.props.title}
-          </div>
           <div className='card-content center-align valign-wrapper'>
             <p>{this.getValue()}</p>
           </div>

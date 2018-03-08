@@ -31,7 +31,12 @@ export default class WidgetBase extends React.Component {
     const Type = this.components[this.props.type || 'WidgetArea'];
 
     return (
-      <Type {...this.props}/>
+      <div className='widget center-align'>
+        <div className="widget-title">{ this.props.title }</div>
+        <div className="widget-content">
+          <Type {...this.props}/>
+        </div>
+      </div>
     )
   }
 }

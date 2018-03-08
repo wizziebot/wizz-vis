@@ -23,3 +23,23 @@
     border-bottom: 2px solid rgba(255, 255, 255, 0.4);
   }
 }
+
+.widget {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .widget-title {
+    flex: auto;
+    height: 30px;
+    line-height: 30px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .widget-content {
+    flex: auto;
+    position: relative;
+    height: calc(100% - 30px);
+  }
+}
