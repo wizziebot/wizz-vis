@@ -1,0 +1,2 @@
+class WidgetTable < Widget
+end

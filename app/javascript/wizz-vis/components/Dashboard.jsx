@@ -67,9 +67,11 @@ export default class Dashboard extends React.Component {
     // layout is an array of objects, see the demo for more complete usage
     const layout = { lg: (this.state.layout || []) };
 
-    const widgets = this.state.$$widgets.map((w) => {
+    const widgets = this.state.$$widgets.map((w, index) => {
                       return <div key={ w.id }>
-                              <WidgetBase {...w} theme={this.props.theme} />
+                              <WidgetBase {...w}
+                                theme={this.props.theme}
+                                height={ layout.lg[index].h * ROWHEIGHT } />
                              </div>;
                     });
 
