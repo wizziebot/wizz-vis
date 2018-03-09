@@ -2,6 +2,8 @@ require 'druid'
 
 module Datastore
   class Query
+    DRUID_TIMEOUT = ENV['DRUID_TIMEOUT'] || 60_000
+
     def initialize(datasource:, properties:, dimensions:, aggregators:)
       properties = ActiveSupport::HashWithIndifferentAccess.new(properties)
 
@@ -17,7 +19,7 @@ module Datastore
     end
 
     def run
-      Rails.logger.debug '  Druid Query  ' + @query.to_json
+      Rails.logger.debug "  Druid Query  (#{@datasource.name}) #{@query.to_json}"
       result = @datasource.post(@query)
       if top_n?
         convert_top_n_data(result)
@@ -47,6 +49,7 @@ module Datastore
     private
 
     def build
+      @query.query.context.timeout = DRUID_TIMEOUT
       @query.interval(*@interval)
       @query.granularity(@granularity)
 
