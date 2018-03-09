@@ -1,0 +1,24 @@
+.widget-title {
+  flex: auto;
+  height: 30px;
+  line-height: 30px;
+  font-weight: 600;
+  cursor: pointer;
+
+  & > .drilldown a.dropdown-button {
+    display: inline-flex;
+    vertical-align: middle;
+    margin: 0 5px;
+
+    i {
+      font-size: 15px;
+    }
+  }
+
+  .dropdown-content {
+    a {
+      font-weight: normal;
+      font-size: 0.8em;
+    }
+  }
+}

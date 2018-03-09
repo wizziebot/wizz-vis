@@ -7,6 +7,7 @@ class WidgetSerializer < ActiveModel::Serializer
     :col,
     :size_x,
     :size_y,
+    :options
   )
 
   has_many :dimensions

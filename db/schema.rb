@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_03_07_155732) do
+ActiveRecord::Schema.define(version: 2018_03_07_194538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,8 +72,10 @@ ActiveRecord::Schema.define(version: 2018_03_07_155732) do
     t.datetime "end_time"
     t.string "granularity"
     t.integer "limit"
+    t.jsonb "options", default: {}
     t.index ["dashboard_id"], name: "index_widgets_on_dashboard_id"
     t.index ["datasource_id"], name: "index_widgets_on_datasource_id"
+    t.index ["options"], name: "index_widgets_on_options", using: :gin
   end
 
   add_foreign_key "aggregators", "datasources"

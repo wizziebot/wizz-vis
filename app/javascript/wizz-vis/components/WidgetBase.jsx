@@ -1,6 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer } from 'recharts';
 
+import WidgetTitle from './widgets/WidgetTitle';
 import WidgetSerie from './widgets/WidgetSerie';
 import WidgetArea from './widgets/WidgetArea';
 import WidgetBar from './widgets/WidgetBar';
@@ -34,7 +35,11 @@ export default class WidgetBase extends React.Component {
 
     return (
       <div className='widget center-align'>
-        <div className="widget-title">{ this.props.title }</div>
+        <WidgetTitle
+          widget_id={this.props.id}
+          title={this.props.title}
+          links={this.props.options.links}
+        />
         <div className="widget-content">
           <Type {...this.props}/>
         </div>
