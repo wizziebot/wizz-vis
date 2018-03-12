@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_03_07_194538) do
+ActiveRecord::Schema.define(version: 2018_03_09_121435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(version: 2018_03_07_194538) do
   create_table "aggregators_widgets", id: false, force: :cascade do |t|
     t.bigint "aggregator_id", null: false
     t.bigint "widget_id", null: false
+    t.index ["aggregator_id", "widget_id"], name: "index_aggregators_widgets_on_aggregator_id_and_widget_id"
+    t.index ["widget_id", "aggregator_id"], name: "index_aggregators_widgets_on_widget_id_and_aggregator_id"
   end
 
   create_table "dashboards", force: :cascade do |t|
@@ -34,6 +36,7 @@ ActiveRecord::Schema.define(version: 2018_03_07_194538) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "theme"
+    t.integer "interval"
   end
 
   create_table "datasources", force: :cascade do |t|
@@ -54,6 +57,8 @@ ActiveRecord::Schema.define(version: 2018_03_07_194538) do
   create_table "dimensions_widgets", id: false, force: :cascade do |t|
     t.bigint "dimension_id", null: false
     t.bigint "widget_id", null: false
+    t.index ["dimension_id", "widget_id"], name: "index_dimensions_widgets_on_dimension_id_and_widget_id"
+    t.index ["widget_id", "dimension_id"], name: "index_dimensions_widgets_on_widget_id_and_dimension_id"
   end
 
   create_table "widgets", force: :cascade do |t|

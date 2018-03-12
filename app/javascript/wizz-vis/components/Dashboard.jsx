@@ -84,7 +84,7 @@ export default class Dashboard extends React.Component {
 
     return (
     <div>
-      <Clock clockReload={ this.fireReload.bind(this) } interval={ 30 }/>
+      <Clock clockReload={ this.fireReload.bind(this) } interval={ this.props.interval }/>
 
       <ResponsiveReactGridLayout
         className={'layout ' + this.props.theme}

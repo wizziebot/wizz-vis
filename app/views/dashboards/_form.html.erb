@@ -24,6 +24,11 @@
               <%= f.input :theme, collection: %w[light dark], include_blank: false %>
             </div>
           </div>
+          <div class='row'>
+            <div class='col s12'>
+              <%= f.input :interval, label: 'Reload interval', collection: [30, 60, 90, 120], include_blank: false %>
+            </div>
+          </div>
         </div>
         <div class='card-action'>
           <div class='row'>
