@@ -42,19 +42,16 @@ export default class WidgetValue extends React.Component {
   }
 
   render () {
-    const data = 2222;
-    const title = 'Title';
-
     return (
-    <div className='widget-value'>
-      <div className='card horizontal'>
-        <div className='card-stacked'>
-          <div className='card-content center-align valign-wrapper'>
-            <p>{this.getValue()}</p>
+      <div className='widget-value'>
+        <div className='card horizontal'>
+          <div className='card-stacked'>
+            <div className='card-content center-align valign-wrapper'>
+              <p>{this.getValue()}</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     )
   }
 }
