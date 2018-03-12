@@ -3,6 +3,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid,
          Tooltip, Legend } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
+import Format from './../../utils/format';
 
 export default class WidgetSerie extends React.Component {
   constructor(props) {
@@ -34,6 +35,10 @@ export default class WidgetSerie extends React.Component {
     })
   }
 
+  formatYAxis(value) {
+    return Format.prefix(value);
+  }
+
   render () {
     return (
       <ResponsiveContainer>
@@ -44,7 +49,12 @@ export default class WidgetSerie extends React.Component {
              domain = {['auto', 'auto']}
              stroke = { Theme.text(this.props.theme) }
            />
-           <YAxis stroke = { Theme.text(this.props.theme) } />
+           <YAxis
+             tickFormatter={this.formatYAxis}
+             interval = 'preserveStartEnd'
+             stroke = { Theme.text(this.props.theme) }
+             tick = { { fontSize: 12 } }
+           />
            <CartesianGrid stroke = { Theme.grid(this.props.theme) } />
            <Tooltip />
            <Legend />

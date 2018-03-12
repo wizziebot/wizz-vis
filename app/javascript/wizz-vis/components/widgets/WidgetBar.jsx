@@ -3,6 +3,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
          Tooltip, Legend } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
+import Format from './../../utils/format';
 
 export default class WidgetBar extends React.Component {
   constructor(props) {
@@ -34,6 +35,10 @@ export default class WidgetBar extends React.Component {
     })
   }
 
+  formatYAxis(value) {
+    return Format.prefix(value);
+  }
+
   render () {
     return (
       <ResponsiveContainer>
@@ -41,7 +46,12 @@ export default class WidgetBar extends React.Component {
               margin={{top: 5, right: 30, left: 20, bottom: 5}}>
            <CartesianGrid stroke = { Theme.grid(this.props.theme) } />
            <XAxis dataKey="timestamp" stroke = { Theme.text(this.props.theme) } />
-           <YAxis stroke = { Theme.text(this.props.theme) } />
+           <YAxis
+             tickFormatter={this.formatYAxis}
+             interval = 'preserveStartEnd'
+             stroke = { Theme.text(this.props.theme) }
+             tick = { { fontSize: 12 } }
+           />
            <Tooltip/>
            <Legend />
            {
