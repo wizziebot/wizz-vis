@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import request from 'axios';
 import {Responsive, WidthProvider} from 'react-grid-layout';
 import WidgetBase from './WidgetBase';
+import Clock from './Clock';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const BREAKPOINTS = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
@@ -18,7 +19,8 @@ export default class Dashboard extends React.Component {
       $$widgets: [],
       layout: null,
       fetchWidgetsError: null,
-      updateLayoutError: null
+      updateLayoutError: null,
+      reloadTimestamp: null
     };
   }
 
@@ -63,6 +65,10 @@ export default class Dashboard extends React.Component {
     return node.offsetWidth >= BREAKPOINTS.sm && !Modernizr.touchevents
   }
 
+  fireReload () {
+    this.setState({ reloadTimestamp: Date.now() })
+  }
+
   render () {
     // layout is an array of objects, see the demo for more complete usage
     const layout = { lg: (this.state.layout || []) };
@@ -71,11 +77,15 @@ export default class Dashboard extends React.Component {
                       return <div key={ w.id }>
                               <WidgetBase {...w}
                                 theme={this.props.theme}
-                                height={ layout.lg[index].h * ROWHEIGHT } />
+                                height={ layout.lg[index].h * ROWHEIGHT }
+                                reloadTimestamp={this.state.reloadTimestamp} />
                              </div>;
                     });
 
     return (
+    <div>
+      <Clock clockReload={ this.fireReload.bind(this) } interval={ 30 }/>
+
       <ResponsiveReactGridLayout
         className={'layout ' + this.props.theme}
         isDraggable={ this.state.isDraggable }
@@ -90,6 +100,7 @@ export default class Dashboard extends React.Component {
         { widgets }
 
       </ResponsiveReactGridLayout>
+    </div>
     )
   }
 }

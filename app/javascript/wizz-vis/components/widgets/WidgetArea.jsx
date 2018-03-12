@@ -21,6 +21,12 @@ export default class WidgetArea extends React.Component {
     this.setAggregators();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
+      this.fetchData();
+    }
+  }
+
   fetchData() {
     return (
       fetch('/widgets/' + this.props.id + '/data.json')

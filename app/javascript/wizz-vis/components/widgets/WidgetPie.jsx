@@ -21,6 +21,12 @@ export default class WidgetPie extends React.Component {
     this.setAggregator();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
+      this.fetchData();
+    }
+  }
+
   fetchData() {
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
@@ -55,7 +61,7 @@ export default class WidgetPie extends React.Component {
                 <Cell
                   key={index}
                   fill={Colors.get(index)}
-                  stroke={Theme.grid(this.props.theme)} 
+                  stroke={Theme.grid(this.props.theme)}
                 />
               ))
             }

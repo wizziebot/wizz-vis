@@ -25,6 +25,12 @@ export default class WidgetLocation extends React.Component {
     this.fetchData();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
+      this.fetchData();
+    }
+  }
+
   fetchData() {
     return (
       fetch('/widgets/' + this.props.id + '/data.json')

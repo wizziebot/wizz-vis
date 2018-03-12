@@ -16,6 +16,12 @@ export default class WidgetValue extends React.Component {
     this.setAggregator();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
+      this.fetchData();
+    }
+  }
+
   fetchData() {
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
