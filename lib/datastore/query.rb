@@ -2,7 +2,7 @@ require 'druid'
 
 module Datastore
   class Query
-    DRUID_TIMEOUT = ENV['DRUID_TIMEOUT'] || 60_000
+    DRUID_TIMEOUT = ENV['DRUID_TIMEOUT']&.to_i || 60_000
 
     def initialize(datasource:, properties:, dimensions:, aggregators:)
       properties = ActiveSupport::HashWithIndifferentAccess.new(properties)
