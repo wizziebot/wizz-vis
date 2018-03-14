@@ -84,7 +84,10 @@ export default class WidgetBar extends React.Component {
              stroke = { Theme.text(this.props.theme) }
              tick = { { fontSize: 12 } }
            />
-           <Tooltip labelFormatter = { Time.simple_format }/>
+           <Tooltip
+             labelFormatter = { Time.simple_format }
+             labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
+           />
            <Legend />
            {
              this.state.aggregators.map((a, index) => (

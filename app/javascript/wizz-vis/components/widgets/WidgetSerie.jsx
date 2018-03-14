@@ -84,7 +84,10 @@ export default class WidgetSerie extends React.Component {
              tick = { { fontSize: 12 } }
            />
            <CartesianGrid stroke = { Theme.grid(this.props.theme) } />
-           <Tooltip labelFormatter = { Time.simple_format }/>
+           <Tooltip
+             labelFormatter = { Time.simple_format }
+             labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
+           />
            <Legend />
            {
              this.state.aggregators.map((a, index) => (

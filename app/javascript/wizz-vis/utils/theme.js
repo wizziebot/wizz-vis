@@ -6,6 +6,9 @@ const THEMES = {
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
     },
+    tooltip: {
+      color: '#555'
+    },
     table: {
       thead_color: '#f68d2e',
       thead_bg: '#ececec',
@@ -20,6 +23,9 @@ const THEMES = {
     map: {
       url: "https://api.mapbox.com/styles/v1/pikislabis/cjeb0cztza0k32snr6abbjd81/tiles/256/{z}/{x}/{y}?access_token=" + process.env.MAPBOX_TOKEN,
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> &copy; <a href="https://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>'
+    },
+    tooltip: {
+      color: '#555'
     },
     table: {
       thead_color: '#f68d2e',
@@ -46,5 +52,9 @@ export default {
 
   table(theme) {
     return THEMES[theme].table;
+  },
+
+  tooltip(theme) {
+    return THEMES[theme].tooltip;
   }
 }
