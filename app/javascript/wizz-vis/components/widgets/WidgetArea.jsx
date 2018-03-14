@@ -84,7 +84,7 @@ export default class WidgetArea extends React.Component {
             tick = { { fontSize: 12 } }
           />
           <CartesianGrid stroke = { Theme.grid(this.props.theme) } />
-          <Tooltip/>
+          <Tooltip labelFormatter = { Time.simple_format }/>
           <Legend/>
           {
             this.state.aggregators.map((a, index) => (

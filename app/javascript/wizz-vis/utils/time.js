@@ -4,6 +4,10 @@ const ONE_DAY = 24 * 3600 * 1000;
 const TWO_DAYS = 2 * 24 * 3600 * 1000;
 
 export default {
+  simple_format(time){
+    return moment(time).format('YYYY-MM-DD HH:mm');
+  },
+
   format(time, interval) {
     const range =
       moment(interval[1]).diff(moment(interval[0]));

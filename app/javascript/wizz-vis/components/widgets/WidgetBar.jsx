@@ -56,7 +56,7 @@ export default class WidgetBar extends React.Component {
 
     return Time.gap(time_1, time_2, this.props.interval);
   }
-  
+
   formatYAxis(value) {
     return Format.prefix(value);
   }
@@ -76,7 +76,7 @@ export default class WidgetBar extends React.Component {
              minTickGap = {gap}
              domain = {['auto', 'auto']}
              stroke = { Theme.text(this.props.theme) }
-             tick = { { fontSize: 12 } } 
+             tick = { { fontSize: 12 } }
             />
            <YAxis
              tickFormatter={this.formatYAxis}
@@ -84,7 +84,7 @@ export default class WidgetBar extends React.Component {
              stroke = { Theme.text(this.props.theme) }
              tick = { { fontSize: 12 } }
            />
-           <Tooltip/>
+           <Tooltip labelFormatter = { Time.simple_format }/>
            <Legend />
            {
              this.state.aggregators.map((a, index) => (
