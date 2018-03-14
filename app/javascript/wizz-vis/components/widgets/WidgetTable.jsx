@@ -24,6 +24,12 @@ export default class WidgetTable extends React.Component {
     this.setHeader();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
+      this.fetchData();
+    }
+  }
+
   fetchData() {
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
