@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactEcharts from 'echarts-for-react';
 
 export default class WidgetValue extends React.Component {
   constructor(props) {
@@ -41,13 +42,88 @@ export default class WidgetValue extends React.Component {
     return data_length == 0 ? 0 : Math.round(this.state.$$data[data_length - 1][this.state.aggregator]);
   }
 
+  showGauge(){
+    return (this.props.options.gauge && this.props.options.gauge.show);
+  }
+
+  gaugeOptions() {
+    let thresholds = this.props.options.gauge.thresholds;
+    let min = this.props.options.gauge.min;
+    let max = this.props.options.gauge.max;
+
+    if(thresholds === undefined){
+      thresholds = [[0.33, "#3DCC91"], [0.66, "#FFB366"], [1, "#FF7373"]];
+    }
+
+    if(min === undefined){
+      min = 0;
+    }
+
+    if (max === undefined){
+      max = 100;
+    }
+
+    return {
+      series : [
+        {
+          type:'gauge',
+          startAngle: 180,
+          endAngle: 0,
+          min,
+          max,
+          splitNumber: 11,
+          radius: '100%',
+          axisLine: {
+            lineStyle: {
+              color: thresholds,
+              width: 25
+            }
+          },
+          axisLabel: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          splitLine: {
+            show: false
+          },
+          detail: {
+            fontWeight: 700,
+            fontFamily: "Roboto"
+          },
+          data:[
+            {value: this.getValue()}
+          ]
+        }
+      ]
+    }
+  }
+
   render () {
+    let element = null;
+
+    if(this.showGauge()) {
+      element = <ReactEcharts
+        option={ this.gaugeOptions() }
+        style={
+          { position: 'absolute',
+            width: '100%', height: '100%',
+            top: 10, left: 0 }
+        }
+        className='gauge' />;
+    } else {
+      element = <div className='value'>
+        { this.getValue() }
+      </div>;
+    }
+
     return (
       <div className='widget-value'>
         <div className='card horizontal'>
           <div className='card-stacked'>
             <div className='card-content center-align valign-wrapper'>
-              <p>{this.getValue()}</p>
+              {element}
             </div>
           </div>
         </div>
