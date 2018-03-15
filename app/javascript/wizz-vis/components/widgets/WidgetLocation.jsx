@@ -32,6 +32,8 @@ export default class WidgetLocation extends React.Component {
   }
 
   fetchData() {
+    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
+    button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
@@ -43,6 +45,7 @@ export default class WidgetLocation extends React.Component {
           }
         )))
         .then(data => this.setState({ $$data: data }))
+        .then(data => button.removeClass('active'))
     )
   }
 
@@ -67,29 +70,33 @@ export default class WidgetLocation extends React.Component {
   }
 
   render () {
-    const bounds = this.state.$$data.map((e) => (e.position));
+    if(this.state.$$data.length == 0) {
+      return(<h5>No data points.</h5>)
+    } else {
+      const bounds = this.state.$$data.map((e) => (e.position));
 
-    return (
-      <Map
-        bounds={ bounds.length > 0 ? bounds : [[0,0]] }
-        scrollWheelZoom={false}
-        ref='map'>
-        <TileLayer
-          url={Theme.map(this.props.theme).url}
-          attribution={Theme.map(this.props.theme).attribution}
-        />
-        {
-          this.state.$$data.map((element, index) => (
-            <Marker
-              position={ element.position }
-              key={ index }>
-              <Popup>
-                <span>{ element.label }</span>
-              </Popup>
-            </Marker>
-          ))
-        }
-      </Map>
-    );
+      return (
+        <Map
+          bounds={ bounds.length > 0 ? bounds : [[0,0]] }
+          scrollWheelZoom={false}
+          ref='map'>
+          <TileLayer
+            url={Theme.map(this.props.theme).url}
+            attribution={Theme.map(this.props.theme).attribution}
+          />
+          {
+            this.state.$$data.map((element, index) => (
+              <Marker
+                position={ element.position }
+                key={ index }>
+                <Popup>
+                  <span>{ element.label }</span>
+                </Popup>
+              </Marker>
+            ))
+          }
+        </Map>
+      );
+    }
   }
 }

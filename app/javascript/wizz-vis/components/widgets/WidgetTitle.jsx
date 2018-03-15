@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import WidgetDrilldown from './WidgetDrilldown';
+import WidgetRefresh from './WidgetRefresh';
 
 export default class WidgetTitle extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ export default class WidgetTitle extends React.Component {
             null
         }
         { this.props.title }
+        <WidgetRefresh widget_id={this.props.widget_id} />
       </div>
     )
   }

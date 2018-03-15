@@ -1,6 +1,7 @@
 @import "widget_value";
 @import "widget_location";
 @import "widget_table";
+@import "widget_refresh";
 
 .layout.light .react-grid-item {
   color: #555;
@@ -42,5 +43,11 @@
     flex: auto;
     position: relative;
     height: calc(100% - 30px);
+
+    h5 {
+      height: 93%;
+      display: inline-flex;
+      align-items: center;
+    }
   }
 }

@@ -28,10 +28,13 @@ export default class WidgetPie extends React.Component {
   }
 
   fetchData() {
+    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
+    button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
         .then(data => this.setState({ $$data: data }))
+        .then(data => button.removeClass('active'))
     );
   }
 
@@ -48,28 +51,32 @@ export default class WidgetPie extends React.Component {
   }
 
   render () {
-    return (
-      <ResponsiveContainer>
-        <PieChart>
-          <Pie data={this.state.$$data}
-               dataKey={this.state.aggregator}
-               nameKey={this.state.dimension}
-               ill="#8884d8"
-               innerRadius="50">
-            {
-              this.state.$$data.map((element, index) => (
-                <Cell
-                  key={index}
-                  fill={Colors.get(index)}
-                  stroke={Theme.grid(this.props.theme)}
-                />
-              ))
-            }
-          </Pie>
-          <Legend />
-          <Tooltip />
-        </PieChart>
-      </ResponsiveContainer>
-    )
+    if(this.state.$$data.length == 0) {
+      return(<h5>No data points.</h5>)
+    } else {
+      return (
+        <ResponsiveContainer>
+          <PieChart>
+            <Pie data={this.state.$$data}
+                 dataKey={this.state.aggregator}
+                 nameKey={this.state.dimension}
+                 ill="#8884d8"
+                 innerRadius="50">
+              {
+                this.state.$$data.map((element, index) => (
+                  <Cell
+                    key={index}
+                    fill={Colors.get(index)}
+                    stroke={Theme.grid(this.props.theme)}
+                  />
+                ))
+              }
+            </Pie>
+            <Legend />
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+      )
+    }
   }
 }

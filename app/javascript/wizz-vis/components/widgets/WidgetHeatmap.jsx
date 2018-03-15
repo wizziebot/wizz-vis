@@ -28,6 +28,8 @@ export default class WidgetHeatmap extends React.Component {
   }
 
   fetchData() {
+    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
+    button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
@@ -40,6 +42,7 @@ export default class WidgetHeatmap extends React.Component {
           }
         )))
         .then(data => this.setState({ $$data: data }))
+        .then(data => button.removeClass('active'))
     )
   }
 
@@ -61,25 +64,29 @@ export default class WidgetHeatmap extends React.Component {
   }
 
   render () {
-    return (
-      <div>
-        <Map
-          center={[0,0]}
-          zoom={13}
-          scrollWheelZoom={false}>
-          <HeatmapLayer
-            fitBoundsOnLoad
-            fitBoundsOnUpdate
-            points={ this.state.$$data }
-            longitudeExtractor={m => m.position[1]}
-            latitudeExtractor={m => m.position[0]}
-            intensityExtractor={m => m.aggregator} />
-          <TileLayer
-            url={Theme.map(this.props.theme).url}
-            attribution={Theme.map(this.props.theme).attribution}
-          />
-        </Map>
-      </div>
-    );
+    if(this.state.$$data.length == 0) {
+      return(<h5>No data points.</h5>)
+    } else {
+      return (
+        <div>
+          <Map
+            center={[0,0]}
+            zoom={13}
+            scrollWheelZoom={false}>
+            <HeatmapLayer
+              fitBoundsOnLoad
+              fitBoundsOnUpdate
+              points={ this.state.$$data }
+              longitudeExtractor={m => m.position[1]}
+              latitudeExtractor={m => m.position[0]}
+              intensityExtractor={m => m.aggregator} />
+            <TileLayer
+              url={Theme.map(this.props.theme).url}
+              attribution={Theme.map(this.props.theme).attribution}
+            />
+          </Map>
+        </div>
+      );
+    }
   }
 }

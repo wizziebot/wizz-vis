@@ -31,10 +31,13 @@ export default class WidgetTable extends React.Component {
   }
 
   fetchData() {
+    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
+    button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
         .then(data => this.setState({ $$data: data }))
+        .then(data => button.removeClass('active'))
     );
   }
 
@@ -65,40 +68,44 @@ export default class WidgetTable extends React.Component {
   }
 
   render () {
-    let theme = {
-      tableHeader: {
-        backgroundColor: Theme.table(this.props.theme).thead_bg,
-        color: Theme.table(this.props.theme).thead_color
-      },
-      table: {
-        backgroundColor: Theme.table(this.props.theme).tbody_bg,
-        color: Theme.table(this.props.theme).tbody_color,
-        borderColor: Theme.table(this.props.theme).border_color,
-        height: '20px'
+    if(this.state.$$data.length == 0) {
+      return(<h5>No data points.</h5>)
+    } else {
+      let theme = {
+        tableHeader: {
+          backgroundColor: Theme.table(this.props.theme).thead_bg,
+          color: Theme.table(this.props.theme).thead_color
+        },
+        table: {
+          backgroundColor: Theme.table(this.props.theme).tbody_bg,
+          color: Theme.table(this.props.theme).tbody_color,
+          borderColor: Theme.table(this.props.theme).border_color,
+          height: '20px'
+        }
       }
+      return (
+        <div className="widget_table">
+          <MuiThemeProvider>
+            <DataTables
+              height={(this.props.height - HEADER_HEIGHT).toString() + 'px'}
+              showHeaderToolbar={false}
+              showHeaderToolbarFilterIcon={false}
+              tableHeaderStyle={theme.tableHeader}
+              tableHeaderColumnStyle={theme.tableHeader}
+              /* tableBodyStyle={theme.table} */
+              tableRowStyle={theme.table}
+              /* tableRowColumnStyle={theme.table} */
+              fixedHeader={true}
+              selectable={false}
+              showRowHover={false}
+              columns={this.state.header}
+              data={this.state.$$data}
+              showCheckboxes={false}
+              showFooterToolbar={false}
+            />
+          </MuiThemeProvider>
+        </div>
+      );
     }
-    return (
-      <div className="widget_table">
-        <MuiThemeProvider>
-          <DataTables
-            height={(this.props.height - HEADER_HEIGHT).toString() + 'px'}
-            showHeaderToolbar={false}
-            showHeaderToolbarFilterIcon={false}
-            tableHeaderStyle={theme.tableHeader}
-            tableHeaderColumnStyle={theme.tableHeader}
-            /* tableBodyStyle={theme.table} */
-            tableRowStyle={theme.table}
-            /* tableRowColumnStyle={theme.table} */
-            fixedHeader={true}
-            selectable={false}
-            showRowHover={false}
-            columns={this.state.header}
-            data={this.state.$$data}
-            showCheckboxes={false}
-            showFooterToolbar={false}
-          />
-        </MuiThemeProvider>
-      </div>
-    );
   }
 }

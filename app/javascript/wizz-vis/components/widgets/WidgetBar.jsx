@@ -31,10 +31,13 @@ export default class WidgetBar extends React.Component {
   }
 
   fetchData() {
+    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
+    button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
         .then(data => this.setState({ $$data: data }))
+        .then(data => button.removeClass('active'))
     );
   }
 
@@ -62,40 +65,44 @@ export default class WidgetBar extends React.Component {
   }
 
   render () {
-    const gap = this.minTickGap();
+    if(this.state.$$data.length == 0) {
+      return(<h5>No data points.</h5>)
+    } else {
+      const gap = this.minTickGap();
 
-    return (
-      <ResponsiveContainer>
-        <BarChart data={this.state.$$data}
-              margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-           <CartesianGrid stroke = { Theme.grid(this.props.theme) } />
-           <XAxis
-             dataKey = "timestamp"
-             tickFormatter={this.formatXAxis}
-             interval = 'preserveStartEnd'
-             minTickGap = {gap}
-             domain = {['auto', 'auto']}
-             stroke = { Theme.text(this.props.theme) }
-             tick = { { fontSize: 12 } }
-            />
-           <YAxis
-             tickFormatter={this.formatYAxis}
-             interval = 'preserveStartEnd'
-             stroke = { Theme.text(this.props.theme) }
-             tick = { { fontSize: 12 } }
-           />
-           <Tooltip
-             labelFormatter = { Time.simple_format }
-             labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
-           />
-           <Legend />
-           {
-             this.state.aggregators.map((a, index) => (
-               <Bar key={ index } dataKey={ a } fill={ Colors.get(index) }/>
-             ))
-           }
-        </BarChart>
-      </ResponsiveContainer>
-    )
+      return (
+        <ResponsiveContainer>
+          <BarChart data={this.state.$$data}
+                margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+             <CartesianGrid stroke = { Theme.grid(this.props.theme) } />
+             <XAxis
+               dataKey = "timestamp"
+               tickFormatter={this.formatXAxis}
+               interval = 'preserveStartEnd'
+               minTickGap = {gap}
+               domain = {['auto', 'auto']}
+               stroke = { Theme.text(this.props.theme) }
+               tick = { { fontSize: 12 } }
+              />
+             <YAxis
+               tickFormatter={this.formatYAxis}
+               interval = 'preserveStartEnd'
+               stroke = { Theme.text(this.props.theme) }
+               tick = { { fontSize: 12 } }
+             />
+             <Tooltip
+               labelFormatter = { Time.simple_format }
+               labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
+             />
+             <Legend />
+             {
+               this.state.aggregators.map((a, index) => (
+                 <Bar key={ index } dataKey={ a } fill={ Colors.get(index) }/>
+               ))
+             }
+          </BarChart>
+        </ResponsiveContainer>
+      )
+    }
   }
 }

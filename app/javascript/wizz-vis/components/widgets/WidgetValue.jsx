@@ -24,10 +24,13 @@ export default class WidgetValue extends React.Component {
   }
 
   fetchData() {
+    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
+    button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
         .then(data => this.setState({ $$data: data }))
+        .then(data => button.removeClass('active'))
     )
   }
 
@@ -101,33 +104,37 @@ export default class WidgetValue extends React.Component {
   }
 
   render () {
-    let element = null;
-
-    if(this.showGauge()) {
-      element = <ReactEcharts
-        option={ this.gaugeOptions() }
-        style={
-          { position: 'absolute',
-            width: '100%', height: '100%',
-            top: 10, left: 0 }
-        }
-        className='gauge' />;
+    if(this.state.$$data.length == 0) {
+      return(<h5>No data points.</h5>)
     } else {
-      element = <div className='value'>
-        { this.getValue() }
-      </div>;
-    }
+      let element = null;
 
-    return (
-      <div className='widget-value'>
-        <div className='card horizontal'>
-          <div className='card-stacked'>
-            <div className='card-content center-align valign-wrapper'>
-              {element}
+      if(this.showGauge()) {
+        element = <ReactEcharts
+          option={ this.gaugeOptions() }
+          style={
+            { position: 'absolute',
+              width: '100%', height: '100%',
+              top: 10, left: 0 }
+          }
+          className='gauge' />;
+      } else {
+        element = <div className='value'>
+          { this.getValue() }
+        </div>;
+      }
+
+      return (
+        <div className='widget-value'>
+          <div className='card horizontal'>
+            <div className='card-stacked'>
+              <div className='card-content center-align valign-wrapper'>
+                {element}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
 }
