@@ -1,24 +1,4 @@
+[![CircleCI](https://circleci.com/gh/wizzie-io/wizz-vis.svg?style=svg&circle-token=0bca72bea8dc031266ba56b4b17442df01f86224)](https://circleci.com/gh/wizzie-io/wizz-vis)
+
 # wizz-vis
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Analytics platform for time series metrics using Druid. Create dashboards and share with other users.
