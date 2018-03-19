@@ -1,0 +1,73 @@
+version: 2
+jobs:
+  build:
+    parallelism: 1
+    docker:
+      - image: ruby:2.5.0-slim
+        environment:
+          BUNDLE_PATH: vendor/bundle
+          DB_HOST: 127.0.0.1
+          DB_USER: test_user
+          DB_PASSWORD: test_password
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/wizz_in_test?encoding=utf8
+          RAILS_ENV: test
+      - image: circleci/postgres:9
+        environment:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+
+    steps:
+      - checkout
+
+      - run:
+          name: Dependencies Install
+          command: |
+              apt-get update; \
+              apt-get install -y --no-install-recommends build-essential \
+                curl gnupg2 ruby-dev libpq-dev nodejs yarn wget
+
+      - run:
+          name: install dockerize
+          command: |
+            wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
+            tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
+            rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.6.0
+
+      - run:
+          name: Update bundler gem
+          command: gem install bundler
+
+      # Restore bundle cache
+      - restore_cache:
+          keys:
+            - wizz-in-bundle-{{ checksum "Gemfile.lock" }}
+            - wizz-in-bundle-
+
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
+
+      # Store bundle cache
+      - save_cache:
+          key: wizz-in-bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Database setup
+          command: bin/rails db:setup --trace
+
+      # Run rspec in parallel
+      - run:
+          name: RSpec
+          command: |
+            bundle exec rspec
+
+      - store_artifacts:
+          path: coverage/

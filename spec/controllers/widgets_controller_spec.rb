@@ -53,14 +53,14 @@ RSpec.describe WidgetsController, type: :controller do
     it "returns a success response" do
       widget = Widget.create! valid_attributes
       get :show, params: {id: widget.to_param}, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
   describe "GET #new" do
     it "returns a success response" do
       get :new, params: {}, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

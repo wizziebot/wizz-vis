@@ -53,14 +53,14 @@ RSpec.describe DashboardsController, type: :controller do
     it "returns a success response" do
       dashboard = Dashboard.create! valid_attributes
       get :show, params: {id: dashboard.to_param}, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
   describe "GET #new" do
     it "returns a success response" do
       get :new, params: {}, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
