@@ -1398,7 +1398,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@2.2.5, classnames@2.x, classnames@^2.2.5:
+classnames@2.2.5, classnames@2.x, classnames@^2.1.2, classnames@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
@@ -3057,6 +3057,10 @@ hawk@~6.0.2:
     cryptiles "3.x.x"
     hoek "4.x.x"
     sntp "2.x.x"
+
+"heatmapjs@git+https://github.com/JonathanWi/heatmap.js.git":
+  version "2.0.2"
+  resolved "git+https://github.com/JonathanWi/heatmap.js.git#df4cae147874a2b85700a78fb3a5caa27ddb3414"
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
@@ -5988,6 +5992,13 @@ react-grid-layout@^0.16.3:
     prop-types "15.x"
     react-draggable "3.x"
     react-resizable "1.x"
+
+react-heatmap@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-heatmap/-/react-heatmap-1.0.6.tgz#25f93e553c1b68babbbfab113e88cb9ad17a1a93"
+  dependencies:
+    classnames "^2.1.2"
+    heatmapjs "git+https://github.com/JonathanWi/heatmap.js.git"
 
 react-leaflet-heatmap-layer@^1.0.3:
   version "1.0.3"

@@ -17,6 +17,7 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-grid-layout": "^0.16.3",
+    "react-heatmap": "^1.0.6",
     "react-leaflet": "^1.8.2",
     "react-leaflet-heatmap-layer": "^1.0.3",
     "react-on-rails": "^10.1.1",

@@ -10,6 +10,7 @@ import WidgetValue from './widgets/WidgetValue';
 import WidgetLocation from './widgets/WidgetLocation';
 import WidgetHeatmap from './widgets/WidgetHeatmap';
 import WidgetTable from './widgets/WidgetTable';
+import WidgetPlane from './widgets/WidgetPlane';
 
 
 export default class WidgetBase extends React.Component {
@@ -27,7 +28,8 @@ export default class WidgetBase extends React.Component {
     WidgetValue: WidgetValue,
     WidgetLocation: WidgetLocation,
     WidgetHeatmap: WidgetHeatmap,
-    WidgetTable: WidgetTable
+    WidgetTable: WidgetTable,
+    WidgetPlane
   };
 
   render () {

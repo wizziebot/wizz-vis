@@ -1,0 +1,2 @@
+class WidgetPlane < Widget
+end
