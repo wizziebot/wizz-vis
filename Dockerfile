@@ -24,8 +24,6 @@ COPY Gemfile Gemfile.lock ./
 RUN gem install bundler
 RUN bundle install --jobs $(nproc) --retry 2
 
-COPY package.json yarn.lock ./
+COPY . .
 
-RUN yarn install
-
-ENTRYPOINT $INSTALL_PATH/scripts/docker-entrypoint.sh
+ENTRYPOINT $INSTALL_PATH/scripts/docker-entrypoint-puma-prod.sh

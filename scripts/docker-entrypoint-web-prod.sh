@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
-echo -e "\nPrecompiling assets"
+echo -e "\nInstalling packages"
+yarn install
+
+echo -e "\nCompiling assets"
 env RAILS_ENV=$RAILS_ENV bundle exec rake assets:precompile
 
 echo -e "\nCreating database"
@@ -13,5 +16,5 @@ env RAILS_ENV=$RAILS_ENV bundle exec rake db:migrate
 echo -e "\nCreating seed data"
 env RAILS_ENV=$RAILS_ENV bundle exec rake db:seed
 
-echo -e "\nRunning server"
-exec "$@"
+echo -e "\nRunning command"
+bundle exec puma -C config/puma.rb

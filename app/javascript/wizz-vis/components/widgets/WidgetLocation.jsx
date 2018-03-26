@@ -16,7 +16,8 @@ export default class WidgetLocation extends React.Component {
   }
 
   componentDidUpdate(){
-    this.refs.map.leafletElement.invalidateSize();
+    if(this.refs.map !== undefined)
+      this.refs.map.leafletElement.invalidateSize();
   }
 
   componentDidMount() {
@@ -46,13 +47,13 @@ export default class WidgetLocation extends React.Component {
         )))
         .then(data => this.setState({ $$data: data }))
         .then(data => button.removeClass('active'))
-    )
+    );
   }
 
   setAggregator() {
     this.setState({
       aggregator: this.props.aggregators[0].name
-    })
+    });
   }
 
   setDimensions() {

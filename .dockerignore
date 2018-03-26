@@ -2,6 +2,9 @@
 .dockerignore
 .byebug_history
 /log/*
-/tmp/cache/*
-/tmp/pids/*
-/tmp/sockets/*
+/tmp/*
+node_modules
+docker-compose.yml
+.circleci
+public/assets/*
+public/packs/*
