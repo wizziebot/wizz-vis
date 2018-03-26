@@ -36,7 +36,12 @@ export default class WidgetTable extends React.Component {
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
-        .then(data => this.setState({ $$data: data }))
+        .then(data => this.setState({
+          $$data: data.map((d) => {
+            if(d[this.state.dimension.name] == null) d[this.state.dimension.name] = 'N/A'
+            return d
+          })
+        }))
         .then(data => button.removeClass('active'))
     );
   }

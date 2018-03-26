@@ -59,8 +59,11 @@ export default class WidgetPie extends React.Component {
   }
 
   customTooltip(value) {
-    let percentage = value / this.state.sum_total;
-    return (<span>{`${Format.fixed(value)} (${(percentage * 100).toFixed(0)}%)`}</span>)
+    let payload = value.payload[0]
+    if(payload != undefined) {
+      let percentage = payload.value / this.state.sum_total;
+      return (<span>{`${payload.name || 'N/A'}: ${Format.fixed(payload.value)} (${(percentage * 100).toFixed(0)}%)`}</span>)
+    }
   }
 
   render () {
@@ -81,12 +84,18 @@ export default class WidgetPie extends React.Component {
                     key={index}
                     fill={Colors.get(index)}
                     stroke={Theme.grid(this.props.theme)}
+                    name={element[this.state.dimension] || 'N/A'}
                   />
                 ))
               }
             </Pie>
             <Legend />
-            <Tooltip formatter = { this.customTooltip.bind(this) }/>
+            <Tooltip content={ this.customTooltip.bind(this) }
+              wrapperStyle={{
+                margin: '0px',
+                padding: '10px',
+                background: '#fff',
+                border: '1px solid #ccc' }} />
           </PieChart>
         </ResponsiveContainer>
       )

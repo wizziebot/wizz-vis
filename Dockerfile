@@ -4,7 +4,7 @@ MAINTAINER Jose Antonio Parra <japarra@wizzie.io>
 # JS Runtime and pg dependencies
 RUN apt-get -qy update && \
     apt-get -y install --no-install-recommends build-essential \
-      curl gnupg2 ruby-dev libpq-dev && \
+      git curl gnupg2 ruby-dev libpq-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
