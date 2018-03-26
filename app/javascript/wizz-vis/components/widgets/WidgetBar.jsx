@@ -91,6 +91,7 @@ export default class WidgetBar extends React.Component {
                tick = { { fontSize: 12 } }
              />
              <Tooltip
+               formatter = { Format.fixed }
                labelFormatter = { Time.simple_format }
                labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
              />

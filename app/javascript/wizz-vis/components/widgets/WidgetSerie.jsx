@@ -91,6 +91,7 @@ export default class WidgetSerie extends React.Component {
              />
              <CartesianGrid stroke = { Theme.grid(this.props.theme) } />
              <Tooltip
+               formatter = { Format.fixed }
                labelFormatter = { Time.simple_format }
                labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
              />
