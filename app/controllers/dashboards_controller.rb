@@ -54,6 +54,7 @@ class DashboardsController < ApplicationController
 
   # PUT /dashboard/1/layout.json
   def update_layout
+    return head :not_modified if @dashboard.locked?
     layout_positions = params[:layout]
 
     layout_positions.each do |w|
@@ -82,6 +83,6 @@ class DashboardsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def dashboard_params
-      params.require(:dashboard).permit(:name, :theme, :interval)
+      params.require(:dashboard).permit(:name, :theme, :interval, :locked)
     end
 end

@@ -12,4 +12,10 @@ SimpleForm.setup do |config|
   config.button_class = 'btn waves-effect waves-light input-field'
   # Wrappers for forms and inputs using the Materialize toolkit.
   config.default_wrapper = :materialize
+  config.wrappers :checkbox, tag: 'div', error_class: 'has-error' do |b|
+    b.use :input
+    b.use :label
+    b.use :error, wrap_with: { tag: 'span', class: 'help-block' }
+    b.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
+  end
 end

@@ -62,7 +62,9 @@ export default class Dashboard extends React.Component {
 
   isDraggable() {
     const node = ReactDOM.findDOMNode(this);
-    return node.offsetWidth >= BREAKPOINTS.sm && !Modernizr.touchevents
+    return node.offsetWidth >= BREAKPOINTS.sm &&
+      !Modernizr.touchevents &&
+      !this.props.locked
   }
 
   fireReload () {

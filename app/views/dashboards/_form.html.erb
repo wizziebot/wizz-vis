@@ -29,6 +29,11 @@
               <%= f.input :interval, label: 'Reload interval', collection: reload_intervals, include_blank: 'No reload' %>
             </div>
           </div>
+          <div class='row'>
+            <div class='col s12'>
+              <%= f.input :locked, wrapper: :checkbox %>
+            </div>
+          </div>
         </div>
         <div class='card-action'>
           <div class='row'>
