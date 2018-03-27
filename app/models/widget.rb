@@ -10,6 +10,7 @@ class Widget < ApplicationRecord
   belongs_to :datasource
   has_and_belongs_to_many :dimensions
   has_and_belongs_to_many :aggregators
+  has_many :filters, dependent: :destroy
 
   # ==========================================================
   # Validations
