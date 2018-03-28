@@ -1,7 +1,9 @@
+/*jshint esversion: 6 */
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DataTables from 'material-ui-datatables';
 import Theme from './../../utils/theme';
+import Format from './../../utils/format';
 
 const HEADER_HEIGHT = 80;
 
@@ -36,11 +38,11 @@ export default class WidgetTable extends React.Component {
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => response.json())
+        .then(data => data.map((d) =>
+          Format.formatColumns(d)
+        ))
         .then(data => this.setState({
-          $$data: data.map((d) => {
-            if(d[this.state.dimension.name] == null) d[this.state.dimension.name] = 'N/A'
-            return d
-          })
+          $$data: data
         }))
         .then(data => button.removeClass('active'))
     );
@@ -49,13 +51,13 @@ export default class WidgetTable extends React.Component {
   setAggregators() {
     this.setState({
       aggregators: this.props.aggregators
-    })
+    });
   }
 
   setDimension() {
     this.setState({
       dimension: this.props.dimensions[0]
-    })
+    });
   }
 
   setHeader() {
@@ -67,9 +69,9 @@ export default class WidgetTable extends React.Component {
                   style: {
                     height: HEADER_HEIGHT
                   }
-                })
+                });
               })
-    })
+    });
   }
 
   render () {
