@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2018_03_26_121206) do
     t.datetime "updated_at", null: false
     t.string "theme"
     t.integer "interval"
-    t.boolean "locked"
+    t.boolean "locked", default: false
   end
 
   create_table "datasources", force: :cascade do |t|
