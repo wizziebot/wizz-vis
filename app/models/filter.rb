@@ -8,5 +8,7 @@ class Filter < ApplicationRecord
   # ==========================================================
   # Validations
   # ==========================================================
-  validates :operator, :value, presence: true
+  validates :operator, presence: true
+  validates :operator,
+            inclusion: { in: %w[eq neq > <= < <= in nin in_rec in_circ regex] }
 end

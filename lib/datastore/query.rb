@@ -4,7 +4,7 @@ module Datastore
   class Query
     DRUID_TIMEOUT = ENV['DRUID_TIMEOUT']&.to_i || 60_000
 
-    def initialize(datasource:, properties:, dimensions:, aggregators:)
+    def initialize(datasource:, properties:, dimensions:, aggregators:, filters:)
       properties = ActiveSupport::HashWithIndifferentAccess.new(properties)
 
       @datasource = Druid::DataSource.new(datasource, ENV['DRUID_URL'])
@@ -14,6 +14,7 @@ module Datastore
       @limit = properties[:limit] || 5
       @dimensions = dimensions || []
       @aggregators = aggregators || []
+      @filters = filters || []
 
       build
     end
@@ -28,6 +29,11 @@ module Datastore
       else
         convert_timeserie_data(result)
       end
+    end
+
+    def as_json
+      query_json = @query.as_json['query']
+      query_json.merge('dataSource' => @datasource.name)
     end
 
     def timeserie?
@@ -54,6 +60,7 @@ module Datastore
       @query.granularity(@granularity)
 
       set_aggregators
+      set_filters
 
       if multiseries?
         # TODO
@@ -70,6 +77,32 @@ module Datastore
     def set_aggregators
       @aggregators.group_by(&:aggregator_type).each do |type, aggregators|
         @query.send(type.underscore, aggregators.map(&:name))
+      end
+    end
+
+    def set_filters
+      @filters.group_by { |f| { dimension_id: f.dimension_id, operator: f.operator } }
+              .each do |values, filters|
+        dimension = Dimension.find_by(id: values[:dimension_id])
+        next unless dimension
+
+        query_dim = Druid::DimensionFilter.new(dimension: dimension.name)
+        operator = values[:operator]
+
+        case operator
+        when 'eq'
+          @query.filter { query_dim.in(filters.map(&:value)) }
+        when 'neq'
+          @query.filter { query_dim.nin(filters.map(&:value)) }
+        when 'regex'
+          @query.filter do
+            query_dim.in(filters.map(&:value).map { |v| Regexp.new(v) })
+          end
+        else
+          filters.each do |filter|
+            @query.filter { query_dim.send(operator, filter.value) }
+          end
+        end
       end
     end
 

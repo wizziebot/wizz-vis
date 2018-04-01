@@ -22,7 +22,8 @@ class Widget < ApplicationRecord
       datasource: datasource.name,
       properties: attributes.merge(interval: interval),
       dimensions: dimensions,
-      aggregators: aggregators
+      aggregators: aggregators,
+      filters: filters
     )
 
     query.run
