@@ -19,7 +19,9 @@ export default class WidgetPlane extends React.Component {
     };
   }
 
-  componentDidMount() {
+  // We have to wait until the image is loaded to retrieve the real width
+  // and real height of the image.
+  handleImageLoaded() {
     this.getImgSize();
     this.setDimensionAggregator();
     this.fetchData();
@@ -83,25 +85,23 @@ export default class WidgetPlane extends React.Component {
   }
 
   getImgSize() {
-    var newImg = new Image();
-    var self = this;
+    let image = this.refs.image;
 
-    newImg.onload = function() {
-      self.setState({
-        img_width: newImg.width,
-        img_height: newImg.height
-      });
-    };
-
-    newImg.src = this.props.options.image;
+    this.setState({
+      img_width: image.naturalWidth,
+      img_height: image.naturalHeight
+    });
   }
 
   render () {
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-        <img style={{ position: 'absolute', top: 0, left: 0,
-                      width: '100%', height: '100%' }}
-          src = { this.getImageURL() }
+        <img
+          ref='image'
+          style={{ position: 'absolute', top: 0, left: 0,
+                   width: '100%', height: '100%' }}
+          src={ this.getImageURL() }
+          onLoad={this.handleImageLoaded.bind(this)}
         />
       <ReactHeatmap
         data={this.state.$$data}
