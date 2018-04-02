@@ -5,10 +5,15 @@ export default class WidgetDrilldown extends React.Component {
     super(props);
   }
 
+  componentDidMount() {
+    if(this.refs.dropdown !== undefined)
+      $(this.refs.dropdown).dropdown();
+  }
+
   render () {
     return (
       <div className="drilldown left">
-        <a className="dropdown-button" href="#" data-activates={"links_" + this.props.widget_id} data-constrainwidth="false">
+        <a ref='dropdown' className="dropdown-button" href="#" data-activates={"links_" + this.props.widget_id} data-constrainwidth="false">
           <i className="material-icons">launch</i>
         </a>
         <ul id={"links_" + this.props.widget_id} className="dropdown-content">
