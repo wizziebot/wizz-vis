@@ -41,6 +41,7 @@ export default class WidgetBase extends React.Component {
           widget_id={this.props.id}
           title={this.props.title}
           links={this.props.options.links}
+          locked={this.props.locked}
         />
         <div className="widget-content">
           <Type {...this.props}/>

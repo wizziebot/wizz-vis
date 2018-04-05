@@ -78,6 +78,7 @@ export default class Dashboard extends React.Component {
     const widgets = this.state.$$widgets.map((w, index) => {
                       return <div key={ w.id }>
                               <WidgetBase {...w}
+                                locked={this.props.locked}
                                 theme={this.props.theme}
                                 height={ layout.lg[index].h * ROWHEIGHT }
                                 reloadTimestamp={this.state.reloadTimestamp} />

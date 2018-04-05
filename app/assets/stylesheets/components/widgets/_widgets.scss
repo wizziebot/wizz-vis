@@ -45,6 +45,10 @@
     line-height: 30px;
     font-weight: 600;
     cursor: pointer;
+
+    &.locked {
+      cursor: default;
+    }
   }
 
   .widget-content {
