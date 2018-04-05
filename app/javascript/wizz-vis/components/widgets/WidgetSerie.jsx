@@ -46,7 +46,7 @@ export default class WidgetSerie extends React.Component {
   setAggregators() {
     this.setState({
       aggregators: this.props.aggregators.map((a) => (a.name))
-    })
+    });
   }
 
   formatXAxis(time) {
@@ -54,7 +54,7 @@ export default class WidgetSerie extends React.Component {
   }
 
   minTickGap() {
-    if(this.state.$$data.length == 0) return 0;
+    if(this.state.$$data.length < 2) return 0;
 
     let time_1 = this.state.$$data[0].timestamp,
         time_2 = this.state.$$data[1].timestamp;
