@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 import React, { Component } from 'react';
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import { Map, Marker, Popup, TileLayer, AttributionControl } from 'react-leaflet';
 import Theme from './../../utils/theme';
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
@@ -89,7 +89,12 @@ export default class WidgetLocation extends React.Component {
         <Map
           bounds={ bounds.length > 0 ? bounds : [[0,0]] }
           scrollWheelZoom={false}
-          ref='map'>
+          attributionControl={false}
+          ref='map'
+        >
+          <AttributionControl
+            position="bottomleft"
+          />
           <TileLayer
             url={Theme.map(this.props.theme).url}
             attribution={Theme.map(this.props.theme).attribution}

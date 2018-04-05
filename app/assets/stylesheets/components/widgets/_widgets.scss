@@ -30,6 +30,10 @@
   }
 }
 
+.react-resizable-handle {
+  z-index: 999;
+}
+
 .widget {
   display: flex;
   flex-direction: column;

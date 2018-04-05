@@ -1,5 +1,6 @@
+/*jshint esversion: 6 */
 import React, { Component } from 'react';
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import { Map, Marker, Popup, TileLayer, AttributionControl } from 'react-leaflet';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import Theme from './../../utils/theme';
 
@@ -43,7 +44,7 @@ export default class WidgetHeatmap extends React.Component {
         )))
         .then(data => this.setState({ $$data: data }))
         .then(data => button.removeClass('active'))
-    )
+    );
   }
 
   setCoordinateDimension() {
@@ -60,7 +61,7 @@ export default class WidgetHeatmap extends React.Component {
   setAggregator() {
     this.setState({
       aggregator: this.props.aggregators[0].name
-    })
+    });
   }
 
   render () {
@@ -72,7 +73,9 @@ export default class WidgetHeatmap extends React.Component {
           <Map
             center={[0,0]}
             zoom={13}
-            scrollWheelZoom={false}>
+            scrollWheelZoom={false}
+            attributionControl={false}
+          >
             <HeatmapLayer
               fitBoundsOnLoad
               fitBoundsOnUpdate
@@ -80,6 +83,9 @@ export default class WidgetHeatmap extends React.Component {
               longitudeExtractor={m => m.position[1]}
               latitudeExtractor={m => m.position[0]}
               intensityExtractor={m => m.aggregator} />
+            <AttributionControl
+              position="bottomleft"
+            />
             <TileLayer
               url={Theme.map(this.props.theme).url}
               attribution={Theme.map(this.props.theme).attribution}
