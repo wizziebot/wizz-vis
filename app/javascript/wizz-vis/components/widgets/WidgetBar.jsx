@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 import React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
          Tooltip, Legend } from 'recharts';
@@ -91,7 +93,7 @@ export default class WidgetBar extends React.Component {
                tick = { { fontSize: 12 } }
              />
              <Tooltip
-               formatter = { Format.fixed }
+               formatter = { Format.fixed.bind(Format) }
                labelFormatter = { Time.simple_format }
                labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
              />

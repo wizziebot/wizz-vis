@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 import React from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis,
          CartesianGrid, Tooltip, Legend } from 'recharts';
@@ -91,7 +93,7 @@ export default class WidgetArea extends React.Component {
             />
             <CartesianGrid stroke = { Theme.grid(this.props.theme) } />
             <Tooltip
-              formatter = { Format.fixed }
+              formatter = { Format.fixed.bind(Format) }
               labelFormatter = { Time.simple_format }
               labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
             />

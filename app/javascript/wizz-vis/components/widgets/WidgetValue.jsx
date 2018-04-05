@@ -1,5 +1,8 @@
+/* jshint esversion: 6 */
+
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
+import Format from './../../utils/format';
 
 export default class WidgetValue extends React.Component {
   constructor(props) {
@@ -31,13 +34,13 @@ export default class WidgetValue extends React.Component {
         .then(response => response.json())
         .then(data => this.setState({ $$data: data }))
         .then(data => button.removeClass('active'))
-    )
+    );
   }
 
   setAggregator() {
     this.setState({
       aggregator: this.props.aggregators[0].name
-    })
+    });
   }
 
   getValue() {
@@ -55,7 +58,7 @@ export default class WidgetValue extends React.Component {
     let max = this.props.options.gauge.max;
 
     if(thresholds === undefined){
-      thresholds = [[0.33, "#3DCC91"], [0.66, "#FFB366"], [1, "#FF7373"]];
+      thresholds = [[1/3, "#3DCC91"], [2/3, "#FFB366"], [1, "#FF7373"]];
     }
 
     if(min === undefined){
@@ -93,14 +96,17 @@ export default class WidgetValue extends React.Component {
           },
           detail: {
             fontWeight: 700,
-            fontFamily: "Roboto"
+            fontFamily: "Roboto",
+            formatter: function (value) {
+                return Format.prefix(value, 2);
+            }
           },
           data:[
             {value: this.getValue()}
           ]
         }
       ]
-    }
+    };
   }
 
   render () {
@@ -120,7 +126,7 @@ export default class WidgetValue extends React.Component {
           className='gauge' />;
       } else {
         element = <div className='value'>
-          { this.getValue() }
+          { Format.prefix(this.getValue(), 2) }
         </div>;
       }
 
