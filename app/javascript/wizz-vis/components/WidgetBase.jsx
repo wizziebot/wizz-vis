@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 import React from 'react';
 import { ResponsiveContainer } from 'recharts';
 
@@ -11,6 +13,7 @@ import WidgetLocation from './widgets/WidgetLocation';
 import WidgetHeatmap from './widgets/WidgetHeatmap';
 import WidgetTable from './widgets/WidgetTable';
 import WidgetPlane from './widgets/WidgetPlane';
+import WidgetSankey from './widgets/WidgetSankey';
 
 
 export default class WidgetBase extends React.Component {
@@ -18,18 +21,17 @@ export default class WidgetBase extends React.Component {
     super(props);
   }
 
-  componentDidMount() { }
-
   components = {
-    WidgetArea: WidgetArea,
-    WidgetSerie: WidgetSerie,
-    WidgetBar: WidgetBar,
-    WidgetPie: WidgetPie,
-    WidgetValue: WidgetValue,
-    WidgetLocation: WidgetLocation,
-    WidgetHeatmap: WidgetHeatmap,
-    WidgetTable: WidgetTable,
-    WidgetPlane
+    WidgetArea,
+    WidgetSerie,
+    WidgetBar,
+    WidgetPie,
+    WidgetValue,
+    WidgetLocation,
+    WidgetHeatmap,
+    WidgetTable,
+    WidgetPlane,
+    WidgetSankey
   };
 
   render () {
