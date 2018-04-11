@@ -1,5 +1,5 @@
 .nav-wrapper {
-  padding-left: 14px;
+  padding: 0 14px;
 
   &.logo {
     .brand-logo img {
@@ -15,8 +15,22 @@
     }
 
     .side-nav {
-      top: auto;
       box-shadow: none;
+      top: auto;
+    }
+  }
+
+  .nav-entries {
+    .nav-entry {
+      display: flex;
+      flex-direction: row;
+      letter-spacing: .010em;
+      padding: 0 6px;
+      margin: 0 8px;
+
+      .button-text {
+        padding-right: 4px;
+      }
     }
   }
 }

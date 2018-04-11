@@ -28,6 +28,40 @@
   margin-bottom: $margin_large;
 }
 
+// Margin right
+.margin-rs {
+  margin-right: $margin_small;
+}
+
+.margin-rm {
+  margin-right: $margin_medium;
+}
+
+.margin-rl {
+  margin-right: $margin_large;
+}
+
+.margin-rxl {
+  margin-right: $margin_xlarge;
+}
+
+// Margin left
+.margin-ls {
+  margin-left: $margin_small;
+}
+
+.margin-lm {
+  margin-left: $margin_medium;
+}
+
+.margin-ll {
+  margin-left: $margin_large;
+}
+
+.margin-lxl {
+  margin-left: $margin_xlarge;
+}
+
 // Full margin
 .margin-s {
   margin: $margin_small 0;

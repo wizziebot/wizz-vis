@@ -6,6 +6,9 @@
   </div>
   <div class="nav-wrapper menu primary-color">
     <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    <div class="nav-entries right">
+      <%= yield :nav_entries %>
+    </div>
     <%= breadcrumbs separator: " &rsaquo; " %>
     <ul id="nav-mobile" class="side-nav margin-ts">
       <li><%= link_to 'Dashboards', dashboards_path %></li>

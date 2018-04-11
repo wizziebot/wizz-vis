@@ -1,5 +1,5 @@
 <% if @dashboard.persisted? %>
-  <% breadcrumb :dashboard, @dashboard %>
+  <% breadcrumb :edit_dashboard, @dashboard %>
 <% else %>
   <% breadcrumb :new_dashboard, @dashboard %>
 <% end %>
@@ -38,6 +38,7 @@
         <div class='card-action'>
           <div class='row'>
             <%= f.button :submit, class: 'right primary-color' %>
+            <%= link_to 'Cancel', url_for(:back), class: 'input-field btn right' %>
           </div>
         </div>
       <% end %>

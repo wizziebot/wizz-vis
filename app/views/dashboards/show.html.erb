@@ -1,3 +1,9 @@
 <% breadcrumb :dashboard, @dashboard %>
+<%= content_for :nav_entries do %>
+ <%= link_to edit_dashboard_path(@dashboard), class: 'nav-entry' do %>
+  <%= mi.edit %>
+  <div class="margin-ls button-text">EDIT</div>
+ <% end %>
+<% end %>
 
 <%= react_component("Dashboard", props: @dashboard.to_json, prerender: false) %>

@@ -17,6 +17,12 @@ crumb :new_dashboard do |dashboard|
   parent :dashboards
 end
 
+crumb :edit_dashboard do |dashboard|
+  link dashboard.name, dashboard
+  link "Edit", dashboard
+  parent :dashboards
+end
+
 # crumb :projects do
 #   link "Projects", projects_path
 # end
