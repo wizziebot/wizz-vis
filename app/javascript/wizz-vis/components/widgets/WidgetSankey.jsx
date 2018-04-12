@@ -4,6 +4,7 @@ import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 import Colors from './../../utils/colors';
+import Format from './../../utils/format';
 
 export default class WidgetSankey extends React.Component {
   constructor(props) {
@@ -104,7 +105,15 @@ export default class WidgetSankey extends React.Component {
   sankeyOptions() {
     return {
       color: Colors.all(),
-      tooltip: {},
+      tooltip: {
+        formatter: function(params) {
+          if (params.dataType == 'edge') {
+            return `${params.data.source} -- ${params.data.target} : ${Format.prefix(params.data.value, 2)}`;
+          } else {
+            return params.marker + " " + params.name;
+          }
+        }
+      },
       series: [
         {
           type: 'sankey',
