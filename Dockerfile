@@ -24,9 +24,11 @@ COPY Gemfile Gemfile.lock ./
 RUN gem install bundler
 RUN bundle install --jobs $(nproc) --retry 2
 
-COPY . .
+COPY package.json yarn.lock ./
 
 RUN yarn install
+
+COPY . .
 
 RUN env RAILS_ENV=production \
   SECRET_KEY_BASE=fake_secret_key_base \

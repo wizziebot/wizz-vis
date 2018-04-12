@@ -1,4 +1,11 @@
 version: 2
+
+gcloud-configuration: &gcloud-configuration
+  docker:
+    - image: google/cloud-sdk:latest
+  environment:
+    - APP_NAME: 'wizz-vis'
+
 jobs:
   test:
     docker:
@@ -14,6 +21,7 @@ jobs:
         environment:
           POSTGRES_USER: test_user
           POSTGRES_PASSWORD: test_password
+    working_directory: /wizz-vis
     steps:
       - checkout
       - run:
@@ -36,14 +44,14 @@ jobs:
       # Restore bundle cache
       - restore_cache:
           keys:
-            - wizz-in-bundle-{{ checksum "Gemfile.lock" }}
-            - wizz-in-bundle-
+            - wizz-vis-bundle-{{ checksum "Gemfile.lock" }}
+            - wizz-vis-bundle-
       - run:
           name: Bundle Install
           command: bundle check || bundle install
       # Store bundle cache
       - save_cache:
-          key: wizz-in-bundle-{{ checksum "Gemfile.lock" }}
+          key: wizz-vis-bundle-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
       - run:
@@ -62,37 +70,51 @@ jobs:
 
   build:
     docker:
-      - image: google/cloud-sdk:latest
+      - image: circleci/buildpack-deps:yakkety-curl
     environment:
       - APP_NAME: 'wizz-vis'
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - restore_cache:
+          key: wizz-vis-docker-cache-
       - run:
           name: Build application Docker image
           command: |
+            if [ -f caches/${APP_NAME}.tar ]; then
+              docker load --input caches/${APP_NAME}.tar
+              docker images
+            fi
             docker build -t ${APP_NAME} .
             mkdir -p caches
-            docker save -o caches/${APP_NAME}.tar ${APP_NAME}
+
+            docker_images=$(docker images --filter 'dangling=false' \
+              --format '{{.Repository}}:{{.Tag}}')
+            docker_histories=$(for i in ${docker_images}; \
+              do docker history -q $i | grep -v missing; \
+            done)
+            docker save -o caches/${APP_NAME}.tar ${docker_images} ${docker_histories}
+      - save_cache:
+          key: wizz-vis-docker-cache-{{ checksum "caches/wizz-vis.tar" }}
+          paths:
+            - caches/wizz-vis.tar
       - persist_to_workspace:
           root: caches
           paths:
             - wizz-vis.tar
 
   deploy:
-    docker:
-      - image: google/cloud-sdk:latest
-    environment:
-      - APP_NAME: 'wizz-vis'
+    <<: *gcloud-configuration
     steps:
       - attach_workspace:
-          at: /wizz-vis/caches
+          at: caches
       - setup_remote_docker
       - run:
           name: Tag master and deploy
           command: |
             set +o pipefail
-            docker load -i /${APP_NAME}/caches/${APP_NAME}.tar | true
+            docker load -i caches/${APP_NAME}.tar | true
             echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
             gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             gcloud config set project $GCLOUD_PROJECT
@@ -100,19 +122,16 @@ jobs:
             gcloud docker -- push gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:latest
 
   tagged-deploy:
-    docker:
-      - image: google/cloud-sdk:latest
-    environment:
-      - APP_NAME: 'wizz-vis'
+    <<: *gcloud-configuration
     steps:
       - attach_workspace:
-          at: /wizz-vis/caches
+          at: caches
       - setup_remote_docker
       - run:
           name: Tag with stable and git tag and deploy both
           command: |
             set +o pipefail
-            docker load -i /${APP_NAME}/caches/${APP_NAME}.tar | true
+            docker load -i caches/${APP_NAME}.tar | true
             echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
             gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             gcloud config set project $GCLOUD_PROJECT
