@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 const THEMES = {
   light: {
     text: '#555',
@@ -35,7 +37,7 @@ const THEMES = {
       border_color: '#444343'
     }
   }
-}
+};
 
 export default {
   text(theme) {
@@ -57,4 +59,4 @@ export default {
   tooltip(theme) {
     return THEMES[theme].tooltip;
   }
-}
+};

@@ -2,9 +2,9 @@
 
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
-import _ from 'lodash';
 import Colors from './../../utils/colors';
 import Format from './../../utils/format';
+import Theme from './../../utils/theme';
 
 export default class WidgetSankey extends React.Component {
   constructor(props) {
@@ -43,9 +43,12 @@ export default class WidgetSankey extends React.Component {
   }
 
   setDimensions() {
+    const dimensions = this.props.dimensions.map((d) => d.name);
+    const ordered_dimensions = this.props.options.ordered_dimensions || dimensions;
+
     this.setState({
-      dimensions: this.props.dimensions.map((d) => d.name)
-    })
+      dimensions: ordered_dimensions
+    });
   }
 
   setAggregator() {
@@ -117,18 +120,26 @@ export default class WidgetSankey extends React.Component {
       series: [
         {
           type: 'sankey',
+          layout: 'none',
           nodes: this.getNodes(),
           links: this.getLinks(),
+          label: {
+            color: Theme.text(this.props.theme),
+            fontSize: 14
+          },
           itemStyle: {
             normal: {
               borderWidth: 1,
-              borderColor: '#aaa'
+              borderColor: Theme.grid(this.props.theme)
             }
           },
           lineStyle: {
             normal: {
-              color: 'source',
+              color: '#bbb',
               opacity: 0.5
+            },
+            emphasis: {
+              color: '#a6a6a6'
             }
           }
         }
