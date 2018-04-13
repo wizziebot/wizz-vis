@@ -80,29 +80,34 @@ jobs:
       - restore_cache:
           key: wizz-vis-docker-cache-
       - run:
+          name: Docker load if exists
+          command: |
+            if [ -f caches/${APP_NAME}.tgz ]; then
+              zcat caches/${APP_NAME}.tgz | docker load
+            fi
+      - run:
           name: Build application Docker image
           command: |
-            if [ -f caches/${APP_NAME}.tar ]; then
-              docker load --input caches/${APP_NAME}.tar
-              docker images
-            fi
             docker build -t ${APP_NAME} .
             mkdir -p caches
-
+      - run:
+          name: Save docker images and histories
+          command: |
             docker_images=$(docker images --filter 'dangling=false' \
               --format '{{.Repository}}:{{.Tag}}')
             docker_histories=$(for i in ${docker_images}; \
               do docker history -q $i | grep -v missing; \
             done)
-            docker save -o caches/${APP_NAME}.tar ${docker_images} ${docker_histories}
+            docker save ${docker_images} ${docker_histories} \
+              | gzip > caches/${APP_NAME}.tgz
       - save_cache:
-          key: wizz-vis-docker-cache-{{ checksum "caches/wizz-vis.tar" }}
+          key: wizz-vis-docker-cache-{{ checksum "caches/wizz-vis.tgz" }}
           paths:
-            - caches/wizz-vis.tar
+            - caches/wizz-vis.tgz
       - persist_to_workspace:
           root: caches
           paths:
-            - wizz-vis.tar
+            - wizz-vis.tgz
 
   deploy:
     <<: *gcloud-configuration
@@ -111,14 +116,22 @@ jobs:
           at: caches
       - setup_remote_docker
       - run:
-          name: Tag master and deploy
+          name: Load docker images
+          command: zcat caches/${APP_NAME}.tgz | docker load
+      - run:
+          name: Config gcloud
           command: |
             set +o pipefail
-            docker load -i caches/${APP_NAME}.tar | true
             echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
             gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             gcloud config set project $GCLOUD_PROJECT
+      - run:
+          name: Tag master
+          command: |
             docker tag ${APP_NAME}:latest gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:latest
+      - run:
+          name: Push latest image to registry
+          command: |
             gcloud docker -- push gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:latest
 
   tagged-deploy:
@@ -128,15 +141,26 @@ jobs:
           at: caches
       - setup_remote_docker
       - run:
-          name: Tag with stable and git tag and deploy both
+          name: Load docker images
+          command: zcat caches/${APP_NAME}.tgz | docker load
+      - run:
+          name: Config gcloud
           command: |
             set +o pipefail
-            docker load -i caches/${APP_NAME}.tar | true
             echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
             gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             gcloud config set project $GCLOUD_PROJECT
+      - run:
+          name: Tag stable
+          command: |
             docker tag ${APP_NAME}:latest gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:stable
+      - run:
+          name: Push stable to registry
+          command: |
             gcloud docker -- push gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:stable
+      - run:
+          name: Tag versioned image in the registry
+          command: |
             gcloud container images add-tag gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:stable gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:${CIRCLE_TAG#?}
 
 workflows:
