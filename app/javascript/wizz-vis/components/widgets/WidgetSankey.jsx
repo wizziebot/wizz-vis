@@ -109,6 +109,16 @@ export default class WidgetSankey extends React.Component {
     return {
       color: Colors.all(),
       tooltip: {
+        backgroundColor: '#fff',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        padding: 10,
+        textStyle: {
+          color: Theme.tooltip(this.props.theme).color,
+          fontWeight: 'normal',
+          fontSize: 15,
+          fontFamily: 'Roboto'
+        },
         formatter: function(params) {
           if (params.dataType == 'edge') {
             return `${params.data.source} -- ${params.data.target} : ${Format.prefix(params.data.value, 2)}`;
@@ -125,7 +135,8 @@ export default class WidgetSankey extends React.Component {
           links: this.getLinks(),
           label: {
             color: Theme.text(this.props.theme),
-            fontSize: 14
+            fontSize: 14,
+            fontFamily: 'Roboto'
           },
           itemStyle: {
             normal: {
