@@ -1,0 +1,2 @@
+class WidgetChord < Widget
+end

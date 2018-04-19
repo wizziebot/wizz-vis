@@ -13,8 +13,8 @@ import WidgetLocation from './widgets/WidgetLocation';
 import WidgetHeatmap from './widgets/WidgetHeatmap';
 import WidgetTable from './widgets/WidgetTable';
 import WidgetPlane from './widgets/WidgetPlane';
+import WidgetChord from './widgets/WidgetChord';
 import WidgetSankey from './widgets/WidgetSankey';
-
 
 export default class WidgetBase extends React.Component {
   constructor(props) {
@@ -31,6 +31,7 @@ export default class WidgetBase extends React.Component {
     WidgetHeatmap,
     WidgetTable,
     WidgetPlane,
+    WidgetChord,
     WidgetSankey
   };
 

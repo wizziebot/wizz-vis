@@ -81,12 +81,13 @@ export default class Dashboard extends React.Component {
                                 locked={this.props.locked}
                                 theme={this.props.theme}
                                 height={ layout.lg[index].h * ROWHEIGHT }
+                                width={ layout.lg[index].w * this.refs.dashboard.offsetWidth / 12 }
                                 reloadTimestamp={this.state.reloadTimestamp} />
                              </div>;
                     });
 
     return (
-    <div>
+    <div ref='dashboard'>
       { this.props.interval ?
           <Clock clockReload={ this.fireReload.bind(this) } interval={ this.props.interval }/>
           : null
