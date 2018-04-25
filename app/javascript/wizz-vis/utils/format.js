@@ -10,7 +10,7 @@ export default {
     } else if (value > 1e3) {
       return (value / 1e3).toFixed(decimals) + " K";
     } else {
-      return value;
+      return value.toFixed(decimals);
     }
   },
 

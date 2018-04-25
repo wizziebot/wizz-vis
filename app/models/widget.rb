@@ -17,10 +17,10 @@ class Widget < ApplicationRecord
   # ==========================================================
   validates :row, :col, :size_x, :size_y, presence: true
 
-  def data
+  def data(options={})
     query = Datastore::Query.new(
       datasource: datasource.name,
-      properties: attributes.merge(interval: interval),
+      properties: attributes.merge(interval: interval).merge(options),
       dimensions: dimensions,
       aggregators: aggregators,
       filters: filters
