@@ -4,6 +4,8 @@ import { Map, Marker, Popup, TileLayer, AttributionControl } from 'react-leaflet
 import Theme from './../../utils/theme';
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
+import uniqWith from 'lodash/uniqWith';
+import isEqual from 'lodash/isEqual';
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
@@ -79,15 +81,27 @@ export default class WidgetLocation extends React.Component {
     this.setState({ grouped_dimension: grouped_dimension.name });
   }
 
+  getBounds() {
+    const bounds = uniqWith(this.state.$$data.map((e) => (e.position)), isEqual);
+
+    if(bounds.length == 1) {
+      return { center: bounds[0], zoom: 18 };
+    } else if(bounds.length > 1) {
+      return { bounds: bounds };
+    } else {
+      return { center: [0, 0], zoom: 1 };
+    }
+  }
+
   render () {
     if(this.state.$$data.length == 0) {
       return(<h5>No data points.</h5>)
     } else {
-      const bounds = this.state.$$data.map((e) => (e.position));
+      const bound_params = this.getBounds();
 
       return (
         <Map
-          bounds={ bounds.length > 0 ? bounds : [[0,0]] }
+          {...bound_params}
           scrollWheelZoom={false}
           attributionControl={false}
           ref='map'
