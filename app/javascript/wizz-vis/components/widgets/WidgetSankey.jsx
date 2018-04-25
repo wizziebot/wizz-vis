@@ -6,6 +6,8 @@ import Colors from './../../utils/colors';
 import Format from './../../utils/format';
 import Theme from './../../utils/theme';
 
+import uniqBy from 'lodash/uniqBy';
+
 export default class WidgetSankey extends React.Component {
   constructor(props) {
     super(props);
@@ -60,29 +62,57 @@ export default class WidgetSankey extends React.Component {
   formatData(data) {
     const aggregator = this.state.aggregator;
     const dimensions = this.state.dimensions;
-    let nodes = new Set();
+    let nodes = [];
     let links = [];
 
     for(let row of data) {
       var value = row[aggregator];
 
+      // Objects from nodes array contains a name attribute to distinguish
+      // values from different dimensions.
+      // Node name has to be created concatenating dimension and value.
+      // Sankey from eacharts library can't contains nodes with same name.
+      // For that reason, we must create nodes with unique name attribute
+      // but with the possibility of same value attribute,
+      // used for labels and tooltips representation.
       dimensions.forEach(function(d) {
-        nodes.add(row[d]);
+        nodes.push({
+          dimension: d,
+          value: row[d],
+          name: `${d}-${row[d]}`
+        });
       });
 
       for(let i = 0; i < dimensions.length - 1; i++) {
         let linkIndex = -1;
 
+        const source = {
+          dimension: dimensions[i],
+          value: row[dimensions[i]],
+          name: `${dimensions[i]}-${row[dimensions[i]]}`
+        };
+
+        const target = {
+          dimension: dimensions[i + 1],
+          value: row[dimensions[i + 1]],
+          name: `${dimensions[i + 1]}-${row[dimensions[i + 1]]}`
+        };
+
+        // objects
         links.forEach(function (d, index) {
-          if (d.source === row[dimensions[i]] && d.target === row[dimensions[i + 1]]) {
+          if (d.source == source.name && d.target == target.name) {
             linkIndex = index;
           }
         });
 
         if (linkIndex === -1) {
           links.push({
-            source: row[dimensions[i]],
-            target: row[dimensions[i + 1]],
+            //source,
+            //target,
+            source_label: source.value,
+            target_label: target.value,
+            source: source.name,
+            target: target.name,
             value
           });
         } else {
@@ -91,8 +121,10 @@ export default class WidgetSankey extends React.Component {
       }
     }
 
+    const unique_nodes = uniqBy(nodes, 'name');
+
     return {
-      nodes: [...nodes].map((n) => ({name: n})),
+      nodes: unique_nodes,
       links
     };
   }
@@ -121,9 +153,12 @@ export default class WidgetSankey extends React.Component {
         },
         formatter: function(params) {
           if (params.dataType == 'edge') {
-            return `${params.data.source} -- ${params.data.target} : ${Format.prefix(params.data.value, 2)}`;
+            const source = params.data.source_label || 'N/A';
+            const target = params.data.target_label || 'N/A';
+            return `${source} -- ${target} : ${Format.prefix(params.data.value, 2)}`;
           } else {
-            return params.marker + " " + params.name;
+            const node = params.value || 'N/A';
+            return `${params.marker} ${params.data.dimension}: ${node}`;
           }
         }
       },
@@ -136,7 +171,10 @@ export default class WidgetSankey extends React.Component {
           label: {
             color: Theme.text(this.props.theme),
             fontSize: 14,
-            fontFamily: 'Roboto'
+            fontFamily: 'Roboto',
+            formatter: function(params){
+              return params.data.value || 'N/A';
+            }
           },
           itemStyle: {
             normal: {
