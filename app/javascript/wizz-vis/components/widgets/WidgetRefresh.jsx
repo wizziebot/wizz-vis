@@ -7,7 +7,7 @@ export default class WidgetRefresh extends React.Component {
 
   render () {
     return (
-      <div className='preloader-wrapper active right' widget_id={this.props.widget_id}>
+      <div className='preloader-wrapper active' widget_id={this.props.widget_id}>
         <div className='spinner-layer'>
           <div className='circle-clipper left'>
             <div className='circle' />

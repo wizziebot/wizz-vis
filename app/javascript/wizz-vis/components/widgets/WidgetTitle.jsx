@@ -34,7 +34,14 @@ export default class WidgetTitle extends React.Component {
             null
         }
         { this.props.title }
-        <WidgetRefresh widget_id={this.props.widget_id} />
+        <div className='options right'>
+          <WidgetRefresh widget_id={this.props.widget_id} />
+          <span
+            className='delete'
+            onClick={this.props.remove}>
+            <i className='material-icons'>delete</i>
+          </span>
+        </div>
       </div>
     )
   }

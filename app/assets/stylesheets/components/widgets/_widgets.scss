@@ -8,6 +8,10 @@
   color: #555;
   border: 1px solid #f4f5f8;
   background-color: #fbfbfb;
+
+  .material-icons {
+    color: #555;
+  }
 }
 
 .layout.dark .react-grid-item {
@@ -29,6 +33,10 @@
     border-right: 2px solid rgba(255, 255, 255, 0.4);
     border-bottom: 2px solid rgba(255, 255, 255, 0.4);
   }
+
+  .material-icons {
+    color: #d8d9da;
+  }
 }
 
 .react-resizable-handle {
@@ -49,6 +57,31 @@
 
     &.locked {
       cursor: default;
+    }
+
+    .options {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    .delete {
+      display: inline-block;
+      opacity: 0;
+      vertical-align: top;
+      margin: 2px;
+    }
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  &:hover .widget-title:not(.locked) .delete {
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
     }
   }
 

@@ -20,6 +20,10 @@ import WidgetMultiserie from './widgets/WidgetMultiserie';
 export default class WidgetBase extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      removeError: null
+    }
   }
 
   components = {
@@ -37,6 +41,28 @@ export default class WidgetBase extends React.Component {
     WidgetMultiserie
   };
 
+  /*
+   * Remove a widget (by id).
+   */
+  removeWidget () {
+    if (!window.confirm('Are you sure you wish to delete this widget?'))
+      return false;
+
+    fetch(
+      '/widgets/' + this.props.id + '.json',
+      {
+        method: 'delete',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': ReactOnRails.authenticityToken()
+        },
+        credentials: 'same-origin'
+      }
+    )
+    .then(response => this.props.remove())
+    .catch(error => this.setState({ removeError: error }));
+  }
+
   render () {
     const Type = this.components[this.props.type || 'WidgetArea'];
 
@@ -47,6 +73,7 @@ export default class WidgetBase extends React.Component {
           title={this.props.title}
           links={this.props.options.links}
           locked={this.props.locked}
+          remove={this.removeWidget.bind(this)}
         />
         <div className="widget-content">
           <Type {...this.props}/>

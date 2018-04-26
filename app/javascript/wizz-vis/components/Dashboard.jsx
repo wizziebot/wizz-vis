@@ -1,9 +1,12 @@
+/* jshint esversion: 6 */
+
 import React from 'react';
 import ReactDOM from "react-dom";
 import request from 'axios';
 import {Responsive, WidthProvider} from 'react-grid-layout';
 import WidgetBase from './WidgetBase';
 import Clock from './Clock';
+import reject from 'lodash/reject';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const BREAKPOINTS = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
@@ -28,7 +31,7 @@ export default class Dashboard extends React.Component {
     this.fetchWidgets();
     this.setState({
       isDraggable: this.isDraggable()
-    })
+    });
   }
 
   fetchWidgets() {
@@ -38,7 +41,7 @@ export default class Dashboard extends React.Component {
         .then(res => this.setState({
           $$widgets: res.data,
           layout: res.data.map((w) => {
-            return { i: w.id.toString(), x: w.col, y: w.row, w: w.size_x, h: w.size_y }
+            return { i: w.id.toString(), x: w.col, y: w.row, w: w.size_x, h: w.size_y };
           })
         }))
         .catch(error => this.setState({ fetchWidgetsError: error }))
@@ -64,11 +67,18 @@ export default class Dashboard extends React.Component {
     const node = ReactDOM.findDOMNode(this);
     return node.offsetWidth >= BREAKPOINTS.sm &&
       !Modernizr.touchevents &&
-      !this.props.locked
+      !this.props.locked;
   }
 
   fireReload () {
-    this.setState({ reloadTimestamp: Date.now() })
+    this.setState({ reloadTimestamp: Date.now() });
+  }
+
+  removeItem (widget_id) {
+    this.setState({
+      $$widgets: reject(this.state.$$widgets, { id: widget_id }),
+      layout: reject(this.state.layout, { i: widget_id.toString() })
+    });
   }
 
   render () {
@@ -76,14 +86,15 @@ export default class Dashboard extends React.Component {
     const layout = { lg: (this.state.layout || []) };
 
     const widgets = this.state.$$widgets.map((w, index) => {
-                      return <div key={ w.id }>
-                              <WidgetBase {...w}
+                      return (<div key={ w.id }>
+                                <WidgetBase {...w}
                                 locked={this.props.locked}
                                 theme={this.props.theme}
                                 height={ layout.lg[index].h * ROWHEIGHT }
                                 width={ layout.lg[index].w * this.refs.dashboard.offsetWidth / 12 }
-                                reloadTimestamp={this.state.reloadTimestamp} />
-                             </div>;
+                                reloadTimestamp={this.state.reloadTimestamp}
+                                remove={ this.removeItem.bind(this, w.id) } />
+                              </div>);
                     });
 
     return (
