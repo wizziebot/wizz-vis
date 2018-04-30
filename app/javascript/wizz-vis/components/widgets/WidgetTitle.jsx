@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import WidgetDrilldown from './WidgetDrilldown';
 import WidgetRefresh from './WidgetRefresh';
+import WidgetTrash from './WidgetTrash';
 import cs from 'classnames';
 
 export default class WidgetTitle extends React.Component {
@@ -36,11 +37,7 @@ export default class WidgetTitle extends React.Component {
         { this.props.title }
         <div className='options right'>
           <WidgetRefresh widget_id={this.props.widget_id} />
-          <span
-            className='delete'
-            onClick={this.props.remove}>
-            <i className='material-icons'>delete</i>
-          </span>
+          <WidgetTrash remove={this.props.remove} isLocked={this.props.locked} />
         </div>
       </div>
     )
