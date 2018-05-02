@@ -16,6 +16,7 @@ import WidgetPlane from './widgets/WidgetPlane';
 import WidgetChord from './widgets/WidgetChord';
 import WidgetSankey from './widgets/WidgetSankey';
 import WidgetMultiserie from './widgets/WidgetMultiserie';
+import WidgetImage from './widgets/WidgetImage';
 
 export default class WidgetBase extends React.Component {
   constructor(props) {
@@ -38,7 +39,8 @@ export default class WidgetBase extends React.Component {
     WidgetPlane,
     WidgetChord,
     WidgetSankey,
-    WidgetMultiserie
+    WidgetMultiserie,
+    WidgetImage
   };
 
   /*

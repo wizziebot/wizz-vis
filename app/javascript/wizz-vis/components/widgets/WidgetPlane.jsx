@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactHeatmap from '../../vendor/ReactHeatmap';
 import gps_utils from './../../utils/gps';
+import WidgetImage from './WidgetImage';
 
 export default class WidgetPlane extends React.Component {
   constructor(props) {
@@ -85,7 +86,7 @@ export default class WidgetPlane extends React.Component {
   }
 
   getImgSize() {
-    let image = this.refs.image;
+    const image = this.image;
 
     this.setState({
       img_width: image.naturalWidth,
@@ -96,12 +97,11 @@ export default class WidgetPlane extends React.Component {
   render () {
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-        <img
-          ref='image'
-          style={{ position: 'absolute', top: 0, left: 0,
-                   width: '100%', height: '100%' }}
-          src={ this.getImageURL() }
+        <WidgetImage
+          keepRatio={this.props.options.keep_ratio}
+          image={this.getImageURL()}
           onLoad={this.handleImageLoaded.bind(this)}
+          ref={(node) => node ? this.image = node.image : null}
         />
       <ReactHeatmap
         data={this.state.$$data}

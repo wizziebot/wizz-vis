@@ -1,0 +1,2 @@
+class WidgetImage < Widget
+end
