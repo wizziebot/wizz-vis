@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 import * as moment from 'moment';
 
 const ONE_DAY = 24 * 3600 * 1000;
@@ -32,5 +34,18 @@ export default {
       return (60 * 1000 / step) - 1;
     }
 
+  },
+  /**
+   * Return the difference in the format %d hr %d min between
+   * two datetime passed as arguments.
+   *
+   * @param {string} time_1
+   * @param {string} time_2
+   * @returns {string}
+   */
+  duration(time_1, time_2) {
+    return moment.utc(
+      moment(time_2).diff(moment(time_1))
+    ).format("H [hr] m [min]");
   }
-}
+};

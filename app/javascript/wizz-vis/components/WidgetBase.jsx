@@ -17,6 +17,7 @@ import WidgetChord from './widgets/WidgetChord';
 import WidgetSankey from './widgets/WidgetSankey';
 import WidgetMultiserie from './widgets/WidgetMultiserie';
 import WidgetImage from './widgets/WidgetImage';
+import WidgetRoute from './widgets/WidgetRoute';
 
 export default class WidgetBase extends React.Component {
   constructor(props) {
@@ -40,7 +41,8 @@ export default class WidgetBase extends React.Component {
     WidgetChord,
     WidgetSankey,
     WidgetMultiserie,
-    WidgetImage
+    WidgetImage,
+    WidgetRoute
   };
 
   /*

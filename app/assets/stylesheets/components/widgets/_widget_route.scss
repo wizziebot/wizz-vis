@@ -1,0 +1,61 @@
+.leaflet-routing-container.leaflet-routing-container-hide {
+    display: none;
+}
+
+.leaflet-marker-icon {
+  &.route-marker {
+    border-radius: 20px;
+    color: white;
+    padding-top: 10px;
+    font-size: 1.2em;
+
+    &.start-marker {
+      background-color: #3bb2d0;
+    }
+
+    &.end-marker {
+      background-color: #8a8acb;
+    }
+  }
+}
+
+.marker-popup .leaflet-popup-content {
+  color: #3bb2d0;
+  font-weight: bold;
+}
+
+.route-popup .leaflet-popup-content {
+  text-align: center;
+  color: #8a8acb;
+  font-weight: bold;
+}
+
+.layout.light .route_resume {
+  background-color: #3bb2d0;
+}
+
+.layout.dark .route_resume {
+  background-color: #8a8acb;
+}
+
+.route_resume {
+  z-index: 999;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  color: #fff;
+  border-radius: 5px;
+
+  .route_duration {
+    border-right: 1px solid #fff;
+  }
+
+  .route_duration, .route_distance {
+    padding: 10px;
+
+    .resume_value {
+      font-size: 1.5em;
+    }
+  }
+}
