@@ -28,8 +28,12 @@ function EndMarker (routing_index) {
   });
 }
 
-function humanize_distance (meters) {
-  return `${(meters/1000).toFixed(2)} km`;
+function humanize_distance (meters, unit) {
+  if(unit == 'mi'){
+    return `${(meters/1609.34).toFixed(2)} mi`;
+  } else {
+    return `${(meters/1000).toFixed(2)} km`;
+  }
 }
 
 export default class Routing extends React.Component {
@@ -121,7 +125,7 @@ export default class Routing extends React.Component {
       router: L.Routing.mapbox(
         process.env.MAPBOX_TOKEN,
         {
-          profile: `mapbox/${this.props.route_profile}`
+          profile: `mapbox/${this.props.routeProfile}`
         }
       ),
       // change the color and show the direction of the route when hovering on it.
@@ -174,7 +178,7 @@ export default class Routing extends React.Component {
 
     routeControl.on('routesfound', function (e) {
       const meters = e.routes[0].summary.totalDistance;
-      distance = humanize_distance(meters);
+      distance = humanize_distance(meters, this.props.distanceUnit);
     }, this);
 
     return routeControl;
@@ -202,7 +206,7 @@ export default class Routing extends React.Component {
         let routing = this.createRouting(sub_waypoints, routing_index);
         routing.on('routesfound', function(e){
           this.distance += e.routes[0].summary.totalDistance;
-          this.refs.distance.textContent = humanize_distance(this.distance);
+          this.refs.distance.textContent = humanize_distance(this.distance, this.props.distanceUnit);
         }, this);
         this.routing.push(routing);
         this.props.map.leafletElement.addControl(routing);

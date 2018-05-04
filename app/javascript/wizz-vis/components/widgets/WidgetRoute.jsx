@@ -73,7 +73,8 @@ export default class WidgetRoute extends React.Component {
           attribution={Theme.route_map(this.props.theme).attribution}
         />
         <Routing
-          route_profile={this.props.options.route_profile || 'driving'}
+          routeProfile={this.props.options.route_profile || 'driving'}
+          distanceUnit={this.props.options.distance_unit || 'km'}
           waypoints={this.state.$$data}
           map={this.map} />
       </Map>
