@@ -4,6 +4,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DataTables from 'material-ui-datatables';
 import Theme from './../../utils/theme';
 import Format from './../../utils/format';
+import Errors from './../../utils/errors';
+import Info from './../Info';
 
 const HEADER_HEIGHT = 80;
 
@@ -13,6 +15,7 @@ export default class WidgetTable extends React.Component {
 
     this.state = {
       $$data: [],
+      error: null,
       aggregators: [],
       dimension: null,
       header: []
@@ -37,15 +40,24 @@ export default class WidgetTable extends React.Component {
     button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => response.json())
-        .then(data => data.map((d) =>
-          Format.formatColumns(d)
-        ))
-        .then(data => this.setState({
-          $$data: data
-        }))
+        .then(response => Errors.handleErrors(response))
+        .then(data => this.setData(data))
         .then(data => button.removeClass('active'))
+        .catch(error => {
+          button.removeClass('active');
+          this.setState({ error: error.error });
+        })
     );
+  }
+
+  setData(data) {
+    if(data)
+      this.setState({
+        $$data: data.map((d) =>
+          Format.formatColumns(d)
+        ),
+        error: null
+      });
   }
 
   setAggregators() {
@@ -75,8 +87,8 @@ export default class WidgetTable extends React.Component {
   }
 
   render () {
-    if(this.state.$$data.length == 0) {
-      return(<h5>No data points.</h5>)
+    if(this.state.error || this.state.$$data.length == 0) {
+      return(<Info error={this.state.error} />)
     } else {
       let theme = {
         tableHeader: {

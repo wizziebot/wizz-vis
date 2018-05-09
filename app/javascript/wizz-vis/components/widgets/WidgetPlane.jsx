@@ -2,7 +2,9 @@
 import React from 'react';
 import ReactHeatmap from '../../vendor/ReactHeatmap';
 import gps_utils from './../../utils/gps';
+import Errors from './../../utils/errors';
 import WidgetImage from './WidgetImage';
+import Info from './../Info';
 
 export default class WidgetPlane extends React.Component {
   constructor(props) {
@@ -11,6 +13,7 @@ export default class WidgetPlane extends React.Component {
 
     this.state = {
       $$data: [],
+      error: null,
       aggregator: '',
       coordinate_dimension: '',
       img_width: 0,
@@ -18,6 +21,12 @@ export default class WidgetPlane extends React.Component {
       gps_markers: [],
       fetchDataError: null
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
+      this.handleImageLoaded();
+    }
   }
 
   // We have to wait until the image is loaded to retrieve the real width
@@ -45,25 +54,39 @@ export default class WidgetPlane extends React.Component {
     button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => response.json())
-        .then(data => data.filter((d) => d[this.state.coordinate_dimension] !== null))
-        .then(
-          data => data.map(function(d) {
-            let latitude = d[this.state.coordinate_dimension].split(',')[0];
-            let longitude = d[this.state.coordinate_dimension].split(',')[1];
-
-            let {x, y} = this.translatePoint(latitude, longitude);
-
-            return {
-              x,
-              y,
-              value: d[this.state.aggregator]
-            };
-          }, this)
-        )
-        .then(data => this.setState({ $$data: data }))
+        .then(response => Errors.handleErrors(response))
+        .then(data => this.filterData(data))
+        .then(data => this.setData(data))
         .then(data => button.removeClass('active'))
+        .catch(error => {
+          button.removeClass('active');
+          this.setState({ error: error.error });
+        })
     );
+  }
+
+  filterData(data) {
+    if(data)
+      return data.filter((d) => d[this.state.coordinate_dimension] !== null);
+  }
+
+  setData(data) {
+    if(data)
+      this.setState({
+        $$data: data.map(function(d) {
+          let latitude = d[this.state.coordinate_dimension].split(',')[0];
+          let longitude = d[this.state.coordinate_dimension].split(',')[1];
+
+          let {x, y} = this.translatePoint(latitude, longitude);
+
+          return {
+            x,
+            y,
+            value: d[this.state.aggregator]
+          };
+        }, this),
+        error: null
+      });
   }
 
   translatePoint(latitude, longitude) {
@@ -95,6 +118,9 @@ export default class WidgetPlane extends React.Component {
   }
 
   render () {
+    if(this.state.error)
+      return(<Info error={this.state.error} />)
+
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <WidgetImage

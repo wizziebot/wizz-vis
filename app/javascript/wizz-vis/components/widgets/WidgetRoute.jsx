@@ -1,8 +1,10 @@
 /* jshint esversion: 6 */
 import React, { Component } from 'react';
 import { Map, TileLayer, AttributionControl } from 'react-leaflet';
-import Theme from './../../utils/theme';
 import L from 'leaflet';
+import Theme from './../../utils/theme';
+import Errors from './../../utils/errors';
+import Info from './../Info';
 import Routing from '../Routing';
 
 export default class WidgetRoute extends React.Component {
@@ -11,6 +13,7 @@ export default class WidgetRoute extends React.Component {
 
     this.state = {
       $$data: [],
+      error: null,
       grouped_dimension: '',
       coordinate_dimension: '',
       fetchDataError: null
@@ -18,7 +21,7 @@ export default class WidgetRoute extends React.Component {
   }
 
   componentDidUpdate(){
-    if(this.map !== undefined)
+    if(this.state.error == null && this.map !== undefined)
       this.map.leafletElement.invalidateSize();
   }
 
@@ -37,10 +40,19 @@ export default class WidgetRoute extends React.Component {
     button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => response.json())
-        .then(data => this.setState({ $$data: data }))
+        .then(response => Errors.handleErrors(response))
+        .then(data => this.setData(data))
         .then(data => button.removeClass('active'))
+        .catch(error => {
+          button.removeClass('active');
+          this.setState({ error: error.error });
+        })
     );
+  }
+
+  setData(data) {
+    if(data)
+      this.setState({ $$data: data, error: null });
   }
 
   setDimensions() {
@@ -58,6 +70,9 @@ export default class WidgetRoute extends React.Component {
   }
 
   render () {
+    if(this.state.error)
+      return(<Info error={this.state.error} />)
+
     return (
       <Map
         center={[0, 0]}

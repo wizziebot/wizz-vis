@@ -65,6 +65,8 @@ class WidgetsController < ApplicationController
   # Get /widgets/1/data.json
   def data
     render json: @widget.data
+  rescue StandardError => error
+    render json: { error: error.message }, status: :unprocessable_entity
   end
 
   private

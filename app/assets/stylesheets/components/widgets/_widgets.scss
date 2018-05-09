@@ -13,6 +13,14 @@
   .material-icons {
     color: #555;
   }
+
+  .widget {
+    .widget-info {
+      .card-content .material-icons {
+        color: #fbfbfb;
+      }
+    }
+  }
 }
 
 .layout.dark .react-grid-item {
@@ -37,6 +45,12 @@
 
   .material-icons {
     color: #d8d9da;
+  }
+
+  .widget .no-content {
+    .card, .card-reveal, .card-content {
+      background-color: #1f1d1d;
+    }
   }
 }
 
@@ -95,6 +109,48 @@
       height: 93%;
       display: inline-flex;
       align-items: center;
+    }
+
+    .widget-info {
+      height: 100%;
+
+      .card, .card-reveal, .card-content {
+        background-color: transparent;
+      }
+
+      .card {
+        height: 100%;
+        margin: 0;
+        box-shadow: none;
+
+        .card-content {
+          .info-corner {
+            border-left: 50px solid #d75546;
+            border-right: none;
+            border-bottom: 50px solid transparent;
+            width: 0;
+            height: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 900;
+          }
+
+          a.activator {
+            top: 2px;
+            left: 2px;
+            z-index: 1000;
+            position: absolute;
+            cursor: pointer;
+          }
+        }
+
+        .card-reveal {
+          .card-title {
+            font-size: 18px;
+          }
+        }
+      }
     }
   }
 }

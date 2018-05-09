@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { Map, Marker, Popup, TileLayer, AttributionControl } from 'react-leaflet';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import Theme from './../../utils/theme';
+import Errors from './../../utils/errors';
+import Info from './../Info';
 
 export default class WidgetHeatmap extends React.Component {
   constructor(props) {
@@ -10,6 +12,7 @@ export default class WidgetHeatmap extends React.Component {
 
     this.state = {
       $$data: [],
+      error: null,
       aggregator: '',
       coordinate_dimension: '',
       fetchDataError: null
@@ -33,18 +36,34 @@ export default class WidgetHeatmap extends React.Component {
     button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => response.json())
-        .then(data => data.filter((d) => d[this.state.coordinate_dimension] !== null))
-        .then(data => data.map((d) => (
+        .then(response => Errors.handleErrors(response))
+        .then(data => this.filterData(data))
+        .then(data => this.setData(data))
+        .then(data => button.removeClass('active'))
+        .catch(error => {
+          button.removeClass('active');
+          this.setState({ error: error.error });
+        })
+    );
+  }
+
+  filterData(data) {
+    if(data)
+      return data.filter((d) => d[this.state.coordinate_dimension] !== null);
+  }
+
+  setData(data) {
+    if(data)
+      this.setState({
+        $$data: data.map((d) => (
           {
             position: d[this.state.coordinate_dimension].split(',')
                       .map((e) => (parseFloat(e))),
             aggregator: d[this.state.aggregator]
           }
-        )))
-        .then(data => this.setState({ $$data: data }))
-        .then(data => button.removeClass('active'))
-    );
+        )),
+        error: null
+      });
   }
 
   setCoordinateDimension() {
@@ -65,8 +84,8 @@ export default class WidgetHeatmap extends React.Component {
   }
 
   render () {
-    if(this.state.$$data.length == 0) {
-      return(<h5>No data points.</h5>)
+    if(this.state.error || this.state.$$data.length == 0) {
+      return(<Info error={this.state.error} />)
     } else {
       return (
         <div>

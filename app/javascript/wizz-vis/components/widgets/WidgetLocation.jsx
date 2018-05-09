@@ -2,10 +2,12 @@
 import React, { Component } from 'react';
 import { Map, Marker, Popup, TileLayer, AttributionControl } from 'react-leaflet';
 import Theme from './../../utils/theme';
+import Errors from './../../utils/errors';
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
 import uniqWith from 'lodash/uniqWith';
 import isEqual from 'lodash/isEqual';
+import Info from './../Info';
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
@@ -19,6 +21,7 @@ export default class WidgetLocation extends React.Component {
 
     this.state = {
       $$data: [],
+      error: null,
       aggregator: '',
       grouped_dimension: '',
       coordinate_dimension: '',
@@ -48,17 +51,28 @@ export default class WidgetLocation extends React.Component {
     button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => response.json())
-        .then(data => data.map((d) => (
+        .then(response => Errors.handleErrors(response))
+        .then(data => this.setData(data))
+        .then(data => button.removeClass('active'))
+        .catch(error => {
+          button.removeClass('active');
+          this.setState({ error: error.error });
+        })
+    );
+  }
+
+  setData(data) {
+    if(data)
+      this.setState({
+        $$data: data.map((d) => (
           {
             position: d[this.state.coordinate_dimension].split(',')
                       .map((e) => (parseFloat(e))),
             label: d[this.state.grouped_dimension]
           }
-        )))
-        .then(data => this.setState({ $$data: data }))
-        .then(data => button.removeClass('active'))
-    );
+        )),
+        error: null
+      });
   }
 
   setAggregator() {
@@ -94,8 +108,8 @@ export default class WidgetLocation extends React.Component {
   }
 
   render () {
-    if(this.state.$$data.length == 0) {
-      return(<h5>No data points.</h5>)
+    if(this.state.error || this.state.$$data.length == 0) {
+      return(<Info error={this.state.error} />)
     } else {
       const bound_params = this.getBounds();
 

@@ -4,6 +4,8 @@ import { Chord } from '@nivo/chord'
 import graph_utils from './../../utils/graph';
 import Format from './../../utils/format';
 import Colors from './../../utils/colors';
+import Errors from './../../utils/errors';
+import Info from './../Info';
 
 export default class WidgetChord extends React.Component {
   constructor(props) {
@@ -15,7 +17,8 @@ export default class WidgetChord extends React.Component {
       matrix: {
         value: [],
         keys: []
-      }
+      },
+      error: null
     };
   }
 
@@ -33,21 +36,30 @@ export default class WidgetChord extends React.Component {
 
   fetchData() {
     let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    let component = this;
     button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => response.json())
-        .then(data => this.setState({
-          matrix: graph_utils.chord(
-            data,
-            component.props.options.origin,
-            component.props.options.destination,
-            component.props.aggregators[0]
-          )
-        }))
+        .then(response => Errors.handleErrors(response))
+        .then(data => this.setData(data))
         .then(data => button.removeClass('active'))
+        .catch(error => {
+          button.removeClass('active');
+          this.setState({ error: error.error });
+        })
     );
+  }
+
+  setData(data) {
+    if(data)
+      this.setState({
+        matrix: graph_utils.chord(
+          data,
+          this.props.options.origin,
+          this.props.options.destination,
+          this.props.aggregators[0]
+        ),
+        error: null
+      });
   }
 
   setAggregator() {
@@ -63,8 +75,8 @@ export default class WidgetChord extends React.Component {
   }
 
   render () {
-    if(this.state.matrix.value.length == 0) {
-      return(<h5>No data points.</h5>)
+    if(this.state.error || this.state.matrix.value.length == 0) {
+      return(<Info error={this.state.error} />)
     } else {
       let legend_width = 0,
           legends = [],

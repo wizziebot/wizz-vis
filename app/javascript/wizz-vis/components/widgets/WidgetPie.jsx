@@ -1,8 +1,12 @@
+/* jshint esversion: 6 */
+
 import React from 'react';
 import { ResponsiveContainer, PieChart, Pie, Legend, Tooltip, Cell } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Format from './../../utils/format';
+import Errors from './../../utils/errors';
+import Info from './../Info';
 
 export default class WidgetPie extends React.Component {
   constructor(props) {
@@ -10,6 +14,7 @@ export default class WidgetPie extends React.Component {
 
     this.state = {
       $$data: [],
+      error: null,
       sum_total: 0,
       dimension: null,
       aggregator: '',
@@ -31,35 +36,47 @@ export default class WidgetPie extends React.Component {
 
   fetchData() {
     let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    let aggregator = this.props.aggregators[0].name;
     button.addClass('active');
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => response.json())
-        .then(data => this.setState(
-          { $$data: data,
-            sum_total: data.reduce(function add(sum, item) {
-                         return sum + item[aggregator]
-                       }, 0)
-          }))
+        .then(response => Errors.handleErrors(response))
+        .then(data => this.setData(data))
         .then(data => button.removeClass('active'))
+        .catch(error => {
+          button.removeClass('active');
+          this.setState({ error: error.error });
+        })
     );
+  }
+
+  setData(data) {
+    if(data) {
+      const aggregator = this.props.aggregators[0].name;
+      this.setState(
+        { $$data: data,
+          sum_total: data.reduce(function add(sum, item) {
+                       return sum + item[aggregator]
+                     }, 0),
+          error: null
+        }
+      );
+    }
   }
 
   setDimension() {
     this.setState({
       dimension: this.props.dimensions[0].name
-    })
+    });
   }
 
   setAggregator() {
     this.setState({
       aggregator: this.props.aggregators[0].name
-    })
+    });
   }
 
   customTooltip(value) {
-    let payload = value.payload[0]
+    let payload = value.payload[0];
     if(payload != undefined) {
       let percentage = payload.value / this.state.sum_total;
       return (<span>{`${payload.name || 'N/A'}: ${Format.fixed(payload.value)} (${(percentage * 100).toFixed(0)}%)`}</span>)
@@ -67,8 +84,8 @@ export default class WidgetPie extends React.Component {
   }
 
   render () {
-    if(this.state.$$data.length == 0) {
-      return(<h5>No data points.</h5>)
+    if(this.state.error || this.state.$$data.length == 0) {
+      return(<Info error={this.state.error} />)
     } else {
       return (
         <ResponsiveContainer>
