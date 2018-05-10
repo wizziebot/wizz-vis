@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Map, TileLayer, AttributionControl } from 'react-leaflet';
 import L from 'leaflet';
+import cs from 'classnames';
 import Theme from './../../utils/theme';
 import Errors from './../../utils/errors';
 import Info from './../Info';
@@ -21,7 +22,7 @@ export default class WidgetRoute extends React.Component {
   }
 
   componentDidUpdate(){
-    if(this.state.error == null && this.map !== undefined)
+    if(this.map !== undefined && this.map !== null)
       this.map.leafletElement.invalidateSize();
   }
 
@@ -45,7 +46,7 @@ export default class WidgetRoute extends React.Component {
         .then(data => button.removeClass('active'))
         .catch(error => {
           button.removeClass('active');
-          this.setState({ error: error.error });
+          this.setState({ error: error.error, $$data: [] });
         })
     );
   }
@@ -70,29 +71,30 @@ export default class WidgetRoute extends React.Component {
   }
 
   render () {
-    if(this.state.error)
-      return(<Info error={this.state.error} />)
-
+    const cssClass = cs({ 'widget-error': this.state.error });
     return (
-      <Map
-        center={[0, 0]}
-        zoom={1}
-        scrollWheelZoom={false}
-        attributionControl={false}
-        ref={map => this.map = map}>
-        <AttributionControl
-          position="bottomleft"
-        />
-        <TileLayer
-          url={Theme.route_map(this.props.theme).url}
-          attribution={Theme.route_map(this.props.theme).attribution}
-        />
-        <Routing
-          routeProfile={this.props.options.route_profile || 'driving'}
-          distanceUnit={this.props.options.distance_unit || 'km'}
-          waypoints={this.state.$$data}
-          map={this.map} />
-      </Map>
+      <div className={ cssClass }>
+        { this.state.error ? <Info error={this.state.error} /> : null }
+        <Map
+          center={[0, 0]}
+          zoom={1}
+          scrollWheelZoom={false}
+          attributionControl={false}
+          ref={map => this.map = map}>
+          <AttributionControl
+            position="bottomleft"
+          />
+          <TileLayer
+            url={Theme.route_map(this.props.theme).url}
+            attribution={Theme.route_map(this.props.theme).attribution}
+          />
+          <Routing
+            routeProfile={this.props.options.route_profile || 'driving'}
+            distanceUnit={this.props.options.distance_unit || 'km'}
+            waypoints={this.state.$$data}
+            map={this.map} />
+        </Map>
+      </div>
     );
   }
 }

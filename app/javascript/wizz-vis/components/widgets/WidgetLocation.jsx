@@ -7,6 +7,7 @@ import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
 import uniqWith from 'lodash/uniqWith';
 import isEqual from 'lodash/isEqual';
+import cs from 'classnames';
 import Info from './../Info';
 
 L.Icon.Default.mergeOptions({
@@ -56,7 +57,7 @@ export default class WidgetLocation extends React.Component {
         .then(data => button.removeClass('active'))
         .catch(error => {
           button.removeClass('active');
-          this.setState({ error: error.error });
+          this.setState({ error: error.error, $$data: [] });
         })
     );
   }
@@ -108,12 +109,12 @@ export default class WidgetLocation extends React.Component {
   }
 
   render () {
-    if(this.state.error || this.state.$$data.length == 0) {
-      return(<Info error={this.state.error} />)
-    } else {
-      const bound_params = this.getBounds();
+    const cssClass = cs({ 'widget-error': this.state.error });
+    const bound_params = this.getBounds();
 
-      return (
+    return (
+      <div className={ cssClass }>
+        { this.state.error ? <Info error={this.state.error} /> : null }
         <Map
           {...bound_params}
           scrollWheelZoom={false}
@@ -139,7 +140,7 @@ export default class WidgetLocation extends React.Component {
             ))
           }
         </Map>
-      );
-    }
+      </div>
+    );
   }
 }

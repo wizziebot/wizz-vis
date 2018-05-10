@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Map, Marker, Popup, TileLayer, AttributionControl } from 'react-leaflet';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
+import cs from 'classnames';
 import Theme from './../../utils/theme';
 import Errors from './../../utils/errors';
 import Info from './../Info';
@@ -42,7 +43,7 @@ export default class WidgetHeatmap extends React.Component {
         .then(data => button.removeClass('active'))
         .catch(error => {
           button.removeClass('active');
-          this.setState({ error: error.error });
+          this.setState({ error: error.error, $$data: [] });
         })
     );
   }
@@ -84,34 +85,33 @@ export default class WidgetHeatmap extends React.Component {
   }
 
   render () {
-    if(this.state.error || this.state.$$data.length == 0) {
-      return(<Info error={this.state.error} />)
-    } else {
-      return (
-        <div>
-          <Map
-            center={[0,0]}
-            zoom={13}
-            scrollWheelZoom={false}
-            attributionControl={false}
-          >
-            <HeatmapLayer
-              fitBoundsOnLoad
-              fitBoundsOnUpdate
-              points={ this.state.$$data }
-              longitudeExtractor={m => m.position[1]}
-              latitudeExtractor={m => m.position[0]}
-              intensityExtractor={m => m.aggregator} />
-            <AttributionControl
-              position="bottomleft"
-            />
-            <TileLayer
-              url={Theme.map(this.props.theme).url}
-              attribution={Theme.map(this.props.theme).attribution}
-            />
-          </Map>
-        </div>
-      );
-    }
+    const cssClass = cs({ 'widget-error': this.state.error });
+
+    return (
+      <div className={ cssClass }>
+        { this.state.error ? <Info error={this.state.error} /> : null }
+        <Map
+          center={[0,0]}
+          zoom={13}
+          scrollWheelZoom={false}
+          attributionControl={false}
+        >
+          <HeatmapLayer
+            fitBoundsOnLoad
+            fitBoundsOnUpdate
+            points={ this.state.$$data }
+            longitudeExtractor={m => m.position[1]}
+            latitudeExtractor={m => m.position[0]}
+            intensityExtractor={m => m.aggregator} />
+          <AttributionControl
+            position="bottomleft"
+          />
+          <TileLayer
+            url={Theme.map(this.props.theme).url}
+            attribution={Theme.map(this.props.theme).attribution}
+          />
+        </Map>
+      </div>
+    );
   }
 }

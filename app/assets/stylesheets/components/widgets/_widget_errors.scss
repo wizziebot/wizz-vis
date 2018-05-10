@@ -1,0 +1,27 @@
+.widget-error {
+  .widget-info {
+    width: 100%;
+    position: absolute;
+    z-index: 999;
+  }
+
+  .leaflet-top, .route_resume {
+    z-index: auto;
+  }
+}
+
+.layout.light {
+  .widget-error .widget-info {
+    .card-reveal {
+      background-color: #fbfbfb!important;
+    }
+  }
+}
+
+.layout.dark {
+  .widget-error .widget-info {
+    .card-reveal {
+        background-color: #1f1d1d!important;
+    }
+  }
+}
