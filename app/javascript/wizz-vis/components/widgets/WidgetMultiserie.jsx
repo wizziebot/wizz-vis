@@ -20,8 +20,7 @@ export default class WidgetMultiserie extends React.Component {
       $$data: [],
       error: null,
       aggregator: '',
-      dimension: '',
-      fetchDataError: null
+      dimension: ''
     };
   }
 
@@ -59,7 +58,7 @@ export default class WidgetMultiserie extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.aggregators[0].name
+      aggregator: this.props.options.metric || this.props.aggregators[0].name
     });
   }
 

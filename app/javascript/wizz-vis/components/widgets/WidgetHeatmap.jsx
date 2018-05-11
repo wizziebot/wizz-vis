@@ -15,8 +15,7 @@ export default class WidgetHeatmap extends React.Component {
       $$data: [],
       error: null,
       aggregator: '',
-      coordinate_dimension: '',
-      fetchDataError: null
+      coordinate_dimension: ''
     };
   }
 
@@ -80,7 +79,7 @@ export default class WidgetHeatmap extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.aggregators[0].name
+      aggregator: this.props.options.metric || this.props.aggregators[0].name
     });
   }
 

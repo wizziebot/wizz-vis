@@ -23,9 +23,9 @@ export default class WidgetChord extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchData();
     this.setAggregator();
     this.setDimensions();
+    this.fetchData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -56,7 +56,7 @@ export default class WidgetChord extends React.Component {
           data,
           this.props.options.origin,
           this.props.options.destination,
-          this.props.aggregators[0]
+          this.state.aggregator
         ),
         error: null
       });
@@ -64,7 +64,7 @@ export default class WidgetChord extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.aggregators[0].name
+      aggregator: this.props.options.metric || this.props.aggregators[0].name
     });
   }
 

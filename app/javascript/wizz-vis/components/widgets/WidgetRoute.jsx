@@ -16,8 +16,7 @@ export default class WidgetRoute extends React.Component {
       $$data: [],
       error: null,
       grouped_dimension: '',
-      coordinate_dimension: '',
-      fetchDataError: null
+      coordinate_dimension: ''
     };
   }
 

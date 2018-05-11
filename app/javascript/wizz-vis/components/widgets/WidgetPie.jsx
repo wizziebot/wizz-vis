@@ -17,15 +17,14 @@ export default class WidgetPie extends React.Component {
       error: null,
       sum_total: 0,
       dimension: null,
-      aggregator: '',
-      fetchDataError: null
+      aggregator: ''
     };
   }
 
   componentDidMount() {
-    this.fetchData();
     this.setDimension();
     this.setAggregator();
+    this.fetchData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,11 +50,11 @@ export default class WidgetPie extends React.Component {
 
   setData(data) {
     if(data) {
-      const aggregator = this.props.aggregators[0].name;
+      const aggregator = this.state.aggregator;
       this.setState(
         { $$data: data,
           sum_total: data.reduce(function add(sum, item) {
-                       return sum + item[aggregator]
+                       return sum + item[aggregator];
                      }, 0),
           error: null
         }
@@ -71,7 +70,7 @@ export default class WidgetPie extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.aggregators[0].name
+      aggregator: this.props.options.metric || this.props.aggregators[0].name
     });
   }
 
@@ -79,7 +78,11 @@ export default class WidgetPie extends React.Component {
     let payload = value.payload[0];
     if(payload != undefined) {
       let percentage = payload.value / this.state.sum_total;
-      return (<span>{`${payload.name || 'N/A'}: ${Format.fixed(payload.value)} (${(percentage * 100).toFixed(0)}%)`}</span>)
+      return (
+        <span>
+          {`${payload.name || 'N/A'}: ${Format.fixed(payload.value)} (${(percentage * 100).toFixed(0)}%)`}
+        </span>
+      )
     }
   }
 

@@ -11,19 +11,22 @@ class Widget < ApplicationRecord
   has_and_belongs_to_many :dimensions
   has_and_belongs_to_many :aggregators
   has_many :filters, dependent: :destroy
+  has_many :post_aggregators, dependent: :destroy
 
   # ==========================================================
   # Validations
   # ==========================================================
   validates :row, :col, :size_x, :size_y, presence: true
 
-  def data(options={})
+  def data(override_options = {})
     query = Datastore::Query.new(
       datasource: datasource.name,
-      properties: attributes.merge(interval: interval).merge(options),
+      properties: attributes.merge(interval: interval).merge(override_options),
       dimensions: dimensions,
       aggregators: aggregators,
-      filters: filters
+      post_aggregators: post_aggregators,
+      filters: filters,
+      options: options
     )
 
     query.run

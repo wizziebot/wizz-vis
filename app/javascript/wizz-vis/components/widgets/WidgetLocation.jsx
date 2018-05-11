@@ -25,8 +25,7 @@ export default class WidgetLocation extends React.Component {
       error: null,
       aggregator: '',
       grouped_dimension: '',
-      coordinate_dimension: '',
-      fetchDataError: null
+      coordinate_dimension: ''
     };
   }
 
@@ -78,7 +77,7 @@ export default class WidgetLocation extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.aggregators[0].name
+      aggregator: this.props.options.metric || this.props.aggregators[0].name
     });
   }
 

@@ -20,6 +20,8 @@ module Intervalable
 
   def interval_for_last
     case range
+    when 'last_30_minutes'
+      [@time_now - 30.minutes, @time_now]
     when 'last_1_hour'
       [@time_now - 1.hour, @time_now]
     when 'last_6_hours'

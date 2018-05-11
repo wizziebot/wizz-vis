@@ -55,7 +55,7 @@ gem 'sidekiq', '~> 5.1'
 gem 'sidekiq-cron', '~> 0.6.3'
 
 # Druid
-gem 'ruby-druid', '~> 0.10.0'
+gem 'ruby-druid', git: 'https://github.com/pikislabis/ruby-druid.git'
 
 # Pagination
 gem 'kaminari', '~> 1.1'

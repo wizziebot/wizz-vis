@@ -17,8 +17,7 @@ export default class WidgetSankey extends React.Component {
       $$data: {nodes: [], links: []},
       error: null,
       dimensions: [],
-      aggregator: '',
-      fetchDataError: null
+      aggregator: ''
     };
   }
 
@@ -65,7 +64,7 @@ export default class WidgetSankey extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.aggregators[0].name
+      aggregator: this.props.options.metric || this.props.aggregators[0].name
     });
   }
 

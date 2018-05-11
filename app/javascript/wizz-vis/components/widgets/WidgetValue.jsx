@@ -13,8 +13,7 @@ export default class WidgetValue extends React.Component {
     this.state = {
       $$data: [],
       error: null,
-      aggregator: '',
-      fetchDataError: null
+      aggregator: ''
     };
   }
 
@@ -51,7 +50,7 @@ export default class WidgetValue extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.aggregators[0].name
+      aggregator: this.props.options.metric || this.props.aggregators[0].name
     });
   }
 

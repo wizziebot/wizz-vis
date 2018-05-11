@@ -4,6 +4,8 @@ class WidgetMultiserie < Widget
       d[dimensions.first.name]
     end
 
+    metric = options['metric'] || aggregators.first.name
+
     multiseries = []
     dimension_values.each do |val|
       filter = filters.build(
@@ -14,7 +16,7 @@ class WidgetMultiserie < Widget
       )
 
       multiseries << super.map do |s|
-        s.merge((val || 'N/A') => s[aggregators.first.name]).except(aggregators.first.name)
+        s.merge((val || 'N/A') => s[metric]).except(metric)
       end
 
       filters.delete(filter)

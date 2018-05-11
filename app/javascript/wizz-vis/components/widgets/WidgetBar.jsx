@@ -19,8 +19,7 @@ export default class WidgetBar extends React.Component {
     this.state = {
       $$data: [],
       error: null,
-      aggregators: [],
-      fetchDataError: null
+      aggregators: []
     };
   }
 
@@ -56,9 +55,15 @@ export default class WidgetBar extends React.Component {
   }
 
   setAggregators() {
-    this.setState({
-      aggregators: this.props.aggregators.map((a) => (a.name))
-    });
+    if (this.props.options.metric) {
+      this.setState({
+        aggregators: [this.props.options.metric]
+      });
+    } else {
+      this.setState({
+        aggregators: this.props.aggregators.map((a) => (a.name))
+      });
+    }
   }
 
   formatXAxis(time) {

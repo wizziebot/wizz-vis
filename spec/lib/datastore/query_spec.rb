@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Datastore::Query do
   let(:datasource) { create(:datasource) }
-  let(:aggregator) { create(:bytes) }
+  let(:long_sum_agg) { create(:bytes) }
   let(:application_dimension) { create(:application_dimension) }
   let(:filter) { create(:application_filter) }
 
@@ -14,7 +14,7 @@ describe Datastore::Query do
           interval: [Time.now - 1.day, Time.now],
           granularity: 'PT1H'
         },
-        aggregators: [aggregator],
+        aggregators: [long_sum_agg],
         filters: [filter],
         dimensions: []
       )
@@ -72,7 +72,7 @@ describe Datastore::Query do
         properties: {
           interval: [Time.now - 1.day, Time.now]
         },
-        aggregators: [aggregator],
+        aggregators: [long_sum_agg],
         dimensions: [application_dimension],
         filters: []
       )
@@ -125,7 +125,7 @@ describe Datastore::Query do
         properties: {
           interval: [Time.now - 1.day, Time.now]
         },
-        aggregators: [aggregator],
+        aggregators: [long_sum_agg],
         dimensions: [application_dimension, coordinate_dimension],
         filters: []
       )
@@ -185,7 +185,7 @@ describe Datastore::Query do
       Datastore::Query.new(
         datasource: datasource.name,
         properties: { interval: [Time.now - 1.day, Time.now] },
-        aggregators: [aggregator],
+        aggregators: [long_sum_agg],
         dimensions: [application_dimension],
         filters: [
           create(:application_filter, operator: 'neq')
@@ -208,7 +208,7 @@ describe Datastore::Query do
       Datastore::Query.new(
         datasource: datasource.name,
         properties: { interval: [Time.now - 1.day, Time.now] },
-        aggregators: [aggregator],
+        aggregators: [long_sum_agg],
         dimensions: [application_dimension],
         filters: [
           create(:application_filter, operator: 'regex')
@@ -232,14 +232,13 @@ describe Datastore::Query do
       Datastore::Query.new(
         datasource: datasource.name,
         properties: { interval: [Time.now - 1.day, Time.now] },
-        aggregators: [aggregator],
+        aggregators: [long_sum_agg],
         dimensions: [application_dimension],
         filters: [
           create(:application_filter, operator: '>')
         ]
       )
     end
-    let(:result) { query.run }
     let(:query_json) {query.as_json}
 
     describe '#set_filters' do
@@ -248,6 +247,92 @@ describe Datastore::Query do
         expect(query_json['filter']).to include('type' => 'javascript')
         expect(query_json['filter']).to have_key('function')
         expect(query_json['filter']['function']).to include(' > ')
+      end
+    end
+  end
+
+  context 'Aggregators' do
+    describe 'Histogram with default breaks' do
+      let(:hist_dwell_agg) { create(:hist_dwell) }
+      let(:query) do
+        Datastore::Query.new(
+          datasource: datasource.name,
+          properties: { interval: [Time.now - 1.day, Time.now] },
+          aggregators: [hist_dwell_agg]
+        )
+      end
+      let(:query_json) { query.as_json }
+
+      it 'post aggregation is included in the query' do
+        expect(query_json).to have_key('postAggregations')
+        expect(query_json['postAggregations']).to eq(
+          [{
+            'name' => 'hist_dwell',
+            'fieldName' => 'raw_hist_dwell',
+            'type' => 'equalBuckets',
+            'numBuckets' => 10
+          }]
+        )
+      end
+    end
+  end
+
+  context 'Post Aggregators' do
+    let(:bytes_agg) { create(:bytes) }
+    let(:events_agg) { create(:events) }
+    let(:users_agg) { create(:users) }
+
+    describe 'Arithmetic post aggregation' do
+      let(:bps_agg) { create(:bytes_per_event) }
+      let(:query) do
+        Datastore::Query.new(
+          datasource: datasource.name,
+          properties: { interval: [Time.now - 1.day, Time.now] },
+          aggregators: [bytes_agg, events_agg],
+          post_aggregators: [bps_agg]
+        )
+      end
+      let(:query_json) { query.as_json }
+
+      it 'is included in the query' do
+        expect(query_json).to have_key('postAggregations')
+        expect(query_json['postAggregations']).to eq(
+          [{
+            'type' => 'arithmetic',
+            'fn' => '/',
+            'fields' => [
+              { 'fieldName' => 'sum_bytes', 'type' => 'fieldAccess' },
+              { 'fieldName' => 'events', 'type' => 'fieldAccess' }
+            ],
+            'name' => 'bps' }]
+        )
+      end
+    end
+
+    describe 'Post aggregation with constant and hyperUnique' do
+      let(:constant_agg) { create(:constant_pg) }
+      let(:query) do
+        Datastore::Query.new(
+          datasource: datasource.name,
+          properties: { interval: [Time.now - 1.day, Time.now] },
+          aggregators: [users_agg],
+          post_aggregators: [constant_agg]
+        )
+      end
+      let(:query_json) { query.as_json }
+
+      it 'is included in the query' do
+        expect(query_json).to have_key('postAggregations')
+        expect(query_json['postAggregations']).to eq(
+          [{
+            'type' => 'arithmetic',
+            'fn' => '*',
+            'fields' => [
+              { 'fieldName' => 'users', 'type' => 'hyperUniqueCardinality' },
+              { 'value' => '100', 'type' => 'constant' }
+            ],
+            'name' => 'percentage' }]
+        )
       end
     end
   end

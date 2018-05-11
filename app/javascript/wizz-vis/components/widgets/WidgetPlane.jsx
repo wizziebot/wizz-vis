@@ -18,8 +18,7 @@ export default class WidgetPlane extends React.Component {
       coordinate_dimension: '',
       img_width: 0,
       img_height: 0,
-      gps_markers: [],
-      fetchDataError: null
+      gps_markers: []
     };
   }
 
@@ -45,7 +44,7 @@ export default class WidgetPlane extends React.Component {
 
     this.setState({
       coordinate_dimension: coordinate_dimension.name,
-      aggregator: this.props.aggregators[0].name
+      aggregator: this.props.options.metric || this.props.aggregators[0].name
     });
   }
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_03_26_121206) do
+ActiveRecord::Schema.define(version: 2018_05_04_100412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,18 @@ ActiveRecord::Schema.define(version: 2018_03_26_121206) do
     t.index ["widget_id"], name: "index_filters_on_widget_id"
   end
 
+  create_table "post_aggregators", force: :cascade do |t|
+    t.string "output_name"
+    t.string "operator"
+    t.string "field_1"
+    t.string "field_2"
+    t.integer "order"
+    t.bigint "widget_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["widget_id"], name: "index_post_aggregators_on_widget_id"
+  end
+
   create_table "widgets", force: :cascade do |t|
     t.string "title"
     t.integer "row"
@@ -99,6 +111,7 @@ ActiveRecord::Schema.define(version: 2018_03_26_121206) do
   add_foreign_key "dimensions", "datasources"
   add_foreign_key "filters", "dimensions"
   add_foreign_key "filters", "widgets"
+  add_foreign_key "post_aggregators", "widgets"
   add_foreign_key "widgets", "dashboards"
   add_foreign_key "widgets", "datasources"
 end

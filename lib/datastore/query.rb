@@ -2,9 +2,13 @@ require 'druid'
 
 module Datastore
   class Query
+    include Aggregators
+    include PostAggregators
+
     DRUID_TIMEOUT = ENV['DRUID_TIMEOUT']&.to_i || 60_000
 
-    def initialize(datasource:, properties:, dimensions:, aggregators:, filters:)
+    def initialize(datasource:, properties:, dimensions: [], aggregators: [],
+                   post_aggregators: [], filters: [], options: {})
       properties = ActiveSupport::HashWithIndifferentAccess.new(properties)
 
       @datasource = Druid::DataSource.new(datasource, ENV['DRUID_URL'])
@@ -12,9 +16,11 @@ module Datastore
       @interval = properties[:interval]
       @granularity = properties[:granularity] || 'all'
       @limit = properties[:limit] || 5
-      @dimensions = dimensions || []
-      @aggregators = aggregators || []
-      @filters = filters || []
+      @dimensions = dimensions
+      @aggregators = aggregators
+      @post_aggregators = post_aggregators
+      @filters = filters
+      @options = options
 
       build
     end
@@ -60,23 +66,19 @@ module Datastore
       @query.granularity(@granularity)
 
       set_aggregators
+      set_post_aggregators
       set_filters
 
       if multiseries?
         # TODO
       elsif top_n?
-        @query.topn(@dimensions.first.name.to_sym, @aggregators.first.name.to_sym, @limit)
+        metric = @options['metric']&.to_sym || @aggregators.first.name.to_sym
+        @query.topn(@dimensions.first.name.to_sym, metric, @limit)
       elsif group_by?
         @query.group_by(*@dimensions.map(&:name))
         @query.limit(@limit, @dimensions.map { |d| [d.name, :desc] })
       else
         # timeserie
-      end
-    end
-
-    def set_aggregators
-      @aggregators.group_by(&:aggregator_type).each do |type, aggregators|
-        @query.send(type.underscore, aggregators.map(&:name))
       end
     end
 

@@ -61,9 +61,15 @@ export default class WidgetTable extends React.Component {
   }
 
   setAggregators() {
-    this.setState({
-      aggregators: this.props.aggregators
-    });
+    if (this.props.options.metric) {
+      this.setState({
+        aggregators: [this.props.options.metric]
+      });
+    } else {
+      this.setState({
+        aggregators: this.props.aggregators.map((a) => (a.name))
+      });
+    }
   }
 
   setDimension() {
@@ -74,7 +80,7 @@ export default class WidgetTable extends React.Component {
 
   setHeader() {
     this.setState({
-      header: [this.props.dimensions[0]].concat(this.props.aggregators).map((d) => {
+      header: [this.props.dimensions[0]].concat(this.state.aggregators).map((d) => {
                 return ({
                   key: d.name,
                   label: d.name,

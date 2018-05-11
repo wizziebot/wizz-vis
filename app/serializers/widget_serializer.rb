@@ -13,4 +13,5 @@ class WidgetSerializer < ActiveModel::Serializer
 
   has_many :dimensions
   has_many :aggregators
+  has_many :post_aggregators
 end
