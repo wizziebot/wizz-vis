@@ -1,4 +1,5 @@
-/*jshint esversion: 6 */
+/* jshint esversion: 6 */
+
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DataTables from 'material-ui-datatables';
@@ -67,7 +68,7 @@ export default class WidgetTable extends React.Component {
       });
     } else {
       this.setState({
-        aggregators: this.props.aggregators.map((a) => (a.name))
+        aggregators: this.props.aggregators.map(a => a.name)
       });
     }
   }
@@ -79,8 +80,11 @@ export default class WidgetTable extends React.Component {
   }
 
   setHeader() {
+    const headers =
+      [this.props.dimensions[0]].concat(this.props.aggregators);
+
     this.setState({
-      header: [this.props.dimensions[0]].concat(this.state.aggregators).map((d) => {
+      header: headers.map((d) => {
                 return ({
                   key: d.name,
                   label: d.name,
