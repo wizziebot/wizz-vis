@@ -2,6 +2,12 @@ a.dropdown-button i {
   color: rgba(0,0,0,0.54);
 }
 
-.dropdown-content li > a {
-  color: initial;
+.dropdown-content {
+  &.active {
+    z-index: 9999;
+  }
+
+  li > a {
+    color: initial;
+  }
 }
