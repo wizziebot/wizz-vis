@@ -123,7 +123,7 @@ export default class Routing extends React.Component {
         }
       ),
       router: L.Routing.mapbox(
-        process.env.MAPBOX_TOKEN,
+        window.mapbox_token,
         {
           profile: `mapbox/${this.props.routeProfile}`
         }

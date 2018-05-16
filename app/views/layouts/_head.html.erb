@@ -2,6 +2,10 @@
   <title>Wizz-Vis</title>
   <%= csrf_meta_tags %>
 
+  <script>
+    window.mapbox_token = "<%= ENV['MAPBOX_TOKEN'] %>";
+  </script>
+
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_pack_tag 'application' %>
   <%= javascript_include_tag 'application' %>

@@ -9,7 +9,7 @@ const THEMES = {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
     },
     route_map: {
-      url: "https://api.mapbox.com/styles/v1/pikislabis/cjgj5g1id00642stj8qovxfpv/tiles/256/{z}/{x}/{y}?access_token=" + process.env.MAPBOX_TOKEN,
+      url: "https://api.mapbox.com/styles/v1/pikislabis/cjgj5g1id00642stj8qovxfpv/tiles/256/{z}/{x}/{y}?access_token=" + window.mapbox_token,
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> &copy; <a href="https://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>'
     },
     tooltip: {
@@ -27,11 +27,11 @@ const THEMES = {
     text: '#d8d9da',
     grid: '#444343',
     map: {
-      url: "https://api.mapbox.com/styles/v1/pikislabis/cjeb0cztza0k32snr6abbjd81/tiles/256/{z}/{x}/{y}?access_token=" + process.env.MAPBOX_TOKEN,
+      url: "https://api.mapbox.com/styles/v1/pikislabis/cjeb0cztza0k32snr6abbjd81/tiles/256/{z}/{x}/{y}?access_token=" + window.mapbox_token,
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> &copy; <a href="https://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>'
     },
     route_map: {
-      url: "https://api.mapbox.com/styles/v1/pikislabis/cjgj5ota400652spkudo45syp/tiles/256/{z}/{x}/{y}?access_token=" + process.env.MAPBOX_TOKEN,
+      url: "https://api.mapbox.com/styles/v1/pikislabis/cjgj5ota400652spkudo45syp/tiles/256/{z}/{x}/{y}?access_token=" + window.mapbox_token,
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> &copy; <a href="https://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>'
     },
     tooltip: {
