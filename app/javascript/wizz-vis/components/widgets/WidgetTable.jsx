@@ -14,18 +14,19 @@ export default class WidgetTable extends React.Component {
   constructor(props) {
     super(props);
 
+    this.aggregators = [];
+    this.dimensions = [];
+    this.header = [];
+
     this.state = {
       $$data: [],
-      error: null,
-      aggregators: [],
-      dimension: null,
-      header: []
+      error: null
     };
   }
 
   componentDidMount() {
     this.setAggregators();
-    this.setDimension();
+    this.setDimensions();
     this.fetchData();
     this.setHeader();
   }
@@ -62,38 +63,30 @@ export default class WidgetTable extends React.Component {
   }
 
   setAggregators() {
-    if (this.props.options.metric) {
-      this.setState({
-        aggregators: [this.props.options.metric]
-      });
+    if (this.props.options.metrics) {
+      this.aggregators =
+        Array.isArray(this.props.options.metrics) ? this.props.options.metrics : [this.props.options.metrics];
     } else {
-      this.setState({
-        aggregators: this.props.aggregators.map(a => a.name)
-      });
+      this.aggregators = this.props.aggregators.map(a => a.name);
     }
   }
 
-  setDimension() {
-    this.setState({
-      dimension: this.props.dimensions[0]
-    });
+  setDimensions() {
+    this.dimensions = this.props.dimensions.map(d => d.name);
   }
 
   setHeader() {
-    const headers =
-      [this.props.dimensions[0]].concat(this.props.aggregators);
-
-    this.setState({
-      header: headers.map((d) => {
-                return ({
-                  key: d.name,
-                  label: d.name,
-                  style: {
-                    height: HEADER_HEIGHT
-                  }
-                });
-              })
-    });
+    this.header =
+      this.dimensions.concat(this.aggregators)
+      .map(d => {
+        return ({
+          key: d,
+          label: d,
+          style: {
+            height: HEADER_HEIGHT
+          }
+        });
+      });
   }
 
   render () {
@@ -121,13 +114,11 @@ export default class WidgetTable extends React.Component {
               showHeaderToolbarFilterIcon={false}
               tableHeaderStyle={theme.tableHeader}
               tableHeaderColumnStyle={theme.tableHeader}
-              /* tableBodyStyle={theme.table} */
               tableRowStyle={theme.table}
-              /* tableRowColumnStyle={theme.table} */
               fixedHeader={true}
               selectable={false}
               showRowHover={false}
-              columns={this.state.header}
+              columns={this.header}
               data={this.state.$$data}
               showCheckboxes={false}
               showFooterToolbar={false}
