@@ -9,7 +9,7 @@ class Dashboard < ApplicationRecord
   # ==========================================================
   # Relations
   # ==========================================================
-  has_many :widgets
+  has_many :widgets, dependent: :destroy
 
   # ==========================================================
   # Validations

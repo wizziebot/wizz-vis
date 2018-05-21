@@ -124,18 +124,21 @@ RSpec.describe DashboardsController, type: :controller do
   end
 
   describe "DELETE #destroy" do
+    let!(:dashboard) do
+      create(:dashboard) do |dashboard|
+        dashboard.widgets.create(attributes_for(:widget_area))
+      end
+    end
+
     it "destroys the requested dashboard" do
-      dashboard = Dashboard.create! valid_attributes
       expect {
         delete :destroy, params: {id: dashboard.to_param}, session: valid_session
       }.to change(Dashboard, :count).by(-1)
     end
 
     it "redirects to the dashboards list" do
-      dashboard = Dashboard.create! valid_attributes
       delete :destroy, params: {id: dashboard.to_param}, session: valid_session
       expect(response).to redirect_to(dashboards_url)
     end
   end
-
 end
