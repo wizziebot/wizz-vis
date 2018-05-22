@@ -19,31 +19,77 @@ import WidgetMultiserie from './widgets/WidgetMultiserie';
 import WidgetImage from './widgets/WidgetImage';
 import WidgetRoute from './widgets/WidgetRoute';
 
+import Errors from './../utils/errors';
+
 export default class WidgetBase extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      removeError: null
+      $$data: [],
+      error: null,
+      reloadTimestamp: null
+    };
+
+    this.components = {
+      WidgetArea,
+      WidgetSerie,
+      WidgetBar,
+      WidgetPie,
+      WidgetValue,
+      WidgetLocation,
+      WidgetHeatmap,
+      WidgetTable,
+      WidgetPlane,
+      WidgetChord,
+      WidgetSankey,
+      WidgetMultiserie,
+      WidgetImage,
+      WidgetRoute
+    };
+  }
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.reloadTimestamp !== prevState.reloadTimestamp) {
+      return {
+        reloadTimestamp: nextProps.reloadTimestamp
+      };
+    }
+
+    // No state update necessary
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.reloadTimestamp !== prevProps.reloadTimestamp) {
+      this.fetchData();
     }
   }
 
-  components = {
-    WidgetArea,
-    WidgetSerie,
-    WidgetBar,
-    WidgetPie,
-    WidgetValue,
-    WidgetLocation,
-    WidgetHeatmap,
-    WidgetTable,
-    WidgetPlane,
-    WidgetChord,
-    WidgetSankey,
-    WidgetMultiserie,
-    WidgetImage,
-    WidgetRoute
-  };
+  fetchData() {
+    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
+    button.addClass('active');
+    return (
+      fetch('/widgets/' + this.props.id + '/data.json')
+        .then(response => Errors.handleErrors(response))
+        .then(data => {
+          if(data && JSON.stringify(data) !== JSON.stringify(this.state.$$data)) {
+            this.setState({ $$data: data, error: null });
+          }
+        })
+        .then(data => button.removeClass('active'))
+        .catch(error => {
+          button.removeClass('active');
+          if(JSON.stringify(error.error) !== JSON.stringify(this.state.error)) {
+            this.setState({ $$data: [], error: error.error });
+          }
+        })
+    );
+  }
 
   /*
    * Remove a widget (by id).
@@ -64,7 +110,7 @@ export default class WidgetBase extends React.Component {
       }
     )
     .then(response => this.props.remove())
-    .catch(error => this.setState({ removeError: error }));
+    .catch(error => this.setState({ error: error }));
   }
 
   render () {
@@ -80,7 +126,7 @@ export default class WidgetBase extends React.Component {
           remove={this.removeWidget.bind(this)}
         />
         <div className="widget-content">
-          <Type {...this.props}/>
+          <Type {...this.props} data={this.state.$$data} error={this.state.error} />
         </div>
       </div>
     )

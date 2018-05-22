@@ -5,7 +5,6 @@ import { ResponsiveContainer, PieChart, Pie, Legend, Tooltip, Cell } from 'recha
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Format from './../../utils/format';
-import Errors from './../../utils/errors';
 import Info from './../Info';
 
 export default class WidgetPie extends React.Component {
@@ -13,8 +12,8 @@ export default class WidgetPie extends React.Component {
     super(props);
 
     this.state = {
-      $$data: [],
-      error: null,
+      $$data: this.props.data,
+      error: this.props.error,
       sum_total: 0,
       dimension: null,
       aggregator: ''
@@ -24,42 +23,22 @@ export default class WidgetPie extends React.Component {
   componentDidMount() {
     this.setDimension();
     this.setAggregator();
-    this.fetchData();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
-      this.fetchData();
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.data !== prevState.$$data || nextProps.error !== prevState.error) {
+      const aggregator = nextProps.options.metric || nextProps.aggregators[0].name;
+      return {
+        $$data: nextProps.data,
+        sum_total: nextProps.data.reduce(function add(sum, item) {
+                     return sum + item[aggregator];
+                   }, 0),
+        error: nextProps.error
+      };
     }
-  }
 
-  fetchData() {
-    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    button.addClass('active');
-    return (
-      fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => Errors.handleErrors(response))
-        .then(data => this.setData(data))
-        .then(data => button.removeClass('active'))
-        .catch(error => {
-          button.removeClass('active');
-          this.setState({ error: error.error });
-        })
-    );
-  }
-
-  setData(data) {
-    if(data) {
-      const aggregator = this.state.aggregator;
-      this.setState(
-        { $$data: data,
-          sum_total: data.reduce(function add(sum, item) {
-                       return sum + item[aggregator];
-                     }, 0),
-          error: null
-        }
-      );
-    }
+    // No state update necessary
+    return null;
   }
 
   setDimension() {

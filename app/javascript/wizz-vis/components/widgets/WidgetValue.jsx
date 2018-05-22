@@ -3,7 +3,6 @@
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 import Format from './../../utils/format';
-import Errors from './../../utils/errors';
 import Info from './../Info';
 
 export default class WidgetValue extends React.Component {
@@ -11,41 +10,26 @@ export default class WidgetValue extends React.Component {
     super(props);
 
     this.state = {
-      $$data: [],
-      error: null,
+      $$data: this.props.data,
+      error: this.props.error,
       aggregator: ''
     };
   }
 
   componentDidMount() {
-    this.fetchData();
     this.setAggregator();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
-      this.fetchData();
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.data !== prevState.$$data || nextProps.error !== prevState.error) {
+      return {
+        $$data: nextProps.data,
+        error: nextProps.error
+      };
     }
-  }
 
-  fetchData() {
-    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    button.addClass('active');
-    return (
-      fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => Errors.handleErrors(response))
-        .then(data => this.setData(data))
-        .then(data => button.removeClass('active'))
-        .catch(error => {
-          button.removeClass('active');
-          this.setState({ error: error.error });
-        })
-    );
-  }
-
-  setData(data) {
-    if(data)
-      this.setState({ $$data: data, error: null });
+    // No state update necessary
+    return null;
   }
 
   setAggregator() {

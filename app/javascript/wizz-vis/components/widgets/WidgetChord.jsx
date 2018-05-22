@@ -4,7 +4,6 @@ import { Chord } from '@nivo/chord'
 import graph_utils from './../../utils/graph';
 import Format from './../../utils/format';
 import Colors from './../../utils/colors';
-import Errors from './../../utils/errors';
 import Info from './../Info';
 
 export default class WidgetChord extends React.Component {
@@ -18,48 +17,27 @@ export default class WidgetChord extends React.Component {
         value: [],
         keys: []
       },
-      error: null
+      error: this.props.error
     };
   }
 
   componentDidMount() {
     this.setAggregator();
     this.setDimensions();
-    this.fetchData();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
-      this.fetchData();
-    }
-  }
-
-  fetchData() {
-    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    button.addClass('active');
-    return (
-      fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => Errors.handleErrors(response))
-        .then(data => this.setData(data))
-        .then(data => button.removeClass('active'))
-        .catch(error => {
-          button.removeClass('active');
-          this.setState({ error: error.error });
-        })
-    );
-  }
-
-  setData(data) {
-    if(data)
+  componentDidUpdate(prevProps) {
+    if (prevProps.data !== this.props.data || prevProps.error !== this.props.error) {
       this.setState({
         matrix: graph_utils.chord(
-          data,
+          this.props.data,
           this.props.options.origin,
           this.props.options.destination,
           this.state.aggregator
         ),
-        error: null
+        error: this.props.error
       });
+    }
   }
 
   setAggregator() {

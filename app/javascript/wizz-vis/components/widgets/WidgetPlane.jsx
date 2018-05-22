@@ -2,7 +2,6 @@
 import React from 'react';
 import ReactHeatmap from '../../vendor/ReactHeatmap';
 import gps_utils from './../../utils/gps';
-import Errors from './../../utils/errors';
 import WidgetImage from './WidgetImage';
 import Info from './../Info';
 
@@ -12,19 +11,25 @@ export default class WidgetPlane extends React.Component {
     this.getImgSize = this.getImgSize.bind(this);
 
     this.state = {
-      $$data: [],
-      error: null,
-      aggregator: '',
-      coordinate_dimension: '',
-      img_width: 0,
-      img_height: 0,
+      $$data: this.props.data,
+      error: this.props.error,
       gps_markers: []
     };
+
+    this.aggregator = '';
+    this.coordinate_dimension = '';
+    this.img_width = 0;
+    this.img_height = 0;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
-      this.handleImageLoaded();
+  componentDidMount() {
+    this.setDimensionAggregator();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.data !== this.props.data || prevProps.error !== this.props.error) {
+      this.setDimensionAggregator();
+      this.setData();
     }
   }
 
@@ -32,8 +37,7 @@ export default class WidgetPlane extends React.Component {
   // and real height of the image.
   handleImageLoaded() {
     this.getImgSize();
-    this.setDimensionAggregator();
-    this.fetchData();
+    this.setData();
   }
 
   setDimensionAggregator() {
@@ -42,55 +46,32 @@ export default class WidgetPlane extends React.Component {
         /coordinate|latlong|latlng/.test(e.name)
       ));
 
+    this.coordinate_dimension = coordinate_dimension.name;
+    this.aggregator = this.props.options.metric || this.props.aggregators[0].name;
+  }
+
+  setData() {
+    let data = this.props.data.filter((d) => d[this.coordinate_dimension] !== null);
     this.setState({
-      coordinate_dimension: coordinate_dimension.name,
-      aggregator: this.props.options.metric || this.props.aggregators[0].name
+      $$data: data.map(function(d) {
+        let latitude = d[this.coordinate_dimension].split(',')[0];
+        let longitude = d[this.coordinate_dimension].split(',')[1];
+
+        let {x, y} = this.translatePoint(latitude, longitude);
+
+        return {
+          x,
+          y,
+          value: d[this.aggregator]
+        };
+      }, this),
+      error: this.props.error
     });
   }
 
-  fetchData() {
-    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    button.addClass('active');
-    return (
-      fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => Errors.handleErrors(response))
-        .then(data => this.filterData(data))
-        .then(data => this.setData(data))
-        .then(data => button.removeClass('active'))
-        .catch(error => {
-          button.removeClass('active');
-          this.setState({ error: error.error });
-        })
-    );
-  }
-
-  filterData(data) {
-    if(data)
-      return data.filter((d) => d[this.state.coordinate_dimension] !== null);
-  }
-
-  setData(data) {
-    if(data)
-      this.setState({
-        $$data: data.map(function(d) {
-          let latitude = d[this.state.coordinate_dimension].split(',')[0];
-          let longitude = d[this.state.coordinate_dimension].split(',')[1];
-
-          let {x, y} = this.translatePoint(latitude, longitude);
-
-          return {
-            x,
-            y,
-            value: d[this.state.aggregator]
-          };
-        }, this),
-        error: null
-      });
-  }
-
   translatePoint(latitude, longitude) {
-    const width = this.state.img_width;
-    const height = this.state.img_height;
+    const width = this.img_width;
+    const height = this.img_height;
 
     const {m_trans, m_offset} =
       gps_utils.latlngToPointMatrices(this.props.options.gps_markers,
@@ -109,11 +90,8 @@ export default class WidgetPlane extends React.Component {
 
   getImgSize() {
     const image = this.image;
-
-    this.setState({
-      img_width: image.naturalWidth,
-      img_height: image.naturalHeight
-    });
+    this.img_width = image.naturalWidth;
+    this.img_height = image.naturalHeight;
   }
 
   render () {

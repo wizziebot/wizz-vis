@@ -5,7 +5,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DataTables from 'material-ui-datatables';
 import Theme from './../../utils/theme';
 import Format from './../../utils/format';
-import Errors from './../../utils/errors';
 import Info from './../Info';
 
 const HEADER_HEIGHT = 80;
@@ -19,47 +18,29 @@ export default class WidgetTable extends React.Component {
     this.header = [];
 
     this.state = {
-      $$data: [],
-      error: null
+      $$data: this.props.data,
+      error: this.props.error,
     };
   }
 
   componentDidMount() {
     this.setAggregators();
     this.setDimensions();
-    this.fetchData();
     this.setHeader();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
-      this.fetchData();
-    }
-  }
-
-  fetchData() {
-    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    button.addClass('active');
-    return (
-      fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => Errors.handleErrors(response))
-        .then(data => this.setData(data))
-        .then(data => button.removeClass('active'))
-        .catch(error => {
-          button.removeClass('active');
-          this.setState({ error: error.error });
-        })
-    );
-  }
-
-  setData(data) {
-    if(data)
-      this.setState({
-        $$data: data.map((d) =>
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.data !== prevState.$$data || nextProps.error !== prevState.error) {
+      return {
+        $$data: nextProps.data.map((d) =>
           Format.formatColumns(d)
         ),
-        error: null
-      });
+        error: nextProps.error
+      };
+    }
+
+    // No state update necessary
+    return null;
   }
 
   setAggregators() {

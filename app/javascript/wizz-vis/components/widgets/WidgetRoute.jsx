@@ -4,7 +4,6 @@ import { Map, TileLayer, AttributionControl } from 'react-leaflet';
 import L from 'leaflet';
 import cs from 'classnames';
 import Theme from './../../utils/theme';
-import Errors from './../../utils/errors';
 import Info from './../Info';
 import Routing from '../Routing';
 
@@ -13,10 +12,8 @@ export default class WidgetRoute extends React.Component {
     super(props);
 
     this.state = {
-      $$data: [],
-      error: null,
-      grouped_dimension: '',
-      coordinate_dimension: ''
+      $$data: this.props.data,
+      error: this.props.error
     };
   }
 
@@ -25,48 +22,16 @@ export default class WidgetRoute extends React.Component {
       this.map.leafletElement.invalidateSize();
   }
 
-  componentDidMount() {
-    //this.setDimensions();
-    this.fetchData();
-  }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.data !== prevState.$$data || nextProps.error !== prevState.error) {
+      return {
+        $$data: nextProps.data,
+        error: nextProps.error
+      };
+    }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp)
-      this.fetchData();
-  }
-
-  fetchData() {
-    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    button.addClass('active');
-    return (
-      fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => Errors.handleErrors(response))
-        .then(data => this.setData(data))
-        .then(data => button.removeClass('active'))
-        .catch(error => {
-          button.removeClass('active');
-          this.setState({ error: error.error, $$data: [] });
-        })
-    );
-  }
-
-  setData(data) {
-    if(data)
-      this.setState({ $$data: data, error: null });
-  }
-
-  setDimensions() {
-    let coordinate_dimension =
-      this.props.dimensions.find((e) => (
-        /coordinate|latlong|latlng/.test(e.name)
-      ));
-    this.setState({ coordinate_dimension: coordinate_dimension.name });
-
-    let grouped_dimension =
-      this.props.dimensions.find((e) => (
-        e.name !== coordinate_dimension.name
-      ));
-    this.setState({ grouped_dimension: grouped_dimension.name });
+    // No state update necessary
+    return null;
   }
 
   render () {

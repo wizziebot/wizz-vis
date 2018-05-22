@@ -7,7 +7,6 @@ import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Time from './../../utils/time';
 import Format from './../../utils/format';
-import Errors from './../../utils/errors';
 import Info from './../Info';
 
 export default class WidgetMultiserie extends React.Component {
@@ -17,43 +16,28 @@ export default class WidgetMultiserie extends React.Component {
     this.minTickGap = this.minTickGap.bind(this);
 
     this.state = {
-      $$data: [],
-      error: null,
+      $$data: this.props.data,
+      error: this.props.error,
       aggregator: '',
       dimension: ''
     };
   }
 
   componentDidMount() {
-    this.fetchData();
     this.setAggregator();
     this.setDimension();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
-      this.fetchData();
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.data !== prevState.$$data || nextProps.error !== prevState.error) {
+      return {
+        $$data: nextProps.data,
+        error: nextProps.error
+      };
     }
-  }
 
-  fetchData() {
-    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    button.addClass('active');
-    return (
-      fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => Errors.handleErrors(response))
-        .then(data => this.setData(data))
-        .then(data => button.removeClass('active'))
-        .catch(error => {
-          button.removeClass('active');
-          this.setState({ error: error.error });
-        })
-    );
-  }
-
-  setData(data) {
-    if(data)
-      this.setState({ $$data: data, error: null });
+    // No state update necessary
+    return null;
   }
 
   setAggregator() {

@@ -4,7 +4,6 @@ import { Map, Marker, Popup, TileLayer, AttributionControl } from 'react-leaflet
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import cs from 'classnames';
 import Theme from './../../utils/theme';
-import Errors from './../../utils/errors';
 import Info from './../Info';
 
 export default class WidgetHeatmap extends React.Component {
@@ -12,8 +11,8 @@ export default class WidgetHeatmap extends React.Component {
     super(props);
 
     this.state = {
-      $$data: [],
-      error: null,
+      $$data: this.props.data,
+      error: this.props.error,
       aggregator: '',
       coordinate_dimension: ''
     };
@@ -22,48 +21,26 @@ export default class WidgetHeatmap extends React.Component {
   componentDidMount() {
     this.setCoordinateDimension();
     this.setAggregator();
-    this.fetchData();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
-      this.fetchData();
+  componentDidUpdate(prevProps) {
+    if (prevProps.data !== this.props.data || prevProps.error !== this.props.error) {
+      this.setData();
     }
   }
 
-  fetchData() {
-    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    button.addClass('active');
-    return (
-      fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => Errors.handleErrors(response))
-        .then(data => this.filterData(data))
-        .then(data => this.setData(data))
-        .then(data => button.removeClass('active'))
-        .catch(error => {
-          button.removeClass('active');
-          this.setState({ error: error.error, $$data: [] });
-        })
-    );
-  }
-
-  filterData(data) {
-    if(data)
-      return data.filter((d) => d[this.state.coordinate_dimension] !== null);
-  }
-
-  setData(data) {
-    if(data)
-      this.setState({
-        $$data: data.map((d) => (
-          {
-            position: d[this.state.coordinate_dimension].split(',')
-                      .map((e) => (parseFloat(e))),
-            aggregator: d[this.state.aggregator]
-          }
-        )),
-        error: null
-      });
+  setData() {
+    let data = this.props.data.filter((d) => d[this.state.coordinate_dimension] !== null);
+    this.setState({
+      $$data: data.map((d) => (
+        {
+          position: d[this.state.coordinate_dimension].split(',')
+                    .map((e) => (parseFloat(e))),
+          aggregator: d[this.state.aggregator]
+        }
+      )),
+      error: this.props.error
+    });
   }
 
   setCoordinateDimension() {

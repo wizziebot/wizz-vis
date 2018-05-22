@@ -5,7 +5,6 @@ import ReactEcharts from 'echarts-for-react';
 import Colors from './../../utils/colors';
 import Format from './../../utils/format';
 import Theme from './../../utils/theme';
-import Errors from './../../utils/errors';
 import Info from './../Info';
 import uniqBy from 'lodash/uniqBy';
 
@@ -15,7 +14,7 @@ export default class WidgetSankey extends React.Component {
 
     this.state = {
       $$data: {nodes: [], links: []},
-      error: null,
+      error: this.props.error,
       dimensions: [],
       aggregator: ''
     };
@@ -24,33 +23,12 @@ export default class WidgetSankey extends React.Component {
   componentDidMount() {
     this.setDimensions();
     this.setAggregator();
-    this.fetchData();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reloadTimestamp !== this.props.reloadTimestamp) {
-      this.fetchData();
+  componentDidUpdate(prevProps) {
+    if (prevProps.data !== this.props.data || prevProps.error !== this.props.error) {
+      this.setState({ $$data: this.formatData(this.props.data), error: this.props.error })
     }
-  }
-
-  fetchData() {
-    let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
-    button.addClass('active');
-    return (
-      fetch('/widgets/' + this.props.id + '/data.json')
-        .then(response => Errors.handleErrors(response))
-        .then(data => this.setData(data))
-        .then(data => button.removeClass('active'))
-        .catch(error => {
-          button.removeClass('active');
-          this.setState({ error: error.error });
-        })
-    );
-  }
-
-  setData(data) {
-    if(data)
-      this.setState({ $$data: this.formatData(data), error: null });
   }
 
   setDimensions() {
