@@ -2,6 +2,10 @@
 
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
+import { ResponsiveContainer, LineChart, Line, XAxis, Tooltip } from 'recharts';
+import Colors from './../../utils/colors';
+import Theme from './../../utils/theme';
+import Time from './../../utils/time';
 import Format from './../../utils/format';
 import Info from './../Info';
 
@@ -10,7 +14,7 @@ export default class WidgetValue extends React.Component {
     super(props);
 
     this.state = {
-      $$data: this.props.data,
+      $$data: [],
       error: this.props.error,
       aggregator: ''
     };
@@ -39,12 +43,28 @@ export default class WidgetValue extends React.Component {
   }
 
   getValue() {
+    const value_type = this.props.options.value || 'current';
     const data_length = this.state.$$data.length;
-    return data_length == 0 ? 0 : Math.round(this.state.$$data[data_length - 1][this.state.aggregator]);
+
+    if (data_length == 0) {
+      return 0;
+    } else if (value_type == 'max') {
+      return Math.max(...this.state.$$data.map(d => d[this.state.aggregator]));
+    } else if (value_type == 'min') {
+      return Math.min(...this.state.$$data.map(d => d[this.state.aggregator]));
+    } else if (value_type == 'average') {
+      return this.state.$$data.map(d => d[this.state.aggregator]).reduce((a,b) => a + b, 0) / data_length;
+    } else {
+      return this.state.$$data[data_length - 1][this.state.aggregator];
+    }
   }
 
   showGauge(){
     return (this.props.options.gauge && this.props.options.gauge.show);
+  }
+
+  showSerie(){
+    return (this.props.options.serie && this.props.options.serie.show);
   }
 
   gaugeOptions() {
@@ -108,15 +128,18 @@ export default class WidgetValue extends React.Component {
     if(this.state.error || this.state.$$data.length == 0) {
       return(<Info error={this.state.error} />)
     } else {
-      let element = null;
+      let element = null,
+          serie = null;
 
       if(this.showGauge()) {
         element = <ReactEcharts
           option={ this.gaugeOptions() }
           style={
             { position: 'absolute',
-              width: '100%', height: '100%',
-              top: 10, left: 0 }
+              width: '100%',
+              height: this.showSerie() ? '60%' : '100%',
+              top: 10,
+              left: 0 }
           }
           className='gauge' />;
       } else {
@@ -125,12 +148,33 @@ export default class WidgetValue extends React.Component {
         </div>;
       }
 
+      if(this.showSerie()) {
+        serie = <ResponsiveContainer>
+          <LineChart data={this.state.$$data}
+                margin={{top: 0, right: 5, left: 5, bottom: 0}}>
+             <XAxis
+               dataKey = "timestamp"
+               hide = { true }
+             />
+             <Tooltip
+               formatter = { Format.fixed.bind(Format) }
+               labelFormatter = { Time.simple_format }
+               labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
+             />
+           <Line key={ 0 } type="monotone" dataKey={ this.state.aggregator } stroke={ Colors.get(0) } dot={false}/>
+          </LineChart>
+        </ResponsiveContainer>
+      }
+
       return (
         <div className='widget-value'>
           <div className='card horizontal'>
             <div className='card-stacked'>
               <div className='card-content center-align valign-wrapper'>
                 {element}
+              </div>
+              <div className='card-serie'>
+                {serie}
               </div>
             </div>
           </div>
