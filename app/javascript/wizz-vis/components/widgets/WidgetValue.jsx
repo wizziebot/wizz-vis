@@ -12,50 +12,27 @@ import Info from './../Info';
 export default class WidgetValue extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      $$data: [],
-      error: this.props.error,
-      aggregator: ''
-    };
+    this.aggregator = null;
   }
 
-  componentDidMount() {
-    this.setAggregator();
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.data !== prevState.$$data || nextProps.error !== prevState.error) {
-      return {
-        $$data: nextProps.data,
-        error: nextProps.error
-      };
-    }
-
-    // No state update necessary
-    return null;
-  }
-
-  setAggregator() {
-    this.setState({
-      aggregator: this.props.options.metric || this.props.aggregators[0].name
-    });
+  getAggregator() {
+    return this.props.options.metric || this.props.aggregators[0].name;
   }
 
   getValue() {
     const value_type = this.props.options.value || 'current';
-    const data_length = this.state.$$data.length;
+    const data_length = this.props.data.length;
 
     if (data_length == 0) {
       return 0;
     } else if (value_type == 'max') {
-      return Math.max(...this.state.$$data.map(d => d[this.state.aggregator]));
+      return Math.max(...this.props.data.map(d => d[this.aggregator]));
     } else if (value_type == 'min') {
-      return Math.min(...this.state.$$data.map(d => d[this.state.aggregator]));
+      return Math.min(...this.props.data.map(d => d[this.aggregator]));
     } else if (value_type == 'average') {
-      return this.state.$$data.map(d => d[this.state.aggregator]).reduce((a,b) => a + b, 0) / data_length;
+      return this.props.data.map(d => d[this.aggregator]).reduce((a,b) => a + b, 0) / data_length;
     } else {
-      return this.state.$$data[data_length - 1][this.state.aggregator];
+      return this.props.data[data_length - 1][this.aggregator];
     }
   }
 
@@ -125,8 +102,10 @@ export default class WidgetValue extends React.Component {
   }
 
   render () {
-    if(this.state.error || this.state.$$data.length == 0) {
-      return(<Info error={this.state.error} />)
+    this.aggregator = this.getAggregator();
+
+    if(this.props.error || this.props.data.length == 0) {
+      return(<Info error={this.props.error} />)
     } else {
       let element = null,
           serie = null;
@@ -150,7 +129,7 @@ export default class WidgetValue extends React.Component {
 
       if(this.showSerie()) {
         serie = <ResponsiveContainer>
-          <LineChart data={this.state.$$data}
+          <LineChart data={this.props.data}
                 margin={{top: 0, right: 5, left: 5, bottom: 0}}>
              <XAxis
                dataKey = "timestamp"
@@ -161,7 +140,7 @@ export default class WidgetValue extends React.Component {
                labelFormatter = { Time.simple_format }
                labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
              />
-           <Line key={ 0 } type="monotone" dataKey={ this.state.aggregator } stroke={ Colors.get(0) } dot={false}/>
+           <Line key={ 0 } type="monotone" dataKey={ this.aggregator } stroke={ Colors.get(0) } dot={false}/>
           </LineChart>
         </ResponsiveContainer>
       }

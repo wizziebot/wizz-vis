@@ -16,8 +16,6 @@ export default class WidgetSerie extends React.Component {
     this.minTickGap = this.minTickGap.bind(this);
 
     this.state = {
-      $$data: this.props.data,
-      error: this.props.error,
       aggregators: []
     };
   }
@@ -26,16 +24,16 @@ export default class WidgetSerie extends React.Component {
     this.setAggregators();
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.data !== prevState.$$data || nextProps.error !== prevState.error) {
-      return {
-        $$data: nextProps.data,
-        error: nextProps.error
-      };
-    }
+  componentDidUpdate(prevProps) {
+    if (prevProps.aggregators !== this.props.aggregators ||
+      prevProps.options.metric !== this.props.options.metric)
+      this.setAggregators();
+  }
 
-    // No state update necessary
-    return null;
+  transformData(data) {
+    return data.map((d) => {
+      return {...d, unixTime: Time.moment(d.timestamp).unix() * 1000};
+    });
   }
 
   setAggregators() {
@@ -50,15 +48,15 @@ export default class WidgetSerie extends React.Component {
     }
   }
 
-  formatXAxis(time) {
-    return Time.format(time, this.props.interval);
+  formatXAxis(unixTime) {
+    return Time.format(Time.moment(unixTime), this.props.interval);
   }
 
   minTickGap() {
-    if(this.state.$$data.length < 2) return 0;
+    if(this.props.data.length < 2) return 0;
 
-    let time_1 = this.state.$$data[0].timestamp,
-        time_2 = this.state.$$data[1].timestamp;
+    let time_1 = this.props.data[0].timestamp,
+        time_2 = this.props.data[1].timestamp;
 
     return Time.gap(time_1, time_2, this.props.interval);
   }
@@ -68,23 +66,26 @@ export default class WidgetSerie extends React.Component {
   }
 
   render () {
-    if(this.state.error || this.state.$$data.length == 0) {
-      return(<Info error={this.state.error} />)
+    if(this.props.error || this.props.data.length == 0) {
+      return(<Info error={this.props.error} />)
     } else {
+      const data = this.transformData(this.props.data);
       const gap = this.minTickGap();
+      const start_time = Time.moment(this.props.interval[0]).unix() * 1000;
+      const end_time = Time.moment(this.props.interval[1]).unix() * 1000;
 
       return (
         <ResponsiveContainer>
-          <LineChart data={this.state.$$data}
+          <LineChart data={data}
                 margin={{top: 5, right: 30, left: 20, bottom: 5}}>
              <XAxis
-               dataKey = "timestamp"
-               tickFormatter={this.formatXAxis}
-               interval = 'preserveStartEnd'
+               dataKey = "unixTime"
+               tickFormatter = {(unixTime) => this.formatXAxis(unixTime)}
                minTickGap = {gap}
-               domain = {['auto', 'auto']}
+               domain = {[start_time, end_time]}
                stroke = { Theme.text(this.props.theme) }
                tick = { { fontSize: 12 } }
+               type = 'number'
              />
              <YAxis
                tickFormatter={this.formatYAxis}

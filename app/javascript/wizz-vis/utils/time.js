@@ -6,6 +6,10 @@ const ONE_DAY = 24 * 3600 * 1000;
 const TWO_DAYS = 2 * 24 * 3600 * 1000;
 
 export default {
+  moment(time) {
+    return moment(time);
+  },
+
   simple_format(time){
     return moment(time).format('YYYY-MM-DD HH:mm');
   },

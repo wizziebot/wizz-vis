@@ -12,9 +12,6 @@ export default class WidgetPie extends React.Component {
     super(props);
 
     this.state = {
-      $$data: this.props.data,
-      error: this.props.error,
-      sum_total: 0,
       dimension: null,
       aggregator: ''
     };
@@ -25,20 +22,14 @@ export default class WidgetPie extends React.Component {
     this.setAggregator();
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.data !== prevState.$$data || nextProps.error !== prevState.error) {
-      const aggregator = nextProps.options.metric || nextProps.aggregators[0].name;
-      return {
-        $$data: nextProps.data,
-        sum_total: nextProps.data.reduce(function add(sum, item) {
-                     return sum + item[aggregator];
-                   }, 0),
-        error: nextProps.error
-      };
+  componentDidUpdate(prevProps) {
+    if (prevProps.aggregators !== this.props.aggregators ||
+      prevProps.dimensions !== this.props.dimensions ||
+      prevProps.options.metric !== this.props.options.metric
+    ) {
+      this.setDimension();
+      this.setAggregator();
     }
-
-    // No state update necessary
-    return null;
   }
 
   setDimension() {
@@ -53,10 +44,10 @@ export default class WidgetPie extends React.Component {
     });
   }
 
-  customTooltip(value) {
+  customTooltip(value, total) {
     let payload = value.payload[0];
     if(payload != undefined) {
-      let percentage = payload.value / this.state.sum_total;
+      let percentage = payload.value / total;
       return (
         <span>
           {`${payload.name || 'N/A'}: ${Format.fixed(payload.value)} (${(percentage * 100).toFixed(0)}%)`}
@@ -66,30 +57,36 @@ export default class WidgetPie extends React.Component {
   }
 
   render () {
-    if(this.state.error || this.state.$$data.length == 0) {
-      return(<Info error={this.state.error} />)
+    const aggregator = this.state.aggregator;
+    const dimension = this.state.dimension;
+    const total = this.props.data.reduce(function add(sum, item) {
+      return sum + item[aggregator];
+    }, 0);
+
+    if(this.props.error || this.props.data.length == 0) {
+      return(<Info error={this.props.error} />)
     } else {
       return (
         <ResponsiveContainer>
           <PieChart>
-            <Pie data={this.state.$$data}
-                 dataKey={this.state.aggregator}
-                 nameKey={this.state.dimension}
+            <Pie data={this.props.data}
+                 dataKey={aggregator}
+                 nameKey={dimension}
                  fill="#8884d8"
                  innerRadius="50">
               {
-                this.state.$$data.map((element, index) => (
+                this.props.data.map((element, index) => (
                   <Cell
                     key={index}
                     fill={Colors.get(index)}
                     stroke={Theme.grid(this.props.theme)}
-                    name={element[this.state.dimension] || 'N/A'}
+                    name={element[dimension] || 'N/A'}
                   />
                 ))
               }
             </Pie>
             <Legend />
-            <Tooltip content={ this.customTooltip.bind(this) }
+            <Tooltip content={ (value) => this.customTooltip(value, total) }
               wrapperStyle={{
                 margin: '0px',
                 padding: '10px',

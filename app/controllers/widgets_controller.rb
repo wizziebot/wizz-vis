@@ -64,7 +64,10 @@ class WidgetsController < ApplicationController
 
   # Get /widgets/1/data.json
   def data
-    render json: @widget.data
+    render json: {
+      data: @widget.data,
+      attributes: WidgetSerializer.new(@widget).as_json
+    }
   rescue StandardError => error
     render json: { error: error.message }, status: :unprocessable_entity
   end

@@ -16,8 +16,6 @@ export default class WidgetMultiserie extends React.Component {
     this.minTickGap = this.minTickGap.bind(this);
 
     this.state = {
-      $$data: this.props.data,
-      error: this.props.error,
       aggregator: '',
       dimension: ''
     };
@@ -28,16 +26,22 @@ export default class WidgetMultiserie extends React.Component {
     this.setDimension();
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.data !== prevState.$$data || nextProps.error !== prevState.error) {
-      return {
-        $$data: nextProps.data,
-        error: nextProps.error
-      };
+  componentDidUpdate(prevProps) {
+    if (prevProps.aggregators !== this.props.aggregators ||
+      prevProps.dimensions !== this.props.dimensions ||
+      prevProps.options.metric !== this.props.options.metric
+    ) {
+      this.setAggregator();
+      this.setDimension();
     }
+  }
 
-    // No state update necessary
-    return null;
+  transformData(data) {
+    const values = data.values.map((d) => {
+      return {...d, unixTime: Time.moment(d.timestamp).unix() * 1000};
+    });
+
+    return { values, dimensions: data.dimensions };
   }
 
   setAggregator() {
@@ -52,17 +56,17 @@ export default class WidgetMultiserie extends React.Component {
     });
   }
 
-  minTickGap() {
-    if(this.state.$$data.values.length < 2) return 0;
-
-    let time_1 = this.props.interval[0],
-        time_2 = this.props.interval[1];
-
-    return Time.gap(time_1, time_2, this.props.interval);
+  formatXAxis(unixTime) {
+    return Time.format(Time.moment(unixTime), this.props.interval);
   }
 
-  formatXAxis(time) {
-    return Time.format(time, this.props.interval);
+  minTickGap() {
+    if(this.props.data.length < 2) return 0;
+
+    let time_1 = this.props.data.values[0].timestamp,
+        time_2 = this.props.data.values[1].timestamp;
+
+    return Time.gap(time_1, time_2, this.props.interval);
   }
 
   formatYAxis(value) {
@@ -70,26 +74,29 @@ export default class WidgetMultiserie extends React.Component {
   }
 
   render () {
-    if(this.state.error ||
-       this.state.$$data.values == undefined ||
-       this.state.$$data.values.length == 0) {
-      return(<Info error={this.state.error} />)
+    if(this.props.error ||
+       this.props.data.values == undefined ||
+       this.props.data.values.length == 0) {
+      return(<Info error={this.props.error} />)
     } else {
+      const data = this.transformData(this.props.data);
       const gap = this.minTickGap();
+      const start_time = Time.moment(this.props.interval[0]).unix() * 1000;
+      const end_time = Time.moment(this.props.interval[1]).unix() * 1000;
 
       return (
         <ResponsiveContainer>
-          <LineChart data={this.state.$$data.values}
+          <LineChart data={data.values}
                 margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-             <XAxis
-               dataKey = "timestamp"
-               tickFormatter={this.formatXAxis}
-               interval = 'preserveStartEnd'
-               minTickGap = {gap}
-               domain = {['auto', 'auto']}
-               stroke = { Theme.text(this.props.theme) }
-               tick = { { fontSize: 12 } }
-             />
+              <XAxis
+                dataKey = "unixTime"
+                tickFormatter = {(unixTime) => this.formatXAxis(unixTime)}
+                minTickGap = {gap}
+                domain = {[start_time, end_time]}
+                stroke = { Theme.text(this.props.theme) }
+                tick = { { fontSize: 12 } }
+                type = 'number'
+              />
              <YAxis
                tickFormatter={this.formatYAxis}
                interval = 'preserveStartEnd'
@@ -104,7 +111,7 @@ export default class WidgetMultiserie extends React.Component {
              />
              <Legend />
              {
-               this.state.$$data.dimensions.map((a, index) => (
+               data.dimensions.map((a, index) => (
                  <Line key={ index } type="monotone" dataKey={ a } stroke={ Colors.get(index) } dot={false}/>
                ))
              }

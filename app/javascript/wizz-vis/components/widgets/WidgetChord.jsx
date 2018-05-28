@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
+
 import React from 'react';
-import { Chord } from '@nivo/chord'
+import { Chord } from '@nivo/chord';
 import graph_utils from './../../utils/graph';
 import Format from './../../utils/format';
 import Colors from './../../utils/colors';
@@ -11,32 +12,18 @@ export default class WidgetChord extends React.Component {
     super(props);
 
     this.state = {
-      aggregator: '',
-      dimensions: [],
-      matrix: {
-        value: [],
-        keys: []
-      },
-      error: this.props.error
+      aggregator: ''
     };
   }
 
   componentDidMount() {
     this.setAggregator();
-    this.setDimensions();
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.data !== this.props.data || prevProps.error !== this.props.error) {
-      this.setState({
-        matrix: graph_utils.chord(
-          this.props.data,
-          this.props.options.origin,
-          this.props.options.destination,
-          this.state.aggregator
-        ),
-        error: this.props.error
-      });
+    if (prevProps.aggregators !== this.props.aggregators ||
+      prevProps.options.metric !== this.props.options.metric){
+      this.setAggregator();
     }
   }
 
@@ -46,14 +33,15 @@ export default class WidgetChord extends React.Component {
     });
   }
 
-  setDimensions() {
-    this.setState({
-      dimensions: this.props.dimensions
-    });
-  }
-
   render () {
-    if(this.state.error || this.state.matrix.value.length == 0) {
+    const matrix = graph_utils.chord(
+      this.props.data,
+      this.props.options.origin,
+      this.props.options.destination,
+      this.state.aggregator
+    );
+
+    if(this.state.error || matrix.value.length == 0) {
       return(<Info error={this.state.error} />)
     } else {
       let legend_width = 0,
@@ -77,8 +65,8 @@ export default class WidgetChord extends React.Component {
       return (
         <div className='widget-chord'>
           <Chord
-            matrix={this.state.matrix.value}
-            keys={this.state.matrix.keys}
+            matrix={matrix.value}
+            keys={matrix.keys}
             margin={{
                 'top': 0,
                 'right': legend_width,

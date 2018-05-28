@@ -27,6 +27,7 @@ export default class WidgetBase extends React.Component {
 
     this.state = {
       $$data: [],
+      attributes: {},
       error: null,
       reloadTimestamp: null
     };
@@ -76,9 +77,14 @@ export default class WidgetBase extends React.Component {
     return (
       fetch('/widgets/' + this.props.id + '/data.json')
         .then(response => Errors.handleErrors(response))
-        .then(data => {
-          if(data && JSON.stringify(data) !== JSON.stringify(this.state.$$data)) {
-            this.setState({ $$data: data, error: null });
+        .then(widget => {
+          if(widget.data && JSON.stringify(widget.data) !== JSON.stringify(this.state.$$data) ||
+            JSON.stringify(widget.attributes) !== JSON.stringify(this.state.attributes)) {
+            this.setState({
+              $$data: widget.data,
+              attributes: widget.attributes,
+              error: null
+            });
           }
         })
         .then(data => button.removeClass('active'))
@@ -126,7 +132,7 @@ export default class WidgetBase extends React.Component {
           remove={this.removeWidget.bind(this)}
         />
         <div className="widget-content">
-          <Type {...this.props} data={this.state.$$data} error={this.state.error} />
+          <Type {...this.props} {...this.state.attributes} data={this.state.$$data} error={this.state.error} />
         </div>
       </div>
     )

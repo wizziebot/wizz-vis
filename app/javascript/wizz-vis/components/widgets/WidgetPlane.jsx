@@ -10,12 +10,6 @@ export default class WidgetPlane extends React.Component {
     super(props);
     this.getImgSize = this.getImgSize.bind(this);
 
-    this.state = {
-      $$data: this.props.data,
-      error: this.props.error,
-      gps_markers: []
-    };
-
     this.aggregator = '';
     this.coordinate_dimension = '';
     this.img_width = 0;
@@ -27,17 +21,20 @@ export default class WidgetPlane extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.data !== this.props.data || prevProps.error !== this.props.error) {
+    if (prevProps.aggregators !== this.props.aggregators ||
+      prevProps.dimensions !== this.props.dimensions ||
+      prevProps.options.metric !== this.props.options.metric){
       this.setDimensionAggregator();
-      this.setData();
     }
   }
 
   // We have to wait until the image is loaded to retrieve the real width
   // and real height of the image.
+  // The forceUpdate is needed because sometimes the data is caculated before
+  // the image is loaded.
   handleImageLoaded() {
     this.getImgSize();
-    this.setData();
+    this.forceUpdate();
   }
 
   setDimensionAggregator() {
@@ -50,10 +47,9 @@ export default class WidgetPlane extends React.Component {
     this.aggregator = this.props.options.metric || this.props.aggregators[0].name;
   }
 
-  setData() {
-    let data = this.props.data.filter((d) => d[this.coordinate_dimension] !== null);
-    this.setState({
-      $$data: data.map(function(d) {
+  transformData(data) {
+    return (
+      data.filter((d) => d[this.coordinate_dimension] !== null).map(function(d) {
         let latitude = d[this.coordinate_dimension].split(',')[0];
         let longitude = d[this.coordinate_dimension].split(',')[1];
 
@@ -64,9 +60,8 @@ export default class WidgetPlane extends React.Component {
           y,
           value: d[this.aggregator]
         };
-      }, this),
-      error: this.props.error
-    });
+      }, this)
+    );
   }
 
   translatePoint(latitude, longitude) {
@@ -95,8 +90,10 @@ export default class WidgetPlane extends React.Component {
   }
 
   render () {
-    if(this.state.error)
-      return(<Info error={this.state.error} />)
+    if(this.props.error)
+      return(<Info error={this.props.error} />)
+
+    const data = this.transformData(this.props.data);
 
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -107,7 +104,7 @@ export default class WidgetPlane extends React.Component {
           ref={(node) => node ? this.image = node.image : null}
         />
       <ReactHeatmap
-        data={this.state.$$data}
+        data={data}
       />
       </div>
     )

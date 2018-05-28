@@ -13,8 +13,6 @@ export default class WidgetSankey extends React.Component {
     super(props);
 
     this.state = {
-      $$data: {nodes: [], links: []},
-      error: this.props.error,
       dimensions: [],
       aggregator: ''
     };
@@ -26,8 +24,11 @@ export default class WidgetSankey extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.data !== this.props.data || prevProps.error !== this.props.error) {
-      this.setState({ $$data: this.formatData(this.props.data), error: this.props.error })
+    if (prevProps.aggregators !== this.props.aggregators ||
+      prevProps.dimensions !== this.props.dimensions ||
+      prevProps.options.metric !== this.props.options.metric) {
+      this.setDimensions();
+      this.setAggregator();
     }
   }
 
@@ -116,15 +117,7 @@ export default class WidgetSankey extends React.Component {
     };
   }
 
-  getNodes(){
-    return this.state.$$data.nodes;
-  }
-
-  getLinks(){
-    return this.state.$$data.links;
-  }
-
-  sankeyOptions() {
+  sankeyOptions(data) {
     return {
       color: Colors.all(),
       tooltip: {
@@ -153,8 +146,8 @@ export default class WidgetSankey extends React.Component {
         {
           type: 'sankey',
           layout: 'none',
-          nodes: this.getNodes(),
-          links: this.getLinks(),
+          nodes: data.nodes,
+          links: data.links,
           label: {
             color: Theme.text(this.props.theme),
             fontSize: 14,
@@ -184,12 +177,14 @@ export default class WidgetSankey extends React.Component {
   }
 
   render () {
-    if(this.state.error || this.getNodes().length == 0)
-      return(<Info error={this.state.error} />)
+    const data = this.formatData(this.props.data);
+
+    if(this.props.error || data.nodes.length == 0)
+      return(<Info error={this.props.error} />)
 
     return (
       <ReactEcharts
-        option={ this.sankeyOptions() }
+        option={ this.sankeyOptions(data) }
         style={
           { position: 'absolute',
             width: '100%', height: '100%',

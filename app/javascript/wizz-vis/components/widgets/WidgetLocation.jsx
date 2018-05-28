@@ -20,8 +20,6 @@ export default class WidgetLocation extends React.Component {
     super(props);
 
     this.state = {
-      $$data: this.props.data,
-      error: this.props.error,
       aggregator: '',
       grouped_dimension: '',
       coordinate_dimension: ''
@@ -37,22 +35,24 @@ export default class WidgetLocation extends React.Component {
     if(this.refs.map !== undefined)
       this.refs.map.leafletElement.invalidateSize();
 
-    if (prevProps.data !== this.props.data || prevProps.error !== this.props.error) {
-      this.setData();
+    if (prevProps.aggregators !== this.props.aggregators ||
+      prevProps.dimensions !== this.props.dimensions ||
+      prevProps.options.metric !== this.props.options.metric){
+      this.setAggregator();
+      this.setDimensions();
     }
   }
 
-  setData() {
-    this.setState({
-      $$data: this.props.data.map((d) => (
+  transformData(data) {
+    return (
+      data.map((d) => (
         {
           position: d[this.state.coordinate_dimension].split(',')
                     .map((e) => (parseFloat(e))),
           label: d[this.state.grouped_dimension]
         }
-      )),
-      error: this.props.error
-    });
+      ))
+    );
   }
 
   setAggregator() {
@@ -62,21 +62,21 @@ export default class WidgetLocation extends React.Component {
   }
 
   setDimensions() {
-    let coordinate_dimension =
+    const coordinate_dimension =
       this.props.dimensions.find((e) => (
         /coordinate|latlong|latlng/.test(e.name)
       ));
     this.setState({ coordinate_dimension: coordinate_dimension.name });
 
-    let grouped_dimension =
+    const grouped_dimension =
       this.props.dimensions.find((e) => (
         e.name !== coordinate_dimension.name
       ));
     this.setState({ grouped_dimension: grouped_dimension.name });
   }
 
-  getBounds() {
-    const bounds = uniqWith(this.state.$$data.map((e) => (e.position)), isEqual);
+  getBounds(data) {
+    const bounds = uniqWith(data.map((e) => (e.position)), isEqual);
 
     if(bounds.length == 1) {
       return { center: bounds[0], zoom: 18 };
@@ -88,12 +88,13 @@ export default class WidgetLocation extends React.Component {
   }
 
   render () {
-    const cssClass = cs({ 'widget-error': this.state.error });
-    const bound_params = this.getBounds();
+    const cssClass = cs({ 'widget-error': this.props.error });
+    const data = this.transformData(this.props.data);
+    const bound_params = this.getBounds(data);
 
     return (
       <div className={ cssClass }>
-        { this.state.error ? <Info error={this.state.error} /> : null }
+        { this.props.error ? <Info error={this.props.error} /> : null }
         <Map
           {...bound_params}
           scrollWheelZoom={false}
@@ -108,7 +109,7 @@ export default class WidgetLocation extends React.Component {
             attribution={Theme.map(this.props.theme).attribution}
           />
           {
-            this.state.$$data.map((element, index) => (
+            data.map((element, index) => (
               <Marker
                 position={ element.position }
                 key={ index }>

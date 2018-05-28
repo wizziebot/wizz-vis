@@ -16,37 +16,17 @@ export default class WidgetTable extends React.Component {
     this.aggregators = [];
     this.dimensions = [];
     this.header = [];
-
-    this.state = {
-      $$data: this.props.data,
-      error: this.props.error,
-    };
   }
 
-  componentDidMount() {
-    this.setAggregators();
-    this.setDimensions();
-    this.setHeader();
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.data !== prevState.$$data || nextProps.error !== prevState.error) {
-      return {
-        $$data: nextProps.data.map((d) =>
-          Format.formatColumns(d)
-        ),
-        error: nextProps.error
-      };
-    }
-
-    // No state update necessary
-    return null;
+  formatData(data) {
+    return data.map((d) =>
+      Format.formatColumns(d)
+    );
   }
 
   setAggregators() {
     if (this.props.options.metrics) {
-      this.aggregators =
-        Array.isArray(this.props.options.metrics) ? this.props.options.metrics : [this.props.options.metrics];
+      this.aggregators = Array.isArray(this.props.options.metrics) ? this.props.options.metrics : [this.props.options.metrics];
     } else {
       this.aggregators = this.props.aggregators.map(a => a.name);
     }
@@ -57,8 +37,7 @@ export default class WidgetTable extends React.Component {
   }
 
   setHeader() {
-    this.header =
-      this.dimensions.concat(this.aggregators)
+    this.header = this.dimensions.concat(this.aggregators)
       .map(d => {
         return ({
           key: d,
@@ -71,10 +50,10 @@ export default class WidgetTable extends React.Component {
   }
 
   render () {
-    if(this.state.error || this.state.$$data.length == 0) {
-      return(<Info error={this.state.error} />)
+    if(this.props.error || this.props.data.length == 0) {
+      return(<Info error={this.props.error} />)
     } else {
-      let theme = {
+      const theme = {
         tableHeader: {
           backgroundColor: Theme.table(this.props.theme).thead_bg,
           color: Theme.table(this.props.theme).thead_color
@@ -86,6 +65,12 @@ export default class WidgetTable extends React.Component {
           height: '20px'
         }
       }
+      this.setAggregators();
+      this.setDimensions();
+      this.setHeader();
+
+      const data = this.formatData(this.props.data);
+
       return (
         <div className="widget_table">
           <MuiThemeProvider>
@@ -100,7 +85,7 @@ export default class WidgetTable extends React.Component {
               selectable={false}
               showRowHover={false}
               columns={this.header}
-              data={this.state.$$data}
+              data={data}
               showCheckboxes={false}
               showFooterToolbar={false}
             />

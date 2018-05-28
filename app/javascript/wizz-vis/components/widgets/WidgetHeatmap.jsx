@@ -11,8 +11,6 @@ export default class WidgetHeatmap extends React.Component {
     super(props);
 
     this.state = {
-      $$data: this.props.data,
-      error: this.props.error,
       aggregator: '',
       coordinate_dimension: ''
     };
@@ -24,23 +22,24 @@ export default class WidgetHeatmap extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.data !== this.props.data || prevProps.error !== this.props.error) {
-      this.setData();
+    if (prevProps.aggregators !== this.props.aggregators ||
+      prevProps.dimensions !== this.props.dimensions ||
+      prevProps.options.metric !== this.props.options.metric){
+      this.setCoordinateDimension();
+      this.setAggregator();
     }
   }
 
-  setData() {
-    let data = this.props.data.filter((d) => d[this.state.coordinate_dimension] !== null);
-    this.setState({
-      $$data: data.map((d) => (
+  transformData(data) {
+    return (
+      data.filter((d) => d[this.state.coordinate_dimension] !== null).map((d) => (
         {
           position: d[this.state.coordinate_dimension].split(',')
                     .map((e) => (parseFloat(e))),
           aggregator: d[this.state.aggregator]
         }
-      )),
-      error: this.props.error
-    });
+      ))
+    );
   }
 
   setCoordinateDimension() {
@@ -63,9 +62,11 @@ export default class WidgetHeatmap extends React.Component {
   render () {
     const cssClass = cs({ 'widget-error': this.state.error });
 
+    const data = this.transformData(this.props.data);
+
     return (
       <div className={ cssClass }>
-        { this.state.error ? <Info error={this.state.error} /> : null }
+        { this.props.error ? <Info error={this.props.error} /> : null }
         <Map
           center={[0,0]}
           zoom={13}
@@ -75,7 +76,7 @@ export default class WidgetHeatmap extends React.Component {
           <HeatmapLayer
             fitBoundsOnLoad
             fitBoundsOnUpdate
-            points={ this.state.$$data }
+            points={ data }
             longitudeExtractor={m => m.position[1]}
             latitudeExtractor={m => m.position[0]}
             intensityExtractor={m => m.aggregator} />
