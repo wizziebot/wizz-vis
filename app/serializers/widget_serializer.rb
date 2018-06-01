@@ -3,6 +3,8 @@ class WidgetSerializer < ActiveModel::Serializer
     :id,
     :type,
     :title,
+    :datasource_id,
+    :dashboard_id,
     :row,
     :col,
     :size_x,
@@ -11,6 +13,7 @@ class WidgetSerializer < ActiveModel::Serializer
     :interval
   )
 
+  belongs_to :datasource
   has_many :dimensions
   has_many :aggregators
   has_many :post_aggregators

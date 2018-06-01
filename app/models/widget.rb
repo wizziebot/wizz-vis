@@ -2,6 +2,7 @@ require 'druid'
 
 class Widget < ApplicationRecord
   include Intervalable
+  include Api::WidgetApi
 
   # ==========================================================
   # Relations
@@ -12,6 +13,9 @@ class Widget < ApplicationRecord
   has_and_belongs_to_many :aggregators
   has_many :filters, dependent: :destroy
   has_many :post_aggregators, dependent: :destroy
+
+  accepts_nested_attributes_for :post_aggregators
+  accepts_nested_attributes_for :filters
 
   # ==========================================================
   # Validations

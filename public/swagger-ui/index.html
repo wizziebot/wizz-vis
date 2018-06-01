@@ -1,0 +1,72 @@
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Wizz-Vis API</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/swagger-ui/swagger-ui.css" >
+    <link rel="icon" type="image/png" href="/swagger-ui/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/swagger-ui/favicon-16x16.png" sizes="16x16" />
+    <style>
+      html
+      {
+        box-sizing: border-box;
+        overflow: -moz-scrollbars-vertical;
+        overflow-y: scroll;
+      }
+
+      *,
+      *:before,
+      *:after
+      {
+        box-sizing: inherit;
+      }
+
+      body
+      {
+        margin:0;
+        background: #fafafa;
+      }
+
+      .swagger-ui .topbar {
+        background-color: #F68D2E;
+      }
+
+      .swagger-ui .topbar .download-url-wrapper {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="swagger-ui"></div>
+
+    <script src="/swagger-ui/swagger-ui-bundle.js"> </script>
+    <script src="/swagger-ui/swagger-ui-standalone-preset.js"> </script>
+    <script>
+      window.onload = function() {
+
+      // Build a system
+      const ui = SwaggerUIBundle({
+        url: "/api/v1/docs",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        jsonEditor: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout"
+      })
+
+      window.ui = ui;
+      document.getElementsByClassName('topbar-wrapper')[0].getElementsByTagName('img')[0].src = "/swagger-ui/logo.png";
+      document.getElementsByClassName('topbar-wrapper')[0].getElementsByTagName('span')[0].innerHTML = "Wizzie";
+    }
+    </script>
+  </body>
+</html>

@@ -1,4 +1,9 @@
 FactoryBot.define do
+  factory :aggregator do
+    name 'aggregator'
+    aggregator_type 'longSum'
+  end
+
   factory :bytes, class: Aggregator do
     name 'sum_bytes'
     aggregator_type 'longSum'

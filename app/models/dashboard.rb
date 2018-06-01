@@ -11,6 +11,8 @@ class Dashboard < ApplicationRecord
   # ==========================================================
   has_many :widgets, dependent: :destroy
 
+  accepts_nested_attributes_for :widgets
+
   # ==========================================================
   # Validations
   # ==========================================================

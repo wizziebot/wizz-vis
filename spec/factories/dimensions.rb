@@ -1,4 +1,8 @@
 FactoryBot.define do
+  factory :dimension do
+    name 'dimension'
+  end
+
   factory :coordinate, class: Dimension do
     name 'client_latlng'
     association :datasource
