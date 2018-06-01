@@ -49,7 +49,7 @@ export default class WidgetPie extends React.Component {
     if(payload != undefined) {
       let percentage = payload.value / total;
       return (
-        <span>
+        <span style={{ color: payload.payload.fill }}>
           {`${payload.name || 'N/A'}: ${Format.fixed(payload.value)} (${(percentage * 100).toFixed(0)}%)`}
         </span>
       )
