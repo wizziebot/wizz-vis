@@ -18,6 +18,7 @@ import WidgetSankey from './widgets/WidgetSankey';
 import WidgetMultiserie from './widgets/WidgetMultiserie';
 import WidgetImage from './widgets/WidgetImage';
 import WidgetRoute from './widgets/WidgetRoute';
+import WidgetHistogram from './widgets/WidgetHistogram';
 
 import Errors from './../utils/errors';
 
@@ -46,7 +47,8 @@ export default class WidgetBase extends React.Component {
       WidgetSankey,
       WidgetMultiserie,
       WidgetImage,
-      WidgetRoute
+      WidgetRoute,
+      WidgetHistogram
     };
   }
 

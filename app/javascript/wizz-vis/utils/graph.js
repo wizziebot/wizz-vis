@@ -2,6 +2,7 @@
 
 import compact from 'lodash/compact';
 import flattenDeep from 'lodash/flattenDeep';
+import Format from './format';
 
 export default {
   chord(data, dim_origin, dim_destination, aggregator) {
@@ -40,4 +41,26 @@ export default {
       })
     };
   },
+
+  histogram(data, aggregator, discard_values) {
+    const graph = data[0][aggregator];
+    let histogram = [];
+
+    for (let [i, count] of graph.counts.entries()) {
+      if(i > 0 && discard_values === true) {
+        count -= graph.counts[i - 1];
+        if(count < 0)
+          count = 0;
+      }
+
+      histogram.push(
+        {
+          range: (Format.fixed(graph.breaks[i]) + ' - ' + Format.fixed(graph.breaks[i + 1])),
+          [aggregator]: count
+        }
+      );
+    }
+
+    return histogram;
+  }
 };
