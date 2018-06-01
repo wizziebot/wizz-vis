@@ -2,10 +2,9 @@
 
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
-import { ResponsiveContainer, LineChart, Line, XAxis, Tooltip } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
-import Time from './../../utils/time';
 import Format from './../../utils/format';
 import Info from './../Info';
 
@@ -34,6 +33,11 @@ export default class WidgetValue extends React.Component {
     } else {
       return this.props.data[data_length - 1][this.aggregator];
     }
+  }
+
+  getFontSize() {
+    return (this.props.width < this.props.height) ?
+      this.props.width / 12 : this.props.height / 12;
   }
 
   showGauge(){
@@ -116,7 +120,7 @@ export default class WidgetValue extends React.Component {
           style={
             { position: 'absolute',
               width: '100%',
-              height: this.showSerie() ? '60%' : '100%',
+              height: '100%',
               top: 10,
               left: 0 }
           }
@@ -129,26 +133,25 @@ export default class WidgetValue extends React.Component {
 
       if(this.showSerie()) {
         serie = <ResponsiveContainer>
-          <LineChart data={this.props.data}
-                margin={{top: 0, right: 5, left: 5, bottom: 0}}>
-             <XAxis
-               dataKey = "timestamp"
-               hide = { true }
-             />
-             <Tooltip
-               formatter = { Format.fixed.bind(Format) }
-               labelFormatter = { Time.simple_format }
-               labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
-             />
-           <Line key={ 0 } type="monotone" dataKey={ this.aggregator } stroke={ Colors.get(0) } dot={false}/>
-          </LineChart>
+          <AreaChart data={this.props.data}
+                margin={{top: 0, right: 0, left: 5, bottom: 0}}>
+            <defs>
+              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={ Colors.get(0) } stopOpacity={0.7}/>
+                <stop offset="95%" stopColor={ Colors.get(0) } stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <Area key={ 0 } type="monotone" dataKey={ this.aggregator }
+              stroke={ Colors.get(0) } dot={false}
+              fillOpacity={1} fill="url(#colorUv)" />
+          </AreaChart>
         </ResponsiveContainer>
       }
 
       return (
         <div className='widget-value'>
           <div className='card horizontal'>
-            <div className='card-stacked'>
+            <div className='card-stacked' style={{ fontSize: this.getFontSize() }}>
               <div className='card-content center-align valign-wrapper'>
                 {element}
               </div>

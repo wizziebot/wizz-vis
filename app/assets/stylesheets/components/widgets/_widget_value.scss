@@ -8,6 +8,10 @@
     box-shadow: none;
     border-bottom: none;
 
+    &.horizontal {
+      margin: 0px;
+    }
+
     .card-stacked {
       height: 100%;
       width: 100%;
@@ -15,6 +19,7 @@
       .card-content {
         font-size: 3em;
         font-weight: 700;
+        z-index: 1;
 
         .value {
           width: 100%;
@@ -24,6 +29,8 @@
       .card-serie {
         width: 100%;
         height: 40%;
+        position: absolute;
+        top: 60%;
       }
     }
   }
