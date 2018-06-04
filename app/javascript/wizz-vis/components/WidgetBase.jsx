@@ -121,6 +121,16 @@ export default class WidgetBase extends React.Component {
     .catch(error => this.setState({ error: error }));
   }
 
+  contentHeight () {
+    if (this.refs.content !== undefined)
+      return this.refs.content.clientHeight
+  }
+
+  contentWidth () {
+    if (this.refs.content !== undefined)
+      return this.refs.content.clientWidth
+  }
+
   render () {
     const Type = this.components[this.props.type || 'WidgetArea'];
 
@@ -133,8 +143,11 @@ export default class WidgetBase extends React.Component {
           locked={this.props.locked}
           remove={this.removeWidget.bind(this)}
         />
-        <div className="widget-content">
-          <Type {...this.props} {...this.state.attributes} data={this.state.$$data} error={this.state.error} />
+        <div className='widget-content' ref='content'>
+          <Type {...this.props} {...this.state.attributes}
+            data={this.state.$$data} error={this.state.error}
+            height={this.contentHeight()}
+            width={this.contentWidth()} />
         </div>
       </div>
     )

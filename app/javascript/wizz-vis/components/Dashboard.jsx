@@ -90,8 +90,6 @@ export default class Dashboard extends React.Component {
                                 <WidgetBase {...w}
                                 locked={this.props.locked}
                                 theme={this.props.theme}
-                                height={ layout.lg[index].h * ROWHEIGHT }
-                                width={ layout.lg[index].w * this.refs.dashboard.offsetWidth / 12 }
                                 reloadTimestamp={this.state.reloadTimestamp}
                                 remove={ this.removeItem.bind(this, w.id) } />
                               </div>);

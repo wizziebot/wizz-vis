@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 
-import React, { Component } from 'react';
+import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DataTables from 'material-ui-datatables';
 import Theme from './../../utils/theme';
@@ -43,10 +43,18 @@ export default class WidgetTable extends React.Component {
           key: d,
           label: d,
           style: {
-            height: HEADER_HEIGHT
+            height: (
+              this.props.height - HEADER_HEIGHT < 0 ?
+                this.props.height : HEADER_HEIGHT
+            )
           }
         });
       });
+  }
+
+  getContentHeight() {
+    const content_size = this.props.height - HEADER_HEIGHT
+    return content_size < 0 ? '0px' : content_size.toString() + 'px'
   }
 
   render () {
@@ -61,8 +69,7 @@ export default class WidgetTable extends React.Component {
         table: {
           backgroundColor: Theme.table(this.props.theme).tbody_bg,
           color: Theme.table(this.props.theme).tbody_color,
-          borderColor: Theme.table(this.props.theme).border_color,
-          height: '20px'
+          borderColor: Theme.table(this.props.theme).border_color
         }
       }
       this.setAggregators();
@@ -75,7 +82,7 @@ export default class WidgetTable extends React.Component {
         <div className="widget_table">
           <MuiThemeProvider>
             <DataTables
-              height={(this.props.height - HEADER_HEIGHT).toString() + 'px'}
+              height={this.getContentHeight()}
               showHeaderToolbar={false}
               showHeaderToolbarFilterIcon={false}
               tableHeaderStyle={theme.tableHeader}
