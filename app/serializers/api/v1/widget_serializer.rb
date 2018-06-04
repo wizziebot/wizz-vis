@@ -9,6 +9,7 @@ class Api::V1::WidgetSerializer < ActiveModel::Serializer
     :size_x,
     :size_y,
     :range,
+    :granularity,
     :start_time,
     :end_time,
     :limit,

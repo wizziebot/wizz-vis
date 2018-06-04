@@ -101,6 +101,7 @@ module Api
                   size_x: 4,
                   size_y: 4,
                   range: 'last_1_hour',
+                  granularity: 'PT1M',
                   start_time: '',
                   end_time: '',
                   limit: 100,
