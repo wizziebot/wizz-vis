@@ -12,7 +12,7 @@ module WizzVis
     config.load_defaults 5.2
 
     config.active_job.queue_adapter = :sidekiq
-
+    config.autoload_paths += Dir[Rails.root.join('app', 'models', 'widgets')]
     config.eager_load_paths.push(*%W[#{config.root}/lib])
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers

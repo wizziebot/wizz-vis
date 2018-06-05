@@ -20,7 +20,8 @@ class Widget < ApplicationRecord
   # ==========================================================
   # Validations
   # ==========================================================
-  validates :row, :col, :size_x, :size_y, presence: true
+  validates :granularity, :row, :col, :size_x, :size_y, presence: true
+  validate :validate_interval
 
   def data(override_options = {})
     query = Datastore::Query.new(
@@ -34,5 +35,11 @@ class Widget < ApplicationRecord
     )
 
     query.run
+  end
+
+  private
+
+  def validate_interval
+    errors.add(:range, 'must be set') if range.nil? && start_time.nil? && end_time.nil?
   end
 end

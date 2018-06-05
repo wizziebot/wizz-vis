@@ -9,10 +9,26 @@ RSpec.describe Widget, type: :model do
   end
 
   describe 'validations' do
+    it { is_expected.to validate_presence_of(:granularity) }
     it { is_expected.to validate_presence_of(:row) }
     it { is_expected.to validate_presence_of(:col) }
     it { is_expected.to validate_presence_of(:size_x) }
     it { is_expected.to validate_presence_of(:size_y) }
+  end
+
+  describe 'custom_validations' do
+    context 'when no interval is set' do
+      let(:widget) { create(:widget_area) }
+
+      it 'is not valid' do
+        widget.range = nil
+        widget.start_time = nil
+        widget.end_time = nil
+
+        expect(widget.valid?).to be false
+      end
+
+    end
   end
 
   describe '#data' do

@@ -16,7 +16,9 @@ RSpec.describe Api::V1::DashboardsController, type: :controller do
         datasource_name: datasource.name,
         dashboard_id: widget.dashboard_id,
         row: 0, col: 0, size_x: 4, size_y: 4,
-        dimensions: datasource.dimensions.map(&:name),
+        granularity: widget.granularity,
+        range: widget.range,
+        dimensions: [],
         aggregators: datasource.aggregators.map(&:name),
         filters: [
           {

@@ -1,2 +1,0 @@
-class WidgetSerie < Widget
-end

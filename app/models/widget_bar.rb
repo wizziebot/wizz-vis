@@ -1,2 +1,0 @@
-class WidgetBar < Widget
-end
