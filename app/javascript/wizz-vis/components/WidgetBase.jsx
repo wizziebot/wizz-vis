@@ -5,8 +5,6 @@ import { ResponsiveContainer } from 'recharts';
 
 import WidgetTitle from './widgets/WidgetTitle';
 import WidgetSerie from './widgets/WidgetSerie';
-import WidgetArea from './widgets/WidgetArea';
-import WidgetBar from './widgets/WidgetBar';
 import WidgetPie from './widgets/WidgetPie';
 import WidgetValue from './widgets/WidgetValue';
 import WidgetLocation from './widgets/WidgetLocation';
@@ -34,9 +32,7 @@ export default class WidgetBase extends React.Component {
     };
 
     this.components = {
-      WidgetArea,
       WidgetSerie,
-      WidgetBar,
       WidgetPie,
       WidgetValue,
       WidgetLocation,
@@ -132,7 +128,7 @@ export default class WidgetBase extends React.Component {
   }
 
   render () {
-    const Type = this.components[this.props.type || 'WidgetArea'];
+    const Type = this.components[this.props.type || 'WidgetSerie'];
 
     return (
       <div className='widget center-align'>

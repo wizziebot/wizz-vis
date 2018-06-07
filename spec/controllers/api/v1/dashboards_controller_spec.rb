@@ -4,7 +4,7 @@ RSpec.describe Api::V1::DashboardsController, type: :controller do
   let(:datasource) { create(:datasource_with_relations) }
   let(:aggregators) { datasource.aggregators }
   let(:dashboard) { create(:dashboard) }
-  let(:widget) { create(:widget_area, datasource: datasource) }
+  let(:widget) { create(:widget_serie, datasource: datasource) }
   let(:valid_attributes) do
     {
       name: "Dashboard's name",

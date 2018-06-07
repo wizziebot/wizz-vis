@@ -1,2 +1,0 @@
-class WidgetArea < Widget
-end

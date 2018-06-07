@@ -126,7 +126,7 @@ RSpec.describe DashboardsController, type: :controller do
   describe "DELETE #destroy" do
     let!(:dashboard) do
       create(:dashboard) do |dashboard|
-        dashboard.widgets.create(attributes_for(:widget_area))
+        dashboard.widgets.create(attributes_for(:widget_serie))
       end
     end
 

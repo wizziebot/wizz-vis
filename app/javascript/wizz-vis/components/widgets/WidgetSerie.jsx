@@ -1,8 +1,8 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid,
-         Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+         LineChart, Line, AreaChart, Area, BarChart, Bar } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Time from './../../utils/time';
@@ -17,6 +17,12 @@ export default class WidgetSerie extends React.Component {
 
     this.state = {
       aggregators: []
+    };
+
+    this.components = {
+      line: { type: LineChart, shape: Line },
+      area: { type: AreaChart, shape: Area },
+      bar:  { type: BarChart,  shape: Bar }
     };
   }
 
@@ -74,9 +80,11 @@ export default class WidgetSerie extends React.Component {
       const start_time = Time.moment(this.props.interval[0]).unix() * 1000;
       const end_time = Time.moment(this.props.interval[1]).unix() * 1000;
 
+      const Chart = this.components[this.props.options.type || 'line'];
+
       return (
         <ResponsiveContainer>
-          <LineChart data={data}
+          <Chart.type data={data}
                 margin={{top: 5, right: 30, left: 20, bottom: 5}}>
              <XAxis
                dataKey = "unixTime"
@@ -102,10 +110,13 @@ export default class WidgetSerie extends React.Component {
              <Legend />
              {
                this.state.aggregators.map((a, index) => (
-                 <Line key={ index } type="monotone" dataKey={ a } stroke={ Colors.get(index) } dot={false}/>
+                 <Chart.shape
+                   key={ index } type="monotone" dataKey={ a }
+                   stroke={ Colors.get(index) } dot={false}
+                   fill={ Colors.get(index) } />
                ))
              }
-          </LineChart>
+          </Chart.type>
         </ResponsiveContainer>
       )
     }
