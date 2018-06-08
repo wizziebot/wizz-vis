@@ -5,6 +5,7 @@ import { ResponsiveContainer } from 'recharts';
 
 import WidgetTitle from './widgets/WidgetTitle';
 import WidgetSerie from './widgets/WidgetSerie';
+import WidgetBar from './widgets/WidgetBar';
 import WidgetPie from './widgets/WidgetPie';
 import WidgetValue from './widgets/WidgetValue';
 import WidgetLocation from './widgets/WidgetLocation';
@@ -33,6 +34,7 @@ export default class WidgetBase extends React.Component {
 
     this.components = {
       WidgetSerie,
+      WidgetBar,
       WidgetPie,
       WidgetValue,
       WidgetLocation,
