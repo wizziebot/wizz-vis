@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid,
-         Tooltip, Legend } from 'recharts';
+         Tooltip, Legend, ReferenceLine, Label } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Time from './../../utils/time';
@@ -110,6 +110,21 @@ export default class WidgetMultiserie extends React.Component {
                labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
              />
              <Legend />
+             {
+               (this.props.options.thresholds || []).map((threshold, index) => (
+                 <ReferenceLine
+                   key = { index }
+                   y = { threshold.value }
+                   stroke = { threshold.color }
+                   strokeDasharray='3 3' >
+                   <Label
+                     value = { threshold.label }
+                     offset = { 3 }
+                     position = 'insideBottomRight'
+                     stroke = { Theme.text(this.props.theme) } />
+                 </ReferenceLine>
+               ))
+             }
              {
                data.dimensions.map((a, index) => (
                  <Line key={ index } type="monotone" dataKey={ a } stroke={ Colors.get(index) } dot={false}/>
