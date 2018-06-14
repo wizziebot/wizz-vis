@@ -1,8 +1,9 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid,
-         Tooltip, Legend, ReferenceLine, Label } from 'recharts';
+import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+         LineChart, Line, AreaChart, Area, BarChart, Bar,
+         ReferenceLine, Label } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Time from './../../utils/time';
@@ -18,6 +19,12 @@ export default class WidgetMultiserie extends React.Component {
     this.state = {
       aggregator: '',
       dimension: ''
+    };
+
+    this.components = {
+      line: { type: LineChart, shape: Line },
+      area: { type: AreaChart, shape: Area },
+      bar:  { type: BarChart,  shape: Bar }
     };
   }
 
@@ -84,9 +91,11 @@ export default class WidgetMultiserie extends React.Component {
       const start_time = Time.moment(this.props.interval[0]).unix() * 1000;
       const end_time = Time.moment(this.props.interval[1]).unix() * 1000;
 
+      const Chart = this.components[this.props.options.type || 'line'];
+
       return (
         <ResponsiveContainer>
-          <LineChart data={data.values}
+          <Chart.type data={data.values}
                 margin={{top: 5, right: 30, left: 20, bottom: 5}}>
               <XAxis
                 dataKey = "unixTime"
@@ -111,9 +120,17 @@ export default class WidgetMultiserie extends React.Component {
              />
              <Legend />
              {
+               data.dimensions.map((a, index) => (
+                 <Chart.shape key = { 'shape-' + index } type="monotone" dataKey = { a }
+                   stroke = { Colors.get(index) } dot = { false }
+                   fill = { Colors.get(index) }
+                   stackId = { this.props.options.stacked ? 'stacked' : null } />
+               ))
+             }
+             {
                (this.props.options.thresholds || []).map((threshold, index) => (
                  <ReferenceLine
-                   key = { index }
+                   key = { 'reference-' + index }
                    y = { threshold.value }
                    stroke = { threshold.color }
                    strokeDasharray='3 3' >
@@ -125,12 +142,7 @@ export default class WidgetMultiserie extends React.Component {
                  </ReferenceLine>
                ))
              }
-             {
-               data.dimensions.map((a, index) => (
-                 <Line key={ index } type="monotone" dataKey={ a } stroke={ Colors.get(index) } dot={false}/>
-               ))
-             }
-          </LineChart>
+          </Chart.type>
         </ResponsiveContainer>
       )
     }
