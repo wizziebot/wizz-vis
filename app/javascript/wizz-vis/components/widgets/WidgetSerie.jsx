@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-         LineChart, Line, AreaChart, Area, BarChart, Bar } from 'recharts';
+         LineChart, Line, AreaChart, Area, BarChart, Bar,
+         ReferenceLine, Label } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Time from './../../utils/time';
@@ -111,9 +112,24 @@ export default class WidgetSerie extends React.Component {
              {
                this.state.aggregators.map((a, index) => (
                  <Chart.shape
-                   key={ index } type="monotone" dataKey={ a }
+                   key={ 'shape-' + index } type="monotone" dataKey={ a }
                    stroke={ Colors.get(index) } dot={false}
                    fill={ Colors.get(index) } />
+               ))
+             }
+             {
+               (this.props.options.thresholds || []).map((threshold, index) => (
+                 <ReferenceLine
+                   key = { 'reference-' + index }
+                   y = { threshold.value }
+                   stroke = { threshold.color }
+                   strokeDasharray='3 3' >
+                   <Label
+                     value = { threshold.label }
+                     offset = { 3 }
+                     position = 'insideBottomRight'
+                     stroke = { Theme.text(this.props.theme) } />
+                 </ReferenceLine>
                ))
              }
           </Chart.type>
