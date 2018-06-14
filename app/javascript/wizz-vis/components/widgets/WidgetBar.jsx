@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-         Tooltip, Legend } from 'recharts';
+         Tooltip, Legend, ReferenceLine, Label } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Format from './../../utils/format';
@@ -101,6 +101,21 @@ export default class WidgetBar extends React.Component {
               fill = { Colors.get(0) }
               name = { this.state.dimension }
             />
+            {
+              (this.props.options.thresholds || []).map((threshold, index) => (
+                <ReferenceLine
+                  key = { 'reference-' + index }
+                  y = { threshold.value }
+                  stroke = { threshold.color }
+                  strokeDasharray='3 3'>
+                  <Label
+                    value = { threshold.label }
+                    offset = { 3 }
+                    position = 'insideBottomRight'
+                    stroke = { Theme.text(this.props.theme) } />
+                </ReferenceLine>
+              ))
+            }
           </BarChart>
         </ResponsiveContainer>
       )
