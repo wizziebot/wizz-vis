@@ -10,10 +10,12 @@ class Widget < ApplicationRecord
   belongs_to :dashboard, touch: true
   belongs_to :datasource
   has_and_belongs_to_many :dimensions
-  has_and_belongs_to_many :aggregators
-  has_many :filters, dependent: :destroy
+  has_many :filters, as: :filterable, dependent: :destroy
+  has_many :aggregator_widgets, dependent: :destroy
+  has_many :aggregators, through: :aggregator_widgets
   has_many :post_aggregators, dependent: :destroy
 
+  accepts_nested_attributes_for :aggregator_widgets
   accepts_nested_attributes_for :post_aggregators
   accepts_nested_attributes_for :filters
 
@@ -27,7 +29,7 @@ class Widget < ApplicationRecord
       datasource: datasource.name,
       properties: attributes.merge(interval: interval).merge(override_options),
       dimensions: dimensions,
-      aggregators: aggregators,
+      aggregators: aggregator_widgets.includes(:aggregator, :filters),
       post_aggregators: post_aggregators,
       filters: filters,
       options: options

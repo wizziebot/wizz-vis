@@ -12,7 +12,10 @@ RSpec.describe Api::V1::WidgetsController, type: :controller do
       dashboard_id: widget.dashboard_id,
       row: 0, col: 0, size_x: 4, size_y: 4,
       dimensions: datasource.dimensions.map(&:name),
-      aggregators: datasource.aggregators.map(&:name),
+      aggregators: datasource.aggregators.map do |agg|
+                     { 'aggregator' => agg.name, 'aggregator_name' => agg.name,
+                       'filters' => [] }
+                   end,
       filters: [
         {
           dimension_name: datasource.dimensions.map(&:name).first,
@@ -97,6 +100,29 @@ RSpec.describe Api::V1::WidgetsController, type: :controller do
         datasource_name: new_datasource.name
       }
       expect(response).to be_successful
+    end
+
+    it 'returns a sucess response when updating the aggregators' do
+      aggregator = aggregators.first
+      dimension = datasource.dimensions.first
+
+      aggregator_params = [{
+        'aggregator' => aggregator.name,
+        'aggregator_name' => 'filtered_aggregator',
+        'filters' => [{
+          'dimension_name' => dimension.name,
+          'operator' => 'eq',
+          'value' => 'a'
+        }]
+      }]
+
+      patch :update, params: {
+        id: widget.id,
+        aggregators: aggregator_params
+      }
+
+      expect(response).to be_successful
+      expect(JSON.parse(response.body)['aggregators']).to eq(aggregator_params)
     end
 
     it 'fails when try to update to unexisted datasource' do

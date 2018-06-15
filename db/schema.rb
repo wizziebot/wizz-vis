@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_04_100412) do
+ActiveRecord::Schema.define(version: 2018_06_12_143839) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,11 +24,12 @@ ActiveRecord::Schema.define(version: 2018_05_04_100412) do
     t.index ["datasource_id"], name: "index_aggregators_on_datasource_id"
   end
 
-  create_table "aggregators_widgets", id: false, force: :cascade do |t|
+  create_table "aggregators_widgets", force: :cascade do |t|
     t.bigint "aggregator_id", null: false
     t.bigint "widget_id", null: false
     t.index ["aggregator_id", "widget_id"], name: "index_aggregators_widgets_on_aggregator_id_and_widget_id"
     t.index ["widget_id", "aggregator_id"], name: "index_aggregators_widgets_on_widget_id_and_aggregator_id"
+    t.string "aggregator_name"
   end
 
   create_table "dashboards", force: :cascade do |t|
@@ -64,13 +65,14 @@ ActiveRecord::Schema.define(version: 2018_05_04_100412) do
 
   create_table "filters", force: :cascade do |t|
     t.bigint "dimension_id"
-    t.bigint "widget_id"
+    t.bigint "filterable_id"
     t.string "operator"
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "filterable_type", default: "Widget"
     t.index ["dimension_id"], name: "index_filters_on_dimension_id"
-    t.index ["widget_id"], name: "index_filters_on_widget_id"
+    t.index ["filterable_id", "filterable_type"], name: "index_filters_on_filterable_id_and_filterable_type"
   end
 
   create_table "post_aggregators", force: :cascade do |t|
@@ -110,7 +112,6 @@ ActiveRecord::Schema.define(version: 2018_05_04_100412) do
   add_foreign_key "aggregators", "datasources"
   add_foreign_key "dimensions", "datasources"
   add_foreign_key "filters", "dimensions"
-  add_foreign_key "filters", "widgets"
   add_foreign_key "post_aggregators", "widgets"
   add_foreign_key "widgets", "dashboards"
   add_foreign_key "widgets", "datasources"

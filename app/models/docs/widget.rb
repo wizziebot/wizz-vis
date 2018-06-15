@@ -62,7 +62,18 @@ module Docs
       property :aggregators do
         key :type, :array
         items do
-          key :type, :string
+          property :aggregator do
+            key :type, :string
+          end
+          property :aggregator_name do
+            key :type, :string
+          end
+          property :filters do
+            key :type, :array
+            items do
+              key :'$ref', :Filter
+            end
+          end
         end
       end
       property :post_aggregators do

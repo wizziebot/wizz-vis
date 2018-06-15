@@ -3,7 +3,7 @@ class Filter < ApplicationRecord
   # Relations
   # ==========================================================
   belongs_to :dimension
-  belongs_to :widget
+  belongs_to :filterable, polymorphic: true
 
   # ==========================================================
   # Validations

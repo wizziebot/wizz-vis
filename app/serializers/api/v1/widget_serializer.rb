@@ -25,7 +25,17 @@ class Api::V1::WidgetSerializer < ActiveModel::Serializer
   end
 
   attribute :aggregators do
-    object.aggregators.map(&:name)
+    #object.aggregators.map(&:name)
+    object.aggregator_widgets.includes(:aggregator).map do |aw|
+      {
+        aggregator: aw.aggregator.name,
+        aggregator_name: aw.aggregator_name || aw.aggregator.name,
+        filters: ActiveModelSerializers::SerializableResource.new(
+          aw.filters,
+          each_serializer: Api::V1::FilterSerializer
+        )
+      }
+    end
   end
 
   attribute :post_aggregators do

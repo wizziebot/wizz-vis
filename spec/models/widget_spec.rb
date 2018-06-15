@@ -5,7 +5,8 @@ RSpec.describe Widget, type: :model do
     it { is_expected.to belong_to(:dashboard) }
     it { is_expected.to belong_to(:datasource) }
     it { is_expected.to have_and_belong_to_many(:dimensions) }
-    it { is_expected.to have_and_belong_to_many(:aggregators) }
+    it { is_expected.to have_many(:aggregator_widgets) }
+    it { is_expected.to have_many(:aggregators).through(:aggregator_widgets) }
   end
 
   describe 'validations' do
