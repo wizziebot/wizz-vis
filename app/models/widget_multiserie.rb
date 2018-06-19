@@ -10,7 +10,7 @@ class WidgetMultiserie < Widget
     dimension_values.each do |val|
       filter = filters.build(
         dimension_id: dimensions.first.id,
-        widget_id: id,
+        filterable_id: id,
         operator: :eq,
         value: val
       )
