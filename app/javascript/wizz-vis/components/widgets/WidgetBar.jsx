@@ -98,7 +98,7 @@ export default class WidgetBar extends React.Component {
             <Legend />
             <Bar
               dataKey = { this.state.aggregator }
-              fill = { Colors.get(0) }
+              fill = { this.props.options.color || Colors.get(0) }
               name = { this.state.dimension }
             />
             {
