@@ -46,7 +46,7 @@ export default class WidgetBar extends React.Component {
   }
 
   formatYAxis(value) {
-    return Format.prefix(value);
+    return Format.prefix(value, 2);
   }
 
   customTooltip(value) {

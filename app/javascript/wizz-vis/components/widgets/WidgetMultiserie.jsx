@@ -77,7 +77,7 @@ export default class WidgetMultiserie extends React.Component {
   }
 
   formatYAxis(value) {
-    return Format.prefix(value);
+    return Format.prefix(value, 2);
   }
 
   render () {
