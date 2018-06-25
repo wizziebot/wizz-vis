@@ -15,7 +15,7 @@ export default class WidgetValue extends React.Component {
   }
 
   getAggregator() {
-    return this.props.options.metric || this.props.aggregators[0].name;
+    return this.props.options.metrics || this.props.aggregators[0].name;
   }
 
   getValue() {

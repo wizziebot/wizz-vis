@@ -24,7 +24,7 @@ export default class WidgetHistogram extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.aggregators !== this.props.aggregators ||
-      prevProps.options.metric !== this.props.options.metric)
+      prevProps.options.metrics !== this.props.options.metrics)
       this.setAggregator();
   }
 
@@ -34,7 +34,7 @@ export default class WidgetHistogram extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.options.metric || this.props.aggregators[0].name
+      aggregator: this.props.options.metrics || this.props.aggregators[0].name
     });
   }
 

@@ -6,6 +6,7 @@ import DataTables from 'material-ui-datatables';
 import Theme from './../../utils/theme';
 import Format from './../../utils/format';
 import Info from './../Info';
+import castArray from 'lodash/castArray';
 
 const HEADER_HEIGHT = 80;
 
@@ -26,7 +27,7 @@ export default class WidgetTable extends React.Component {
 
   setAggregators() {
     if (this.props.options.metrics) {
-      this.aggregators = Array.isArray(this.props.options.metrics) ? this.props.options.metrics : [this.props.options.metrics];
+      this.aggregators = castArray(this.props.options.metrics);
     } else {
       this.aggregators = this.props.aggregators.map(a => a.name);
     }

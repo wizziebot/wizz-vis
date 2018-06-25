@@ -23,7 +23,7 @@ export default class WidgetPlane extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.aggregators !== this.props.aggregators ||
       prevProps.dimensions !== this.props.dimensions ||
-      prevProps.options.metric !== this.props.options.metric){
+      prevProps.options.metrics !== this.props.options.metrics){
       this.setDimensionAggregator();
     }
   }
@@ -44,7 +44,7 @@ export default class WidgetPlane extends React.Component {
       ));
 
     this.coordinate_dimension = coordinate_dimension.name;
-    this.aggregator = this.props.options.metric || this.props.aggregators[0].name;
+    this.aggregator = this.props.options.metrics || this.props.aggregators[0].name;
   }
 
   transformData(data) {

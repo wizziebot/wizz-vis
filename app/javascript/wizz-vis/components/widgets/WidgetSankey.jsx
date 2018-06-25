@@ -26,7 +26,7 @@ export default class WidgetSankey extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.aggregators !== this.props.aggregators ||
       prevProps.dimensions !== this.props.dimensions ||
-      prevProps.options.metric !== this.props.options.metric) {
+      prevProps.options.metrics !== this.props.options.metrics) {
       this.setDimensions();
       this.setAggregator();
     }
@@ -43,7 +43,7 @@ export default class WidgetSankey extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.options.metric || this.props.aggregators[0].name
+      aggregator: this.props.options.metrics || this.props.aggregators[0].name
     });
   }
 

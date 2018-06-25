@@ -9,6 +9,7 @@ import Theme from './../../utils/theme';
 import Time from './../../utils/time';
 import Format from './../../utils/format';
 import Info from './../Info';
+import castArray from 'lodash/castArray';
 
 export default class WidgetSerie extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ export default class WidgetSerie extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.aggregators !== this.props.aggregators ||
-      prevProps.options.metric !== this.props.options.metric)
+      prevProps.options.metrics !== this.props.options.metrics)
       this.setAggregators();
   }
 
@@ -44,9 +45,9 @@ export default class WidgetSerie extends React.Component {
   }
 
   setAggregators() {
-    if (this.props.options.metric) {
+    if (this.props.options.metrics) {
       this.setState({
-        aggregators: [this.props.options.metric]
+        aggregators: castArray(this.props.options.metrics)
       });
     } else {
       this.setState({

@@ -4,7 +4,7 @@ class WidgetMultiserie < Widget
       d[dimensions.first.name]
     end
 
-    metric = options['metric'] || aggregators.first.name
+    metric = [*options['metrics']].first || aggregators.first.name
 
     multiseries = []
     dimension_values.each do |val|
