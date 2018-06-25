@@ -49,21 +49,6 @@ export default class WidgetBar extends React.Component {
     return Format.prefix(value, 2);
   }
 
-  customTooltip(value) {
-    const payload = value.payload[0];
-    if(payload != undefined) {
-      return (
-        <div>
-          {`${payload.payload[this.state.dimension] || 'N/A'}`}
-          <br/>
-          <span style={{ color: payload.fill }}>
-            {`${payload.dataKey}: ${Format.fixed(payload.value)}`}
-          </span>
-        </div>
-      )
-    }
-  }
-
   render () {
     if(this.props.error || this.props.data.length == 0) {
       return(<Info error={this.props.error} />)
@@ -88,18 +73,13 @@ export default class WidgetBar extends React.Component {
               tick = { { fontSize: 12 } }
             />
             <Tooltip
-              content = { (value) => this.customTooltip(value) }
-              wrapperStyle = {{
-               margin: '0px',
-               padding: '10px',
-               background: '#fff',
-               border: '1px solid #ccc' }}
+              formatter = { Format.fixed.bind(Format) }
+              labelStyle = { { color: Theme.tooltip(this.props.theme).color } }
             />
             <Legend />
             <Bar
               dataKey = { this.state.aggregator }
               fill = { this.props.options.color || Colors.get(0) }
-              name = { this.state.dimension }
             />
             {
               (this.props.options.thresholds || []).map((threshold, index) => (
