@@ -2,6 +2,7 @@
 
 import compact from 'lodash/compact';
 import flattenDeep from 'lodash/flattenDeep';
+import cloneDeep from 'lodash/cloneDeep';
 import Format from './format';
 
 export default {
@@ -43,11 +44,15 @@ export default {
   },
 
   histogram(data, aggregator, discard_values) {
-    const graph = data[0][aggregator];
+    let graph = cloneDeep(data[0][aggregator]);
     let histogram = [];
+    if (discard_values === 'next') {
+      graph.counts = graph.counts.reverse();
+      graph.breaks = graph.breaks.reverse();
+    }
 
     for (let [i, count] of graph.counts.entries()) {
-      if(i > 0 && discard_values === true) {
+      if(i > 0 && discard_values !== undefined) {
         count -= graph.counts[i - 1];
         if(count < 0)
           count = 0;
@@ -55,12 +60,16 @@ export default {
 
       histogram.push(
         {
-          range: (Format.fixed(graph.breaks[i]) + ' - ' + Format.fixed(graph.breaks[i + 1])),
+          range: (
+            discard_values === 'next' ?
+              Format.fixed(graph.breaks[i + 1]) + ' - ' + Format.fixed(graph.breaks[i]) :
+              Format.fixed(graph.breaks[i]) + ' - ' + Format.fixed(graph.breaks[i + 1])
+          ),
           [aggregator]: count
         }
       );
     }
 
-    return histogram;
+    return discard_values === 'next' ? histogram.reverse() : histogram;
   }
 };
