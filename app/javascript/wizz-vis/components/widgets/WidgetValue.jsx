@@ -30,6 +30,8 @@ export default class WidgetValue extends React.Component {
       return Math.min(...this.props.data.map(d => d[this.aggregator]));
     } else if (value_type == 'average') {
       return this.props.data.map(d => d[this.aggregator]).reduce((a,b) => a + b, 0) / data_length;
+    } else if (value_type == 'total') {
+      return this.props.data.map(d => d[this.aggregator]).reduce((a,b) => a + b, 0);
     } else {
       return this.props.data[data_length - 1][this.aggregator];
     }
