@@ -72,14 +72,23 @@ export default class WidgetSerie extends React.Component {
     return Format.prefix(value, 2);
   }
 
+  step() {
+    if(this.props.data.length < 2 || this.props.options.type !== 'bar') return 0;
+
+    return Time.step(
+      this.props.data[1].timestamp,
+      this.props.data[0].timestamp
+    );
+  }
+
   render () {
     if(this.props.error || this.props.data.length == 0) {
       return(<Info error={this.props.error} />)
     } else {
       const data = this.transformData(this.props.data);
       const gap = this.minTickGap();
-      const start_time = Time.moment(this.props.interval[0]).unix() * 1000;
-      const end_time = Time.moment(this.props.interval[1]).unix() * 1000;
+      const start_time = Time.moment(this.props.interval[0]).add(this.step()).unix() * 1000;
+      const end_time = Time.moment(this.props.interval[1]).subtract(this.step()).unix() * 1000;
 
       const Chart = this.components[this.props.options.type || 'line'];
 
