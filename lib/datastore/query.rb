@@ -26,7 +26,7 @@ module Datastore
     end
 
     def run
-      Rails.logger.debug "  Druid Query  (#{@datasource.name}) #{@query.to_json}"
+      Datastore::Logger.new(@query.query, @datasource.name).debug
       result = @datasource.post(@query)
       if top_n?
         convert_top_n_data(result)
