@@ -39,7 +39,7 @@ module Api
         Docs::Filter,
         Docs::ApiError,
         self
-      ].freeze
+      ]
 
       def index
         render json: Swagger::Blocks.build_root_json(SWAGGERED_CLASSES)
