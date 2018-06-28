@@ -1,5 +1,5 @@
-$primary-color: #f68d2e !default;
-$secondary-color: #8c8c8c !default;
+$primary-color: <%= ENV['PRIMARY_COLOR'] %> !default;
+$secondary-color: <%= ENV['SECONDARY_COLOR'] %> !default;
 
 .primary-color {
   background-color: $primary-color !important;

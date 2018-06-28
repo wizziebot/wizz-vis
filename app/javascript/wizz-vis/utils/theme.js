@@ -16,7 +16,7 @@ const THEMES = {
       color: '#555'
     },
     table: {
-      thead_color: '#f68d2e',
+      thead_color: window.primary_color,
       thead_bg: '#ececec',
       tbody_color: '#555',
       tbody_bg: 'transparent',
@@ -38,7 +38,7 @@ const THEMES = {
       color: '#555'
     },
     table: {
-      thead_color: '#f68d2e',
+      thead_color: window.primary_color,
       thead_bg: '#242222',
       tbody_color: '#d8d9da',
       tbody_bg: '#1f1d1d',
