@@ -24,14 +24,14 @@ class Widget < ApplicationRecord
   # ==========================================================
   validates :row, :col, :size_x, :size_y, presence: true
 
-  def data(override_options = {})
+  def data(override_filters = nil, override_options = {})
     query = Datastore::Query.new(
       datasource: datasource.name,
       properties: attributes.merge(interval: interval).merge(override_options),
       dimensions: dimensions,
       aggregators: aggregator_widgets.includes(:aggregator, :filters),
       post_aggregators: post_aggregators,
-      filters: filters,
+      filters: override_filters || filters,
       options: options
     )
 
