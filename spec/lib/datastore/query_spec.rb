@@ -2,7 +2,11 @@ require 'rails_helper'
 
 describe Datastore::Query do
   let(:datasource) { create(:datasource) }
+  let(:widget) { create(:widget_serie) }
   let(:long_sum_agg) { create(:bytes) }
+  let(:aggregator_widget_1) do
+    create(:aggregator_widget, widget: widget, aggregator: long_sum_agg)
+  end
   let(:application_dimension) { create(:application_dimension) }
   let(:filter) { create(:application_filter) }
 
@@ -14,7 +18,7 @@ describe Datastore::Query do
           interval: [Time.now - 1.day, Time.now],
           granularity: 'PT1H'
         },
-        aggregators: [long_sum_agg],
+        aggregators: [aggregator_widget_1],
         filters: [filter],
         dimensions: []
       )
@@ -72,13 +76,13 @@ describe Datastore::Query do
         properties: {
           interval: [Time.now - 1.day, Time.now]
         },
-        aggregators: [long_sum_agg],
+        aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
         filters: []
       )
     end
     let(:result) { query.run }
-    let(:query_json) {query.as_json}
+    let(:query_json) { query.as_json }
 
     before do
       WebMock.stub_request(:post, ENV['DRUID_URL'])
@@ -125,7 +129,7 @@ describe Datastore::Query do
         properties: {
           interval: [Time.now - 1.day, Time.now]
         },
-        aggregators: [long_sum_agg],
+        aggregators: [aggregator_widget_1],
         dimensions: [application_dimension, coordinate_dimension],
         filters: []
       )
@@ -185,7 +189,7 @@ describe Datastore::Query do
       Datastore::Query.new(
         datasource: datasource.name,
         properties: { interval: [Time.now - 1.day, Time.now] },
-        aggregators: [long_sum_agg],
+        aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
         filters: [
           create(:application_filter, operator: 'neq')
@@ -208,7 +212,7 @@ describe Datastore::Query do
       Datastore::Query.new(
         datasource: datasource.name,
         properties: { interval: [Time.now - 1.day, Time.now] },
-        aggregators: [long_sum_agg],
+        aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
         filters: [
           create(:application_filter, operator: 'regex')
@@ -232,7 +236,7 @@ describe Datastore::Query do
       Datastore::Query.new(
         datasource: datasource.name,
         properties: { interval: [Time.now - 1.day, Time.now] },
-        aggregators: [long_sum_agg],
+        aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
         filters: [
           create(:application_filter, operator: '>')
@@ -253,7 +257,9 @@ describe Datastore::Query do
 
   context 'Aggregators' do
     describe 'Histogram with default breaks' do
-      let(:hist_dwell_agg) { create(:hist_dwell) }
+      let(:hist_dwell_agg) do
+        create(:aggregator_widget, widget: widget, aggregator: create(:hist_dwell))
+      end
       let(:query) do
         Datastore::Query.new(
           datasource: datasource.name,
@@ -278,9 +284,17 @@ describe Datastore::Query do
   end
 
   context 'Post Aggregators' do
-    let(:bytes_agg) { create(:bytes) }
-    let(:events_agg) { create(:events) }
-    let(:users_agg) { create(:users) }
+    let(:bytes_agg) do
+      create(:aggregator_widget, widget: widget, aggregator: create(:bytes))
+    end
+
+    let(:events_agg) do
+      create(:aggregator_widget, widget: widget, aggregator: create(:events))
+    end
+
+    let(:users_agg) do
+      create(:aggregator_widget, widget: widget, aggregator: create(:users))
+    end
 
     describe 'Arithmetic post aggregation' do
       let(:bps_agg) { create(:bytes_per_event) }
@@ -332,6 +346,71 @@ describe Datastore::Query do
               { 'value' => '100', 'type' => 'constant' }
             ],
             'name' => 'percentage' }]
+        )
+      end
+    end
+  end
+
+  context 'Filtered Aggregations' do
+    let(:ssl_filter) { create(:application_filter, value: 'ssl') }
+
+    describe 'with one filter' do
+      let(:aggregator_widget) do
+        create(:aggregator_widget, widget: widget, aggregator: long_sum_agg,
+               filters: [ssl_filter])
+      end
+      let(:query) do
+        Datastore::Query.new(
+          datasource: datasource.name,
+          properties: { interval: [Time.now - 1.day, Time.now] },
+          aggregators: [aggregator_widget]
+        )
+      end
+
+      it 'is included in the query' do
+        expect(query.as_json).to have_key('aggregations')
+        expect(query.as_json['aggregations']).to eq(
+          [{
+            'type' => 'filtered',
+            'filter' => {
+              'dimension' => 'application',
+              'type' => 'selector',
+              'value' => 'ssl'
+            },
+            'aggregator' => {
+              'type' => 'longSum',
+              'name' => 'aggregator_name',
+              'fieldName' => 'sum_bytes'
+            }
+          }]
+        )
+      end
+    end
+
+    describe 'with two filters of same dimension' do
+      let(:http_filter) { create(:application_filter, value: 'http') }
+      let(:aggregator_widget) do
+        create(:aggregator_widget, widget: widget, aggregator: long_sum_agg,
+               filters: [ssl_filter, http_filter])
+      end
+      let(:query) do
+        Datastore::Query.new(
+          datasource: datasource.name,
+          properties: { interval: [Time.now - 1.day, Time.now] },
+          aggregators: [aggregator_widget]
+        )
+      end
+
+      it 'is included in the query' do
+        expect(query.as_json).to have_key('aggregations')
+        aggregation = query.as_json['aggregations'][0]
+        expect(aggregation['type']).to eq('filtered')
+        expect(aggregation['filter']['type']).to eq('and')
+        expect(aggregation['filter']['fields']).to(
+          include('dimension' => 'application', 'type' => 'selector', 'value' => 'ssl')
+        )
+        expect(aggregation['filter']['fields']).to(
+          include('dimension' => 'application', 'type' => 'selector', 'value' => 'http')
         )
       end
     end

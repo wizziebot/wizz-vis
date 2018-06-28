@@ -39,6 +39,11 @@ export default {
     }
 
   },
+
+  step(time_1, time_2) {
+    return moment(time_2).diff(moment(time_1));
+  },
+
   /**
    * Return the difference in the format %d hr %d min between
    * two datetime passed as arguments.

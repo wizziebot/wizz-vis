@@ -5,7 +5,8 @@ RSpec.describe Widget, type: :model do
     it { is_expected.to belong_to(:dashboard) }
     it { is_expected.to belong_to(:datasource) }
     it { is_expected.to have_and_belong_to_many(:dimensions) }
-    it { is_expected.to have_and_belong_to_many(:aggregators) }
+    it { is_expected.to have_many(:aggregator_widgets) }
+    it { is_expected.to have_many(:aggregators).through(:aggregator_widgets) }
   end
 
   describe 'validations' do
@@ -18,7 +19,7 @@ RSpec.describe Widget, type: :model do
 
   describe 'custom_validations' do
     context 'when no interval is set' do
-      let(:widget) { create(:widget_area) }
+      let(:widget) { create(:widget_serie) }
 
       it 'is not valid' do
         widget.range = nil
@@ -37,7 +38,7 @@ RSpec.describe Widget, type: :model do
         WebMock.stub_request(:post, ENV['DRUID_URL']).to_return(body: '[]')
       end
 
-      let(:widget) { create(:widget_area) }
+      let(:widget) { create(:widget_serie) }
 
       it 'obtain empty array' do
         expect(widget.data).to eql []

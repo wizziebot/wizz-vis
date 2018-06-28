@@ -144,7 +144,7 @@ module Api
             key :required, true
             key :type, :string
             key :example,
-                datasource_id: 0,
+                datasource_name: '69be4185-001a-4146-be33-0b72cf4b0959_flow',
                 title: '',
                 range: 'last_1_hour',
                 start_time: '',
@@ -153,13 +153,17 @@ module Api
                 limit: 5,
                 options: {},
                 dimensions: [],
-                aggregators: [],
+                aggregators: [{
+                  aggregator: '',
+                  aggregator_name: '',
+                  filters: []
+                }],
                 filters: [{
                   dimension_name: '',
                   operator: '',
                   value: ''
                 }],
-                post_aggregators_attributes: [{
+                post_aggregators: [{
                   output_name: '',
                   operator: '',
                   field_1: '',
@@ -234,7 +238,11 @@ module Api
                 options: {},
                 datasource_name: '69be4185-001a-4146-be33-0b72cf4b0959_flow',
                 dimensions: [],
-                aggregators: [],
+                aggregators: [{
+                  aggregator: '',
+                  aggregator_name: '',
+                  filters: []
+                }],
                 filters: [{
                   dimension_name: '',
                   operator: '',
@@ -330,8 +338,9 @@ module Api
       def widget_params_create
         params.permit(
           :type, :title, :row, :col, :size_x, :size_y, :range, :start_time,
-          :end_time, :granularity, :limit, :dashboard_id,
-          dimensions: [], aggregators: [], filters: %i[dimension_name operator value]
+          :end_time, :granularity, :limit, :dashboard_id, dimensions: [],
+          aggregators: [:aggregator, :aggregator_name, filters: %i[dimension_name operator value]],
+          filters: %i[dimension_name operator value]
         ).tap do |attr|
           attr[:datasource_id] = Datasource.find_by(name: params[:datasource_name]).id
           attr[:post_aggregators_attributes] = params.fetch(:post_aggregators, []).map do |pa|

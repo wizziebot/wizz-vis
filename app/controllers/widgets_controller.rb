@@ -69,6 +69,8 @@ class WidgetsController < ApplicationController
       attributes: WidgetSerializer.new(@widget).as_json
     }
   rescue StandardError => error
+    Rails.logger.error "\n#{error} #{error.message}\n"
+    Rails.logger.error error.backtrace.join("\n")
     render json: { error: error.message }, status: :unprocessable_entity
   end
 

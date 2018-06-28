@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { ResponsiveContainer } from 'recharts';
+import get from 'lodash/get';
+import cs from 'classnames';
 
 import WidgetTitle from './widgets/WidgetTitle';
 import WidgetSerie from './widgets/WidgetSerie';
-import WidgetArea from './widgets/WidgetArea';
 import WidgetBar from './widgets/WidgetBar';
 import WidgetPie from './widgets/WidgetPie';
 import WidgetValue from './widgets/WidgetValue';
@@ -34,7 +35,6 @@ export default class WidgetBase extends React.Component {
     };
 
     this.components = {
-      WidgetArea,
       WidgetSerie,
       WidgetBar,
       WidgetPie,
@@ -131,11 +131,27 @@ export default class WidgetBase extends React.Component {
       return this.refs.content.clientWidth
   }
 
+  background (property) {
+    return get(this.props.options.background, property);
+  }
+
   render () {
-    const Type = this.components[this.props.type || 'WidgetArea'];
+    const Type = this.components[this.props.type || 'WidgetSerie'];
+    const color = this.background('color');
+
+    const style = {
+      backgroundColor: color == 'transparent' ? null : color
+    };
+
+    const cssClass = cs(
+      'widget center-align',
+      {
+        'transparent-bg': color == 'transparent'
+      }
+    );
 
     return (
-      <div className='widget center-align'>
+      <div className = { cssClass } style = { style }>
         <WidgetTitle
           widget_id={this.props.id}
           title={this.props.title}
@@ -144,6 +160,12 @@ export default class WidgetBase extends React.Component {
           remove={this.removeWidget.bind(this)}
         />
         <div className='widget-content' ref='content'>
+          { this.background('image') ?
+              <WidgetImage
+                image = { this.background('image') }
+                opacity = { this.background('opacity') }
+              /> : null
+          }
           <Type {...this.props} {...this.state.attributes}
             data={this.state.$$data} error={this.state.error}
             height={this.contentHeight()}

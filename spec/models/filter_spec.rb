@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Filter, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:dimension) }
-    it { is_expected.to belong_to(:widget) }
+    it { is_expected.to belong_to(:filterable) }
   end
 
   describe 'validations' do

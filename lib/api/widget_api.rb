@@ -16,7 +16,7 @@ module Api::WidgetApi
     end
   end
 
-  def update_self_and_relations(attributes, dimension_names, aggregator_names, filters)
+  def update_self_and_relations(attributes, dimension_names, aggregators, filters)
     relations = {}
     datasource =
       if attributes[:datasource_id]
@@ -29,8 +29,30 @@ module Api::WidgetApi
       relations[:dimension_ids] = datasource.dimensions.where(name: dimension_names).map(&:id)
     end
 
-    if aggregator_names
-      relations[:aggregator_ids] = datasource.aggregators.where(name: aggregator_names).map(&:id)
+    if aggregators
+      self.aggregator_widgets = []
+      relations[:aggregator_widgets_attributes] = []
+
+      aggregators.each do |agg|
+        aggregator_id = datasource.aggregators.find_by(name: agg[:aggregator]).id
+        aw_fields = { aggregator_id: aggregator_id, aggregator_name: agg[:aggregator_name] }
+
+        if agg[:filters]&.any?
+          agg_filters = []
+          agg['filters'].each do |filter|
+            dimension = Dimension.find_by(datasource: datasource, name: filter[:dimension_name])
+            agg_filters << {
+              dimension_id: dimension.id,
+              operator: filter[:operator],
+              value: filter[:value]
+            }
+          end
+
+          aw_fields[:filters_attributes] = agg_filters
+        end
+
+        relations[:aggregator_widgets_attributes] << aw_fields
+      end
     end
 
     relations[:filters_attributes] = [] if filters
@@ -67,9 +89,26 @@ module Api::WidgetApi
 
   def aggregators_from_params(params)
     return unless params[:aggregators]
-    params[:aggregator_ids] = []
-    params[:aggregators].each do |aggregator_name|
-      params[:aggregator_ids] << @datasource.aggregators.find_by(name: aggregator_name).id
+    params[:aggregator_widgets_attributes] = []
+    params[:aggregators].each do |agg|
+      aggregator_id = @datasource.aggregators.find_by(name: agg[:aggregator]).id
+      aw_fields = { aggregator_id: aggregator_id, aggregator_name: agg[:aggregator_name] }
+
+      if agg[:filters]&.any?
+        agg_filters = []
+        agg['filters'].each do |filter|
+          dimension = Dimension.find_by(datasource: @datasource, name: filter[:dimension_name])
+          agg_filters << {
+            dimension_id: dimension.id,
+            operator: filter[:operator],
+            value: filter[:value]
+          }
+        end
+
+        aw_fields[:filters_attributes] = agg_filters
+      end
+
+      params[:aggregator_widgets_attributes] << aw_fields
     end
     params.delete(:aggregators)
   end

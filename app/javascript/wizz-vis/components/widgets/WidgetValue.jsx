@@ -15,7 +15,7 @@ export default class WidgetValue extends React.Component {
   }
 
   getAggregator() {
-    return this.props.options.metric || this.props.aggregators[0].name;
+    return this.props.options.metrics || this.props.aggregators[0].name;
   }
 
   getValue() {
@@ -30,6 +30,8 @@ export default class WidgetValue extends React.Component {
       return Math.min(...this.props.data.map(d => d[this.aggregator]));
     } else if (value_type == 'average') {
       return this.props.data.map(d => d[this.aggregator]).reduce((a,b) => a + b, 0) / data_length;
+    } else if (value_type == 'total') {
+      return this.props.data.map(d => d[this.aggregator]).reduce((a,b) => a + b, 0);
     } else {
       return this.props.data[data_length - 1][this.aggregator];
     }
@@ -132,17 +134,18 @@ export default class WidgetValue extends React.Component {
       }
 
       if(this.showSerie()) {
+        const color = this.props.options.serie.color || Colors.get(0);
         serie = <ResponsiveContainer>
           <AreaChart data={this.props.data}
                 margin={{top: 0, right: 0, left: 5, bottom: 0}}>
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={ Colors.get(0) } stopOpacity={0.7}/>
-                <stop offset="95%" stopColor={ Colors.get(0) } stopOpacity={0}/>
+                <stop offset="5%" stopColor={ color } stopOpacity={0.7}/>
+                <stop offset="95%" stopColor={ color } stopOpacity={0}/>
               </linearGradient>
             </defs>
             <Area key={ 0 } type="monotone" dataKey={ this.aggregator }
-              stroke={ Colors.get(0) } dot={false}
+              stroke={ color } dot={false}
               fillOpacity={1} fill="url(#colorUv)" />
           </AreaChart>
         </ResponsiveContainer>

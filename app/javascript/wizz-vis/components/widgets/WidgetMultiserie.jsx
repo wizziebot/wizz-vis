@@ -1,8 +1,9 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid,
-         Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+         LineChart, Line, AreaChart, Area, BarChart, Bar,
+         ReferenceLine, Label } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Time from './../../utils/time';
@@ -19,6 +20,12 @@ export default class WidgetMultiserie extends React.Component {
       aggregator: '',
       dimension: ''
     };
+
+    this.components = {
+      line: { type: LineChart, shape: Line },
+      area: { type: AreaChart, shape: Area },
+      bar:  { type: BarChart,  shape: Bar }
+    };
   }
 
   componentDidMount() {
@@ -29,7 +36,7 @@ export default class WidgetMultiserie extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.aggregators !== this.props.aggregators ||
       prevProps.dimensions !== this.props.dimensions ||
-      prevProps.options.metric !== this.props.options.metric
+      prevProps.options.metrics !== this.props.options.metrics
     ) {
       this.setAggregator();
       this.setDimension();
@@ -46,7 +53,7 @@ export default class WidgetMultiserie extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.options.metric || this.props.aggregators[0].name
+      aggregator: this.props.options.metrics || this.props.aggregators[0].name
     });
   }
 
@@ -70,7 +77,16 @@ export default class WidgetMultiserie extends React.Component {
   }
 
   formatYAxis(value) {
-    return Format.prefix(value);
+    return Format.prefix(value, 2);
+  }
+
+  step() {
+    if(this.props.data.values.length < 2 || this.props.options.type !== 'bar') return 0;
+
+    return Time.step(
+      this.props.data.values[1].timestamp,
+      this.props.data.values[0].timestamp
+    );
   }
 
   render () {
@@ -81,12 +97,14 @@ export default class WidgetMultiserie extends React.Component {
     } else {
       const data = this.transformData(this.props.data);
       const gap = this.minTickGap();
-      const start_time = Time.moment(this.props.interval[0]).unix() * 1000;
-      const end_time = Time.moment(this.props.interval[1]).unix() * 1000;
+      const start_time = Time.moment(this.props.interval[0]).add(this.step()).unix() * 1000;
+      const end_time = Time.moment(this.props.interval[1]).subtract(this.step()).unix() * 1000;
+
+      const Chart = this.components[this.props.options.type || 'line'];
 
       return (
         <ResponsiveContainer>
-          <LineChart data={data.values}
+          <Chart.type data={data.values}
                 margin={{top: 5, right: 30, left: 20, bottom: 5}}>
               <XAxis
                 dataKey = "unixTime"
@@ -112,10 +130,28 @@ export default class WidgetMultiserie extends React.Component {
              <Legend />
              {
                data.dimensions.map((a, index) => (
-                 <Line key={ index } type="monotone" dataKey={ a } stroke={ Colors.get(index) } dot={false}/>
+                 <Chart.shape key = { 'shape-' + index } type="monotone" dataKey = { a }
+                   stroke = { Colors.get(index) } dot = { false }
+                   fill = { Colors.get(index) }
+                   stackId = { this.props.options.stacked ? 'stacked' : null } />
                ))
              }
-          </LineChart>
+             {
+               (this.props.options.thresholds || []).map((threshold, index) => (
+                 <ReferenceLine
+                   key = { 'reference-' + index }
+                   y = { threshold.value }
+                   stroke = { threshold.color }
+                   strokeDasharray='3 3' >
+                   <Label
+                     value = { threshold.label }
+                     offset = { 3 }
+                     position = 'insideBottomRight'
+                     stroke = { Theme.text(this.props.theme) } />
+                 </ReferenceLine>
+               ))
+             }
+          </Chart.type>
         </ResponsiveContainer>
       )
     }

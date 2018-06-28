@@ -11,6 +11,10 @@ export default class WidgetImage extends React.Component {
     return this.props.image || get(this.props, 'options.image');
   }
 
+  get opacity() {
+    return this.props.opacity || get(this.props, 'options.opacity');
+  }
+
   get onLoad() {
     return this.props.onLoad;
   }
@@ -24,7 +28,8 @@ export default class WidgetImage extends React.Component {
                maxWidth: '100%', maxHeight: '100%',
                height: 'auto'};
     } else {
-      style = {...style, width: '100%', height: '100%'};
+      style = {...style, width: '100%', height: '100%',
+               opacity: this.opacity};
     }
 
     return (

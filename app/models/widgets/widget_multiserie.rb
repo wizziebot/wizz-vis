@@ -4,13 +4,13 @@ class WidgetMultiserie < Widget
       d[dimensions.first.name]
     end
 
-    metric = options['metric'] || aggregators.first.name
+    metric = [*options['metrics']].first || aggregators.first.name
 
     multiseries = []
     dimension_values.each do |val|
       filter = filters.build(
         dimension_id: dimensions.first.id,
-        widget_id: id,
+        filterable_id: id,
         operator: :eq,
         value: val
       )

@@ -108,8 +108,17 @@ module Api
                   options: {},
                   datasource_name: '69be4185-001a-4146-be33-0b72cf4b0959_flow',
                   dimensions: [],
-                  aggregators: [],
-                  post_aggregators: [{}]
+                  aggregators: [{
+                    aggregator: '',
+                    aggregator_name: '',
+                    filters: []
+                  }],
+                  post_aggregators: [{
+                    output_name: '',
+                    operator: '',
+                    field_1: '',
+                    field_2: ''
+                  }]
                 }
               ]
             }
@@ -253,8 +262,9 @@ module Api
           dashboard[:widgets_attributes] = (params[:widgets_attributes] || []).map do |w|
             w.permit(
               :type, :title, :row, :col, :size_x, :size_y, :range, :start_time,
-              :end_time, :granularity, :limit,
-              dimensions: [], aggregators: [], filters: %i[dimension_name operator value]
+              :end_time, :granularity, :limit, dimensions: [],
+              aggregators: [:aggregator, :aggregator_name, filters: %i[dimension_name operator value]],
+              filters: %i[dimension_name operator value]
             ).tap do |attr|
               if w[:datasource_name]
                 attr[:datasource_id] = Datasource.find_by(name: w[:datasource_name]).id

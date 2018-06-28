@@ -26,7 +26,7 @@ module Datastore
     end
 
     def run
-      Rails.logger.debug "  Druid Query  (#{@datasource.name}) #{@query.to_json}"
+      Datastore::Logger.new(@query.query, @datasource.name).debug
       result = @datasource.post(@query)
       if top_n?
         convert_top_n_data(result)
@@ -72,7 +72,7 @@ module Datastore
       if multiseries?
         # TODO
       elsif top_n?
-        metric = @options['metric']&.to_sym || @aggregators.first.name.to_sym
+        metric = [*@options['metrics']].first&.to_sym || @aggregators.first.name.to_sym
         @query.topn(@dimensions.first.name.to_sym, metric, @limit)
       elsif group_by?
         @query.group_by(*@dimensions.map(&:name))
