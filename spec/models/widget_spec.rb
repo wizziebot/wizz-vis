@@ -32,6 +32,10 @@ RSpec.describe Widget, type: :model do
     end
   end
 
+  describe 'intervalable' do
+    it_behaves_like 'intervalable'
+  end
+
   describe '#data' do
     context 'when there are no data' do
       before do
