@@ -4,7 +4,22 @@
 
   <script>
     window.mapbox_token = "<%= ENV['MAPBOX_TOKEN'] %>";
+    window.primary_color = "<%= ENV['PRIMARY_COLOR'] %>";
   </script>
+
+  <style>
+    .btn, .btn-large {
+      background-color: <%= ENV['SECONDARY_COLOR'] %> !important;
+    }
+
+    .primary-color {
+      background-color: <%= ENV['PRIMARY_COLOR'] %> !important;
+    }
+
+    .primary-color-text {
+      color: <%= ENV['PRIMARY_COLOR'] %>;
+    }
+  </style>
 
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_pack_tag 'application' %>

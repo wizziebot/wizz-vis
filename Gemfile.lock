@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/pikislabis/ruby-druid.git
-  revision: 883731e5553ece970ddb69a776a2bb15e1ca66ab
+  revision: aaaa98622170f15acdba102c7630da37db4a04dc
   specs:
     ruby-druid (0.10.1)
       activemodel (>= 3.0.0)

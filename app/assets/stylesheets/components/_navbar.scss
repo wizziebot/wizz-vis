@@ -3,9 +3,22 @@
 
   &.logo {
     .brand-logo img {
+      vertical-align: middle;
       height: 48px;
       min-height: 48px;
-      padding: 5px 0 0 14px;
+
+      @media (min-width: 993px) {
+        padding-left: 14px;
+      }
+    }
+
+    .secondary-logo img {
+      padding: 0 14px 0 0;
+
+      @media (max-width: 992px) {
+        height: 30px;
+        min-height: 30px;
+      }
     }
   }
 
