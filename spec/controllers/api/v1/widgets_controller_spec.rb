@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::WidgetsController, type: :controller do
 
   let(:datasource) { create(:datasource_with_relations) }
-  let(:aggregators) { datasource.aggregators }
+  let(:aggregator) { datasource.aggregators.first }
   let(:widget) { create(:widget_serie, datasource: datasource) }
   let(:valid_attributes) do
     {
@@ -14,10 +14,9 @@ RSpec.describe Api::V1::WidgetsController, type: :controller do
       granularity: widget.granularity,
       range: widget.range,
       dimensions: [],
-      aggregators: datasource.aggregators.map do |agg|
-                     { 'aggregator' => agg.name, 'aggregator_name' => agg.name,
-                       'filters' => [] }
-                   end,
+      aggregators: [{ aggregator: aggregator.name,
+                      aggregator_name: aggregator.name,
+                      filters: [] }],
       filters: [
         {
           dimension_name: datasource.dimensions.map(&:name).first,
@@ -29,7 +28,7 @@ RSpec.describe Api::V1::WidgetsController, type: :controller do
         {
           output_name: 'pa',
           operator: '+',
-          field_1: aggregators.first.name,
+          field_1: aggregator.name,
           field_2: '2'
         }
       ]
@@ -105,7 +104,6 @@ RSpec.describe Api::V1::WidgetsController, type: :controller do
     end
 
     it 'returns a sucess response when updating the aggregators' do
-      aggregator = aggregators.first
       dimension = datasource.dimensions.first
 
       aggregator_params = [{
@@ -149,7 +147,9 @@ RSpec.describe Api::V1::WidgetsController, type: :controller do
       expect(valid_attributes[:datasource_name]).to eq(new_widget['datasource_name'])
       expect(valid_attributes[:dashboard_id]).to eq(new_widget['dashboard_id'])
       expect(valid_attributes[:dimensions]).to eq(new_widget['dimensions'])
-      expect(valid_attributes[:aggregators]).to eq(new_widget['aggregators'])
+      valid_attributes[:aggregators].each_with_index do |pa, index|
+        expect(pa.stringify_keys).to eq(new_widget['aggregators'][index])
+      end
       valid_attributes[:post_aggregators].each_with_index do |pa, index|
         expect(pa.stringify_keys).to eq(new_widget['post_aggregators'][index])
       end
