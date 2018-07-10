@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/pikislabis/ruby-druid.git
+  remote: https://github.com/wizzie-io/ruby-druid.git
   revision: aaaa98622170f15acdba102c7630da37db4a04dc
   specs:
     ruby-druid (0.10.1)
