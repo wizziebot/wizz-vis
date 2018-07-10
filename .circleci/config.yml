@@ -44,14 +44,14 @@ jobs:
       # Restore bundle cache
       - restore_cache:
           keys:
-            - wizz-vis-bundle-{{ checksum "Gemfile.lock" }}
-            - wizz-vis-bundle-
+            - wizz-vis-v2-bundle-{{ checksum "Gemfile.lock" }}
+            - wizz-vis-v2-bundle-
       - run:
           name: Bundle Install
           command: bundle check || bundle install
       # Store bundle cache
       - save_cache:
-          key: wizz-vis-bundle-{{ checksum "Gemfile.lock" }}
+          key: wizz-vis-v2-bundle-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
       - run:
