@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.5.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0.rc1'
+gem 'rails', '~> 5.2.0'
 
 gem 'pg', '~> 1.0'
 # Use Puma as the app server
@@ -45,7 +45,7 @@ gem 'materialize-sass', '~> 0.100.2'
 gem 'material_icons', '~> 2.2'
 
 # Simple form
-gem 'simple_form', '~> 3.5.1'
+gem 'simple_form', '~> 4.0.1'
 
 # Breadcrumbs helper
 gem 'gretel', '~> 3.0'
@@ -70,6 +70,7 @@ gem 'swagger-blocks'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and
   # get a debugger console
+  gem 'bundle-audit', '~> 0.1.0'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'dotenv-rails', '~> 2.2'
   gem 'faker', '~> 1.8'

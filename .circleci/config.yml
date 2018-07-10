@@ -62,6 +62,10 @@ jobs:
           command: bin/rails db:setup --trace
       # Run rspec in parallel
       - run:
+          name: Gem Vulnerabilities
+          command: |
+            bundle audit check --update
+      - run:
           name: RSpec
           command: |
             bundle exec rspec
