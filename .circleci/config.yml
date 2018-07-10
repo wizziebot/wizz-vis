@@ -64,7 +64,7 @@ jobs:
       - run:
           name: Gem Vulnerabilities
           command: |
-            bundle audit check --update
+            bundle exec bundle audit check --update
       - run:
           name: RSpec
           command: |
