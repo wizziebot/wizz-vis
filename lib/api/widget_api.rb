@@ -89,41 +89,36 @@ module Api::WidgetApi
 
   def aggregators_from_params(params)
     return unless params[:aggregators]
-    params[:aggregator_widgets_attributes] = []
     params[:aggregators].each do |agg|
       aggregator_id = @datasource.aggregators.find_by(name: agg[:aggregator]).id
       aw_fields = { aggregator_id: aggregator_id, aggregator_name: agg[:aggregator_name] }
 
       if agg[:filters]&.any?
-        agg_filters = []
-        agg['filters'].each do |filter|
-          dimension = Dimension.find_by(datasource: @datasource, name: filter[:dimension_name])
-          agg_filters << {
-            dimension_id: dimension.id,
-            operator: filter[:operator],
-            value: filter[:value]
-          }
-        end
-
+        agg_filters = build_filter_params(agg[:filters])
         aw_fields[:filters_attributes] = agg_filters
       end
-
-      params[:aggregator_widgets_attributes] << aw_fields
+      params[:aggregator_widgets_attributes] ||= []
+      params[:aggregator_widgets_attributes] << ActionController::Parameters.new(aw_fields).permit!
     end
     params.delete(:aggregators)
   end
 
   def filters_from_params(params)
     return unless params[:filters]
-    params[:filters_attributes] = []
-    params[:filters].each do |filter|
+    params[:filters_attributes] = build_filter_params(params[:filters]).map do |filter|
+      ActionController::Parameters.new(filter).permit!
+    end
+    params.delete(:filters)
+  end
+
+  def build_filter_params(filters = [])
+    filters.map do |filter|
       dimension = Dimension.find_by(datasource: @datasource, name: filter[:dimension_name])
-      params[:filters_attributes] << {
+      {
         dimension_id: dimension.id,
         operator: filter[:operator],
         value: filter[:value]
       }
     end
-    params.delete(:filters)
   end
 end
