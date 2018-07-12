@@ -6,7 +6,10 @@ RSpec.describe WidgetSerie, type: :model do
 
     context 'valid widget' do
       let(:datasource) { create(:datasource_with_relations) }
-      let(:widget) { create(:widget_serie) }
+      let(:widget) do
+        create(:widget_serie,
+               aggregators: datasource.aggregators.first(1))
+      end
 
       it 'returns valid' do
         expect(widget.valid?).to be true

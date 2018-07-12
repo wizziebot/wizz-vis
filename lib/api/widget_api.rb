@@ -72,10 +72,13 @@ module Api::WidgetApi
   private
 
   def datasource_from_params(params)
-    return unless params[:datasource_id]
-    @datasource = Datasource.find(params[:datasource_id])
-    params[:datasource_id] = @datasource.id
-    params.delete(:datasource_name)
+    if params[:datasource_id]
+      @datasource = Datasource.find(params[:datasource_id])
+    elsif params[:datasource_name]
+      @datasource = Datasource.find_by(name: params[:datasource_name])
+      params[:datasource_id] = @datasource.id
+      params.delete(:datasource_name)
+    end
   end
 
   def dimensions_from_params(params)

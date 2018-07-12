@@ -255,24 +255,17 @@ module Api
       # options is a schemaless json, so it's neccessary to permit
       # all its fields.
       def dashboard_params
-        params[:widgets_attributes] = params.delete(:widgets)
-        params.permit(
-          :name, :theme, :interval, :locked, :widgets_attributes
-        ).tap do |dashboard|
-          dashboard[:widgets_attributes] = (params[:widgets_attributes] || []).map do |w|
-            w.permit(
-              :type, :title, :row, :col, :size_x, :size_y, :range, :start_time,
-              :end_time, :granularity, :limit, dimensions: [],
-              aggregators: [:aggregator, :aggregator_name, filters: %i[dimension_name operator value]],
-              filters: %i[dimension_name operator value]
-            ).tap do |attr|
-              if w[:datasource_name]
-                attr[:datasource_id] = Datasource.find_by(name: w[:datasource_name]).id
-              end
-              attr[:post_aggregators_attributes] = w.fetch(:post_aggregators).map do |pa|
+        params.permit(:name, :theme, :interval, :locked).tap do |attr|
+          attr[:widgets_attributes] = (params[:widgets] || []).map do |w|
+            w.permit(:type, :title, :row, :col, :size_x, :size_y, :range, :start_time,
+                     :end_time, :granularity, :limit, :datasource_name,
+                     aggregators: [:aggregator, :aggregator_name,
+                                   filters: %i[dimension_name operator value]],
+                     filters: %i[dimension_name operator value]).tap do |w_attr|
+              w_attr[:post_aggregators_attributes] = w.fetch(:post_aggregators, []).map do |pa|
                 pa.permit(:output_name, :operator, :field_1, :field_2)
               end
-              attr[:options] = w[:options].permit! if w[:options]
+              w_attr[:options] = w[:options].permit! if w[:options]
             end
           end
         end

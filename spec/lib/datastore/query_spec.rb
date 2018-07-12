@@ -1,14 +1,17 @@
 require 'rails_helper'
 
 describe Datastore::Query do
-  let(:datasource) { create(:datasource) }
-  let(:widget) { create(:widget_serie) }
+  let(:datasource) { create(:datasource_with_relations) }
+  let(:widget) do
+    create(:widget_serie, datasource: datasource,
+           aggregators: datasource.aggregators.first(1))
+  end
   let(:long_sum_agg) { create(:bytes) }
   let(:aggregator_widget_1) do
     create(:aggregator_widget, widget: widget, aggregator: long_sum_agg)
   end
   let(:application_dimension) { create(:application_dimension) }
-  let(:filter) { create(:application_filter) }
+  let(:filter) { create(:application_filter, filterable: widget) }
 
   context 'Timeserie query' do
     let(:query) do
@@ -192,7 +195,7 @@ describe Datastore::Query do
         aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
         filters: [
-          create(:application_filter, operator: 'neq')
+          create(:application_filter, operator: 'neq', filterable: widget)
         ]
       )
     end
@@ -215,7 +218,7 @@ describe Datastore::Query do
         aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
         filters: [
-          create(:application_filter, operator: 'regex')
+          create(:application_filter, operator: 'regex', filterable: widget)
         ]
       )
     end
@@ -239,7 +242,7 @@ describe Datastore::Query do
         aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
         filters: [
-          create(:application_filter, operator: '>')
+          create(:application_filter, operator: '>', filterable: widget)
         ]
       )
     end
@@ -297,7 +300,7 @@ describe Datastore::Query do
     end
 
     describe 'Arithmetic post aggregation' do
-      let(:bps_agg) { create(:bytes_per_event) }
+      let(:bps_agg) { create(:bytes_per_event, widget: widget) }
       let(:query) do
         Datastore::Query.new(
           datasource: datasource.name,
@@ -324,7 +327,7 @@ describe Datastore::Query do
     end
 
     describe 'Post aggregation with constant and hyperUnique' do
-      let(:constant_agg) { create(:constant_pg) }
+      let(:constant_agg) { create(:constant_pg, widget: widget) }
       let(:query) do
         Datastore::Query.new(
           datasource: datasource.name,
@@ -352,7 +355,9 @@ describe Datastore::Query do
   end
 
   context 'Filtered Aggregations' do
-    let(:ssl_filter) { create(:application_filter, value: 'ssl') }
+    let(:ssl_filter) do
+      create(:application_filter, value: 'ssl', filterable: widget)
+    end
 
     describe 'with one filter' do
       let(:aggregator_widget) do
@@ -388,7 +393,9 @@ describe Datastore::Query do
     end
 
     describe 'with two filters of same dimension' do
-      let(:http_filter) { create(:application_filter, value: 'http') }
+      let(:http_filter) do
+        create(:application_filter, value: 'http', filterable: widget)
+      end
       let(:aggregator_widget) do
         create(:aggregator_widget, widget: widget, aggregator: long_sum_agg,
                filters: [ssl_filter, http_filter])

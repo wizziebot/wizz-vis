@@ -4,7 +4,11 @@ RSpec.describe Api::V1::DashboardsController, type: :controller do
   let(:datasource) { create(:datasource_with_relations) }
   let(:aggregators) { datasource.aggregators }
   let(:dashboard) { create(:dashboard) }
-  let(:widget) { create(:widget_serie, datasource: datasource) }
+  let(:widget) do
+    create(:widget_serie,
+           datasource: datasource,
+           aggregators: aggregators.first(1))
+  end
   let(:valid_attributes) do
     {
       name: "Dashboard's name",
@@ -14,17 +18,23 @@ RSpec.describe Api::V1::DashboardsController, type: :controller do
       widgets: [
         type: widget.type,
         datasource_name: datasource.name,
-        dashboard_id: widget.dashboard_id,
         row: 0, col: 0, size_x: 4, size_y: 4,
         granularity: widget.granularity,
         range: widget.range,
         dimensions: [],
-        aggregators: datasource.aggregators.map(&:name),
+        aggregators: aggregators.map do |a|
+          { aggregator: a.name, aggregator_name: a.name, filters: [] }
+        end,
         filters: [
           {
             dimension_name: datasource.dimensions.map(&:name).first,
-            operator: 'neq',
-            value: nil
+            operator: 'eq',
+            value: 'a'
+          },
+          {
+            dimension_name: datasource.dimensions.map(&:name).first,
+            operator: 'eq',
+            value: 'b'
           }
         ],
         post_aggregators: [
