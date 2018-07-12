@@ -152,6 +152,53 @@ RSpec.describe Api::V1::WidgetsController, type: :controller do
         expect(pa.stringify_keys).to eq(new_widget['post_aggregators'][index])
       end
     end
+
+    it 'allows more than one filter' do
+      filters_attributes = valid_attributes.merge(
+        filters: [
+          {
+            dimension_name: datasource.dimensions.map(&:name).first,
+            operator: 'eq',
+            value: 'a'
+          },
+          {
+            dimension_name: datasource.dimensions.map(&:name).first,
+            operator: 'eq',
+            value: 'b'
+          }
+        ]
+      )
+      post :create, params: filters_attributes
+      new_widget = JSON.parse(response.body)
+      filters_attributes[:filters].each do |f|
+        expect(new_widget['filters']).to include(f.as_json)
+      end
+    end
+
+    it 'allows more than one aggregator with filters' do
+      aggregators = datasource.aggregators.first(2)
+      aggregators_attributes = valid_attributes.merge(
+        aggregators: aggregators.map do |aggregator|
+          {
+            aggregator: aggregator.name,
+            aggregator_name: aggregator.name,
+            filters: [
+              {
+                dimension_name: datasource.dimensions.map(&:name).first,
+                operator: 'eq',
+                value: 'a'
+              }
+            ]
+          }
+        end
+      )
+
+      post :create, params: aggregators_attributes
+      new_widget = JSON.parse(response.body)
+      aggregators_attributes[:aggregators].each do |a|
+        expect(new_widget['aggregators']).to include(a.as_json)
+      end
+    end
   end
 
   describe 'DELETE #destroy' do
