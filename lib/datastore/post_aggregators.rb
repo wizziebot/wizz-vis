@@ -12,7 +12,7 @@ module Datastore
     end
 
     def post_aggregator_field(field)
-      if /^\d+$/.match?(field)
+      if /^\d+(\.\d+)?$/.match?(field)
         Druid::PostAggregationConstant.new(value: field)
       elsif hyper_unique_aggregator?(field)
         Druid::PostAggregationField.new(fieldName: field, type: 'hyperUniqueCardinality')
