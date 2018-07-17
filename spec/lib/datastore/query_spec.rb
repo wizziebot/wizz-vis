@@ -349,6 +349,84 @@ describe Datastore::Query do
         )
       end
     end
+
+    describe 'ThetaSketch Post Aggregation' do
+      let(:clients_agg) { create(:clients) }
+      let(:clients_a_filter) do
+        create(:filter, value: 'a', operator: 'eq', filterable: clients_agg)
+      end
+      let(:clients_b_filter) do
+        create(:filter, value: 'b', operator: 'eq', filterable: clients_agg)
+      end
+      let(:clients_a) do
+        create(:aggregator_widget, widget: widget, aggregator: clients_agg,
+                                   aggregator_name: 'clients_a',
+                                   filters: [clients_a_filter])
+      end
+      let(:clients_b) do
+        create(:aggregator_widget, widget: widget, aggregator: clients_agg,
+                                   aggregator_name: 'clients_b',
+                                   filters: [clients_b_filter])
+      end
+      let(:unique_clients) do
+        create(:post_aggregator,
+               output_name: 'unique_clients',
+               field_1: 'clients_a',
+               field_2: 'clients_b',
+               operator: 'INTERSECT',
+               widget: widget)
+      end
+
+      let(:query) do
+        Datastore::Query.new(
+          datasource: datasource.name,
+          properties: { interval: [Time.now - 1.day, Time.now] },
+          aggregators: [clients_a, clients_b],
+          post_aggregators: [unique_clients]
+        )
+      end
+
+      let(:query_json) { query.as_json }
+
+      it 'is included in the query' do
+        expect(query.as_json).to have_key('aggregations')
+        expect(query_json['aggregations']).to eq(
+          [
+            {
+              'type' => 'filtered',
+              'filter' => { 'dimension' => 'dimension', 'type' => 'selector', 'value' => 'a' },
+              'aggregator' => {
+                'type' => 'thetaSketch', 'name' => 'clients_a', 'fieldName' => 'clients'
+              }
+            },
+            {
+              'type' => 'filtered',
+              'filter' => { 'dimension' => 'dimension', 'type' => 'selector', 'value' => 'b' },
+              'aggregator' => {
+                'type' => 'thetaSketch', 'name' => 'clients_b', 'fieldName' => 'clients'
+              }
+            }
+          ]
+        )
+
+        expect(query.as_json).to have_key('postAggregations')
+        expect(query_json['postAggregations']).to eq(
+          [{
+            'type' => 'thetaSketchEstimate',
+            'name' => 'unique_clients',
+            'field' => {
+              'type' => 'thetaSketchSetOp',
+              'name' => 'unique_clients_sketch',
+              'func' => 'INTERSECT',
+              'fields' => [
+                { 'fieldName' => 'clients_a', 'type' => 'fieldAccess' },
+                { 'fieldName' => 'clients_b', 'type' => 'fieldAccess' }
+              ]
+            }
+          }]
+        )
+      end
+    end
   end
 
   context 'Filtered Aggregations' do

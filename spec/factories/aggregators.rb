@@ -27,4 +27,10 @@ FactoryBot.define do
     aggregator_type 'approxHistogramFold'
     association :datasource
   end
+
+  factory :clients, class: Aggregator do
+    name 'clients'
+    aggregator_type 'thetaSketch'
+    association :datasource
+  end
 end

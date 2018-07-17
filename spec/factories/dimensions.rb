@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :dimension do
     name 'dimension'
+    association :datasource
   end
 
   factory :coordinate, class: Dimension do

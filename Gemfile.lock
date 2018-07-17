@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/wizzie-io/ruby-druid.git
-  revision: ed6c8490bdf7d0ff44a02e3f463927e9854f5ad7
+  revision: 101b663001c728e98380f7fa1bced8c12394abff
   specs:
     ruby-druid (0.10.1)
       activemodel (>= 3.0.0)

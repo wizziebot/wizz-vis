@@ -1,4 +1,7 @@
 FactoryBot.define do
+  factory :post_aggregator, class: PostAggregator do
+  end
+
   factory :bytes_per_event, class: PostAggregator do
     output_name 'bps'
     operator '/'
