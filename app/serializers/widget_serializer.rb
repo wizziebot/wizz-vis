@@ -10,7 +10,8 @@ class WidgetSerializer < ActiveModel::Serializer
     :size_x,
     :size_y,
     :options,
-    :interval
+    :interval,
+    :compare_interval
   )
 
   belongs_to :datasource

@@ -13,7 +13,7 @@ module Datastore
 
       @datasource = Druid::DataSource.new(datasource, ENV['DRUID_URL'])
       @query = Druid::Query::Builder.new
-      @interval = properties[:interval]
+      @intervals = properties[:intervals]
       @granularity = properties[:granularity] || 'all'
       @limit = properties[:limit] || 5
       @dimensions = dimensions
@@ -62,7 +62,7 @@ module Datastore
 
     def build
       @query.query.context.timeout = DRUID_TIMEOUT
-      @query.interval(*@interval)
+      @query.intervals(@intervals)
       @query.granularity(@granularity)
 
       set_aggregators

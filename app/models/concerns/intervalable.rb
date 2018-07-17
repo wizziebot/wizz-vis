@@ -16,6 +16,19 @@ module Intervalable
     end
   end
 
+  def compare_interval
+    return unless options['compare']
+    [
+      interval[0] - compare_difference,
+      interval[1] - compare_difference
+    ]
+  end
+
+  def intervals
+    return [interval] unless options&.[]('compare')
+    [compare_interval, interval]
+  end
+
   private
 
   def interval_for_last
@@ -54,6 +67,15 @@ module Intervalable
       [@time_now.prev_week, @time_now.prev_week.end_of_week]
     when 'previous_month'
       [@time_now.prev_month.beginning_of_month, @time_now.prev_month.end_of_month]
+    end
+  end
+
+  def compare_difference
+    case options['compare']
+    when String && 'past_period'
+      (interval[1] - interval[0])
+    when Hash
+      options['compare']['amount'].to_i.send(options['compare']['range'])
     end
   end
 end

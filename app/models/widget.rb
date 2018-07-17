@@ -27,7 +27,7 @@ class Widget < ApplicationRecord
   def data(override_filters = nil, override_options = {})
     query = Datastore::Query.new(
       datasource: datasource.name,
-      properties: attributes.merge(interval: interval).merge(override_options),
+      properties: attributes.merge(intervals: intervals).merge(override_options),
       dimensions: dimensions,
       aggregators: aggregator_widgets.includes(:aggregator, :filters),
       post_aggregators: post_aggregators,

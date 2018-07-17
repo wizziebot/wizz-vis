@@ -15,7 +15,7 @@ describe Datastore::Query do
       Datastore::Query.new(
         datasource: datasource.name,
         properties: {
-          interval: [Time.now - 1.day, Time.now],
+          intervals: [[Time.now - 1.day, Time.now]],
           granularity: 'PT1H'
         },
         aggregators: [aggregator_widget_1],
@@ -74,7 +74,7 @@ describe Datastore::Query do
       Datastore::Query.new(
         datasource: datasource.name,
         properties: {
-          interval: [Time.now - 1.day, Time.now]
+          intervals: [[Time.now - 1.day, Time.now]]
         },
         aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
@@ -127,7 +127,7 @@ describe Datastore::Query do
       Datastore::Query.new(
         datasource: datasource.name,
         properties: {
-          interval: [Time.now - 1.day, Time.now]
+          intervals: [[Time.now - 1.day, Time.now]]
         },
         aggregators: [aggregator_widget_1],
         dimensions: [application_dimension, coordinate_dimension],
@@ -188,7 +188,7 @@ describe Datastore::Query do
     let(:query) do
       Datastore::Query.new(
         datasource: datasource.name,
-        properties: { interval: [Time.now - 1.day, Time.now] },
+        properties: { intervals: [[Time.now - 1.day, Time.now]] },
         aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
         filters: [
@@ -211,7 +211,7 @@ describe Datastore::Query do
     let(:query) do
       Datastore::Query.new(
         datasource: datasource.name,
-        properties: { interval: [Time.now - 1.day, Time.now] },
+        properties: { intervals: [[Time.now - 1.day, Time.now]] },
         aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
         filters: [
@@ -235,7 +235,7 @@ describe Datastore::Query do
     let(:query) do
       Datastore::Query.new(
         datasource: datasource.name,
-        properties: { interval: [Time.now - 1.day, Time.now] },
+        properties: { intervals: [[Time.now - 1.day, Time.now]] },
         aggregators: [aggregator_widget_1],
         dimensions: [application_dimension],
         filters: [
@@ -263,7 +263,7 @@ describe Datastore::Query do
       let(:query) do
         Datastore::Query.new(
           datasource: datasource.name,
-          properties: { interval: [Time.now - 1.day, Time.now] },
+          properties: { intervals: [[Time.now - 1.day, Time.now]] },
           aggregators: [hist_dwell_agg]
         )
       end
@@ -301,7 +301,7 @@ describe Datastore::Query do
       let(:query) do
         Datastore::Query.new(
           datasource: datasource.name,
-          properties: { interval: [Time.now - 1.day, Time.now] },
+          properties: { intervals: [[Time.now - 1.day, Time.now]] },
           aggregators: [bytes_agg, events_agg],
           post_aggregators: [bps_agg]
         )
@@ -328,7 +328,7 @@ describe Datastore::Query do
       let(:query) do
         Datastore::Query.new(
           datasource: datasource.name,
-          properties: { interval: [Time.now - 1.day, Time.now] },
+          properties: { intervals: [[Time.now - 1.day, Time.now]] },
           aggregators: [users_agg],
           post_aggregators: [constant_agg]
         )
@@ -380,7 +380,7 @@ describe Datastore::Query do
       let(:query) do
         Datastore::Query.new(
           datasource: datasource.name,
-          properties: { interval: [Time.now - 1.day, Time.now] },
+          properties: { intervals: [[Time.now - 1.day, Time.now]] },
           aggregators: [clients_a, clients_b],
           post_aggregators: [unique_clients]
         )
@@ -440,7 +440,7 @@ describe Datastore::Query do
       let(:query) do
         Datastore::Query.new(
           datasource: datasource.name,
-          properties: { interval: [Time.now - 1.day, Time.now] },
+          properties: { intervals: [[Time.now - 1.day, Time.now]] },
           aggregators: [aggregator_widget]
         )
       end
@@ -474,7 +474,7 @@ describe Datastore::Query do
       let(:query) do
         Datastore::Query.new(
           datasource: datasource.name,
-          properties: { interval: [Time.now - 1.day, Time.now] },
+          properties: { intervals: [[Time.now - 1.day, Time.now]] },
           aggregators: [aggregator_widget]
         )
       end
