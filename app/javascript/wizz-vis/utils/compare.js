@@ -2,6 +2,7 @@
 
 import Time from './time';
 import Array from './array';
+import merge from 'lodash/merge';
 
 export default {
   graph_types(aggregator, compare) {
@@ -21,27 +22,20 @@ export default {
   },
 
   unify_data(data, compare_data, metrics, compare) {
-    // convert compare data array to object, in which the keys are time in
-    // unix timestamp.
-    const compare_data_object = compare_data.reduce((obj, item) => {
-      obj[Time.moment(item.timestamp).unix()] = item;
-      return obj;
-    }, {});
+    const compare_to_actual = compare_data.map(cd => {
+      let compare_entry = {
+        timestamp: Time.moment(cd.timestamp).utc()
+          .add(compare.amount, compare.range).toISOString()
+      };
 
-    return data.map((d) => {
-      const compare_timestamp = Time.moment(d.timestamp).subtract(compare.amount, compare.range).unix();
-      if (compare_data_object[compare_timestamp]){
-        let d_with_compare = {};
+      metrics.forEach((m) => {
+        const aggregator_compare_key = this.compared_name(m, compare);
+        compare_entry[aggregator_compare_key] = cd[m];
+      });
 
-        metrics.forEach((m) => {
-          const aggregator_compare_key = this.compared_name(m, compare);
-          d_with_compare[aggregator_compare_key] = compare_data_object[compare_timestamp][m];
-        });
-
-        return {...d, ...d_with_compare};
-      } else {
-        return d;
-      }
+      return compare_entry;
     });
+
+    return merge([], data, compare_to_actual);
   }
 };

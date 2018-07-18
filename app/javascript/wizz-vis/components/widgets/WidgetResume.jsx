@@ -3,6 +3,7 @@
 import React from 'react';
 import Compare from './../../utils/compare';
 import Format from './../../utils/format';
+import ResumeValue from './../ResumeValue';
 
 
 export default class WidgetResume extends React.Component {
@@ -19,14 +20,6 @@ export default class WidgetResume extends React.Component {
         d => d[aggregator_key]
       ).reduce((a,b) => a + (b || 0), 0);
     }
-  }
-
-  getColor(increment) {
-    return increment > 0 ? 'green' : 'red';
-  }
-
-  getIcon(increment) {
-    return increment > 0 ? ' \u25B2 ' : ' \u25BC ';
   }
 
   getHeight() {
@@ -46,14 +39,8 @@ export default class WidgetResume extends React.Component {
 
               return(
                 <div key={'resume-' + aggregator}>
-                  {
-                    'Number of ' + aggregator + ': ' + Format.prefix(total, 2)
-                  }
-                  <span className='compare' style={{ color: this.getColor(increment) }}>
-                    { this.getIcon(increment) +
-                      Format.prefix(Math.abs(increment), 2) + ' (' + percent + '%)'
-                    }
-                  </span>
+                  <span>Number of {aggregator}: </span>
+                  <ResumeValue show_total total={total} total_compared={total_compared} />
                 </div>
               )
             })
