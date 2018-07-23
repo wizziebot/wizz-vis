@@ -350,6 +350,33 @@ describe Datastore::Query do
       end
     end
 
+    describe 'ThetaSketch Aggregation' do
+      let(:clients_agg) do
+        create(:aggregator_widget, widget: widget, aggregator: create(:clients))
+      end
+
+      let(:query) do
+        Datastore::Query.new(
+          datasource: datasource.name,
+          properties: { intervals: [[Time.now - 1.day, Time.now]] },
+          aggregators: [clients_agg]
+        )
+      end
+
+      let(:query_json) { query.as_json }
+
+      it 'is included in the query' do
+        expect(query.as_json).to have_key('aggregations')
+        expect(query_json['aggregations']).to eq(
+          [{
+            'type' => 'thetaSketch',
+            'name' => 'clients',
+            'fieldName' => 'clients'
+          }]
+        )
+      end
+    end
+
     describe 'ThetaSketch Post Aggregation' do
       let(:clients_agg) { create(:clients) }
       let(:clients_a_filter) do
