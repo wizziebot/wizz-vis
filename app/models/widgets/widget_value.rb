@@ -2,13 +2,13 @@ class WidgetValue < Widget
   # ==========================================================
   # Validations
   # ==========================================================
-  validate :validate_aggregator
+  validate :validate_aggregators
   validate :validate_empty_dimensions
 
   private
 
-  def validate_aggregator
-    errors.add(:aggregators, 'only one is allowed') unless aggregators.size == 1
+  def validate_aggregators
+    errors.add(:aggregators, 'only one is allowed') if aggregators.size.zero?
   end
 
   def validate_empty_dimensions

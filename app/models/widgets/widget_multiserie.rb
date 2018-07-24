@@ -5,7 +5,7 @@ class WidgetMultiserie < Widget
   validates :granularity, exclusion: { in: %w[all],
     message: "%{value} is not allowed." }
   validate :validate_dimension
-  validate :validate_aggregator
+  validate :validate_aggregators
 
   def data
     dimension = dimensions.first
@@ -58,7 +58,7 @@ class WidgetMultiserie < Widget
     errors.add(:dimensions, 'only one is allowed') unless dimensions.size == 1
   end
 
-  def validate_aggregator
-    errors.add(:aggregators, 'only one is allowed') unless aggregators.size == 1
+  def validate_aggregators
+    errors.add(:aggregators, 'at least one is needed') if aggregators.size.zero?
   end
 end

@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe WidgetMultiserie, type: :model do
+RSpec.describe WidgetTable, type: :model do
   describe 'validations' do
-    it { is_expected.not_to allow_value('all').for(:granularity) }
+    it { is_expected.to allow_value('all').for(:granularity) }
 
     context 'valid widget' do
       let(:datasource) { create(:datasource_with_relations) }
       let(:widget) do
-        create(:widget_multiserie,
+        create(:widget_table,
                datasource: datasource,
                dimensions: datasource.dimensions.first(1),
                aggregators: datasource.aggregators.first(1))
@@ -32,14 +32,10 @@ RSpec.describe WidgetMultiserie, type: :model do
         expect(widget.valid?).to be true
       end
 
-      it 'is not valid if has more than one dimension associated' do
+      it 'is valid if has more than one dimension associated' do
         widget.dimensions << datasource.dimensions.last
-        expect(widget.valid?).to be false
+        expect(widget.valid?).to be true
       end
-    end
-
-    context '#data' do
-      pending "Test the data method"
     end
   end
 end
