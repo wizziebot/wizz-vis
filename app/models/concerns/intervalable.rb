@@ -1,6 +1,10 @@
 module Intervalable
   extend ActiveSupport::Concern
 
+  def compare?
+    options&.[]('compare')
+  end
+
   def interval
     @time_now = Time.now
 
@@ -17,7 +21,7 @@ module Intervalable
   end
 
   def compare_interval
-    return unless options['compare']
+    return unless compare?
     [
       interval[0] - compare_difference,
       interval[1] - compare_difference
@@ -25,7 +29,7 @@ module Intervalable
   end
 
   def intervals
-    return [interval] unless options&.[]('compare')
+    return [interval] unless compare?
     [compare_interval, interval]
   end
 
@@ -72,7 +76,7 @@ module Intervalable
 
   def compare_difference
     case options['compare']
-    when String && 'past_period'
+    when String && 'previous_period'
       (interval[1] - interval[0])
     when Hash
       options['compare']['amount'].to_i.send(options['compare']['range'])
