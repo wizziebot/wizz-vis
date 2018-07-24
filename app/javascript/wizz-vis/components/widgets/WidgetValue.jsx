@@ -10,6 +10,31 @@ import Info from './../Info';
 import ResumeValue from './../ResumeValue';
 import Time from './../../utils/time';
 
+class CompareValue extends React.Component {
+  getStyle() {
+    if (this.props.bottomAbsolute) {
+      return {
+        position: 'absolute',
+        bottom: 0,
+        fontSize: this.props.fontSize
+      };
+    } else {
+      return {
+        fontSize: this.props.fontSize
+      };
+    }
+  }
+
+  render () {
+    return (
+      <div className="value-compare" style={this.getStyle()}>
+        <ResumeValue show_total={false} total={this.props.total}
+          total_compared={this.props.totalCompared} />
+      </div>
+    );
+  }
+}
+
 export default class WidgetValue extends React.Component {
   constructor(props) {
     super(props);
@@ -182,12 +207,14 @@ export default class WidgetValue extends React.Component {
             <div className='card-stacked' style={{ fontSize: this.getFontSize() }}>
               <div className='card-content center-align valign-wrapper'>
                 {element}
+                {
+                  this.props.compare_interval ?
+                    <CompareValue bottomAbsolute={this.showGauge()}
+                      fontSize={this.getFontSize()} total={total}
+                      totalCompared={total_compared} />
+                    : null
+                }
               </div>
-              {
-                this.props.compare_interval ?
-                  <ResumeValue show_total={false} total={total} total_compared={total_compared} /> :
-                  null
-              }
               <div className='card-serie'>
                 {serie}
               </div>

@@ -20,9 +20,14 @@
         font-size: 3em;
         font-weight: 700;
         z-index: 1;
+        flex-direction: column;
 
         .value {
           width: 100%;
+        }
+
+        .value-compare {
+          font-weight: 400;
         }
       }
 
