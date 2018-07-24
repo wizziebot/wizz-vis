@@ -179,6 +179,7 @@ export default class WidgetSerie extends React.Component {
                            dataKey={ cg != 'actual' ? cg : agg }
                            stroke={ Colors.get(color) } dot={false}
                            fill={ Colors.get(color) }
+                           fillOpacity={ cg != 'actual' ? 0 : 0.5 }
                            strokeDasharray={ cg != 'actual' ? '8 3' : null} />
                        )
                      })
