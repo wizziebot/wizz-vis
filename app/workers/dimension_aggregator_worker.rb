@@ -58,7 +58,7 @@ class DimensionAggregatorWorker
     request.body = {
       queryType: 'segmentMetadata',
       dataSource: datasource_name,
-      intervals: ["#{(last_event_time - 1.hour).iso8601(3)}/#{last_event_time.iso8601(3)}"],
+      intervals: ["#{(last_event_time - 1.hour).iso8601(3)}/#{(last_event_time + 1.minute).iso8601(3)}"],
       merge: true,
       lenientAggregatorMerge: true,
       analysisTypes: %w[aggregators queryGranularity]
