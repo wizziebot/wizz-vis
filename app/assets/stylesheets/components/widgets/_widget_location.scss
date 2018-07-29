@@ -3,4 +3,8 @@
   width: 100%;
   margin: 0 auto;
   position: absolute;
+
+  .leaflet-popup-content {
+    white-space: pre-wrap;
+  }
 }
