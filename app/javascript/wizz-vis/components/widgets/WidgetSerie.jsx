@@ -34,10 +34,18 @@ export default class WidgetSerie extends React.Component {
     this.setAggregators();
   }
 
+  data() {
+    return this.props.data.data || [];
+  }
+
+  compare() {
+    return this.props.data.compare || [];
+  }
+
   getValues() {
     const start_time = Time.moment(this.props.interval[0]);
 
-    return this.props.data.filter(d =>
+    return this.data().filter(d =>
       Time.moment(d.timestamp).isSameOrAfter(start_time)
     );
   }
@@ -48,7 +56,7 @@ export default class WidgetSerie extends React.Component {
 
     const end_time = Time.moment(this.props.compare_interval[1]);
 
-    return this.props.data.filter(d =>
+    return this.data().filter(d =>
       Time.moment(d.timestamp).isSameOrBefore(end_time)
     );
   }
@@ -98,10 +106,10 @@ export default class WidgetSerie extends React.Component {
   }
 
   minTickGap() {
-    if(this.props.data.length < 2) return 0;
+    if(this.data().length < 2) return 0;
 
-    let time_1 = this.props.data[0].timestamp,
-        time_2 = this.props.data[1].timestamp;
+    let time_1 = this.data()[0].timestamp,
+        time_2 = this.data()[1].timestamp;
 
     return Time.gap(time_1, time_2, this.props.interval);
   }
@@ -111,11 +119,11 @@ export default class WidgetSerie extends React.Component {
   }
 
   step() {
-    if(this.props.data.length < 2 || this.props.options.type !== 'bar') return 0;
+    if(this.data().length < 2 || this.props.options.type !== 'bar') return 0;
 
     return Time.step(
-      this.props.data[1].timestamp,
-      this.props.data[0].timestamp
+      this.data()[1].timestamp,
+      this.data()[0].timestamp
     );
   }
 
@@ -128,10 +136,10 @@ export default class WidgetSerie extends React.Component {
   }
 
   render () {
-    if(this.props.error || this.props.data.length == 0) {
+    if(this.props.error || this.data().length == 0) {
       return(<Info error={this.props.error} />)
     } else {
-      const data = this.transformData(this.props.data);
+      const data = this.transformData(this.data());
       const gap = this.minTickGap();
       const start_time = Time.moment(this.props.interval[0]).add(this.step()).unix() * 1000;
       const end_time = Time.moment(this.props.interval[1]).subtract(this.step()).unix() * 1000;
@@ -140,11 +148,13 @@ export default class WidgetSerie extends React.Component {
 
       return (
         <div style = {{ position: 'relative', width: '100%', height: '100%' }} >
-          <WidgetResume
-            compare={this.props.options.compare}
-            aggregators={this.state.aggregators}
-            data={data} />
-
+          {
+            this.props.options.compare ?
+            <WidgetResume
+              aggregators={this.state.aggregators}
+              data={this.compare()} /> :
+            null
+          }
           <ResponsiveContainer height={this.getHeight()}>
             <Chart.type data={data}
                   margin={{top: 5, right: 30, left: 20, bottom: 5}}>

@@ -22,7 +22,7 @@ RSpec.describe Widget, type: :model do
         WebMock.stub_request(:post, ENV['DRUID_URL']).to_return(body: '[]')
       end
 
-      let(:widget) { create(:widget_serie) }
+      let(:widget) { create(:widget) }
 
       it 'obtain empty array' do
         expect(widget.data).to eql []

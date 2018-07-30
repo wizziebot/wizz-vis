@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :widget_serie, class: WidgetSerie do
+  factory :widget, class: Widget do
     title 'Widget Serie'
     row 0
     col 4

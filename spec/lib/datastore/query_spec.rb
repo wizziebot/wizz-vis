@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Datastore::Query do
   let(:datasource) { create(:datasource) }
-  let(:widget) { create(:widget_serie) }
+  let(:widget) { create(:widget) }
   let(:long_sum_agg) { create(:bytes) }
   let(:aggregator_widget_1) do
     create(:aggregator_widget, widget: widget, aggregator: long_sum_agg)

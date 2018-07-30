@@ -37,4 +37,13 @@ class Widget < ApplicationRecord
 
     query.run
   end
+
+  private
+
+  def compare_data
+    intervals.map do |i|
+      Widget.instance_method(:data)
+            .bind(self).call([], granularity: 'all', intervals: [i])
+    end.flatten
+  end
 end

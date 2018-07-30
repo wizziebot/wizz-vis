@@ -27,28 +27,26 @@ export default class WidgetResume extends React.Component {
   }
 
   render () {
-    if(this.props.compare) {
-      return(
-        <div className='widget-resume' style = {{ height: this.getHeight() }} >
-          {
-            this.props.aggregators.map((aggregator) => {
-              const total = this.getValue(this.props.data, aggregator);
-              const total_compared = this.getValue(this.props.data, aggregator, this.props.compare);
-              const increment = total - total_compared;
-              const percent = Format.prefix(Math.abs(increment) * 100 / total, 1);
+    return(
+      <div className='widget-resume' style = {{ height: this.getHeight() }} >
+        {
+          this.props.aggregators.map((aggregator) => {
+            //const total = this.getValue(this.props.data, aggregator);
+            const total = this.props.data[1][aggregator];
+            //const total_compared = this.getValue(this.props.data, aggregator, this.props.compare);
+            const total_compared = this.props.data[0][aggregator];
+            const increment = total - total_compared;
+            const percent = Format.prefix(Math.abs(increment) * 100 / total, 1);
 
-              return(
-                <div key={'resume-' + aggregator}>
-                  <span>Number of {aggregator}: </span>
-                  <ResumeValue show_total total={total} total_compared={total_compared} />
-                </div>
-              )
-            })
-          }
-        </div>
-      )
-    } else {
-      return(null);
-    }
+            return(
+              <div key={'resume-' + aggregator}>
+                <span>Number of {aggregator}: </span>
+                <ResumeValue show_total total={total} total_compared={total_compared} />
+              </div>
+            )
+          })
+        }
+      </div>
+    )
   }
 }
