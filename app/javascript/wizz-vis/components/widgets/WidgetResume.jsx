@@ -12,7 +12,7 @@ export default class WidgetResume extends React.Component {
   }
 
   getValue(data, aggregator, compare) {
-    const aggregator_key = Compare.compared_name(aggregator, compare);
+    const aggregator_key = Compare.metric_name(aggregator, compare);
     if (data.length == 0) {
       return 0;
     } else {

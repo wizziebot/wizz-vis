@@ -73,7 +73,8 @@ export default class WidgetSerie extends React.Component {
     const compare_data = this.getCompareValues();
     const actual_data = this.getValues();
 
-    const unified_data = Compare.unify_data(actual_data, compare_data, this.state.aggregators, this.props.options.compare);
+    const unified_data = Compare.unify_data(actual_data, compare_data,
+      this.state.aggregators, this.props.interval, this.props.options.compare);
 
     return unified_data.map((d) => {
       return {...d, unixTime: Time.moment(d.timestamp).unix() * 1000};

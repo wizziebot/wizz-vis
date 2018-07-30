@@ -10,6 +10,11 @@ export default {
     return moment(time);
   },
 
+  difference(time_1, time_2) {
+    const difference = moment(time_1).diff(moment(time_2));
+    return Math.abs(difference);
+  },
+
   simple_format(time){
     return moment(time).format('YYYY-MM-DD HH:mm');
   },

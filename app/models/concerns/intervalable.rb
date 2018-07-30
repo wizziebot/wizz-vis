@@ -55,11 +55,11 @@ module Intervalable
   def interval_for_current
     case range
     when 'current_day'
-      [@time_now.beginning_of_day, @time_now.end_of_day]
+      [@time_now.beginning_of_day, (@time_now + 1.day).beginning_of_day]
     when 'current_week'
-      [@time_now.beginning_of_week, @time_now.end_of_week]
+      [@time_now.beginning_of_week, (@time_now + 1.week).beginning_of_week]
     when 'current_month'
-      [@time_now.beginning_of_month, @time_now.end_of_month]
+      [@time_now.beginning_of_month, (@time_now + 1.month).beginning_of_month]
     end
   end
 
@@ -75,10 +75,10 @@ module Intervalable
   end
 
   def compare_difference
-    case options['compare']
-    when String && 'previous_period'
+    case options['compare']['range']
+    when 'previous_period'
       (interval[1] - interval[0])
-    when Hash
+    else
       options['compare']['amount'].to_i.send(options['compare']['range'])
     end
   end
