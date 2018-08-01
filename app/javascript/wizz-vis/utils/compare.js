@@ -4,6 +4,7 @@ import Time from './time';
 import Array from './array';
 import merge from 'lodash/merge';
 import values from 'lodash/values';
+import sortBy from 'lodash/sortBy';
 
 export default {
   graph_types(aggregator, compare) {
@@ -58,6 +59,9 @@ export default {
     const data_to_keys = Array.toObject(data, 'timestamp');
     const compare_data_to_keys = Array.toObject(compare_to_actual, 'timestamp');
 
-    return values(merge({}, data_to_keys, compare_data_to_keys));
+    return sortBy(
+      values(merge({}, data_to_keys, compare_data_to_keys)),
+      'timestamp'
+    );
   }
 };

@@ -22,13 +22,19 @@ export default {
   format(time, interval) {
     const range =
       moment(interval[1]).diff(moment(interval[0]));
+    const past_year =
+      moment().diff(interval[1], 'years') > 0;
+    const past_day =
+      moment().diff(interval[1], 'days') > 0;
 
     if (range > TWO_DAYS) {
-      return moment(time).format('MM/DD');
+      return moment(time).format(`${past_year ? 'YYYY/MM/DD' : 'MM/DD'}`);
     } else if (range > ONE_DAY) {
-      return moment(time).format('MM/DD HH:mm');
+      return moment(time).format(`${past_year ? 'YYYY/MM/DD HH:mm' : 'MM/DD HH:mm'}`);
     } else {
-      return moment(time).format('HH:mm');
+      return moment(time).format(
+        `${past_year ? 'YYYY/MM/DD HH:mm' : past_day ? 'MM/DD HH:mm' : 'HH:mm'}`
+      );
     }
   },
 
