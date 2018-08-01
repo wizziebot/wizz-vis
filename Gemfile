@@ -52,7 +52,7 @@ gem 'gretel', '~> 3.0'
 
 # Sidekiq
 gem 'sidekiq', '~> 5.1'
-gem 'sidekiq-cron', '~> 0.6.3'
+gem 'sidekiq-cron', '~> 1.0.0'
 
 # Druid
 gem 'ruby-druid', git: 'https://github.com/wizzie-io/ruby-druid.git'
