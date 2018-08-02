@@ -23,9 +23,9 @@ export default {
     const range =
       moment(interval[1]).diff(moment(interval[0]));
     const past_year =
-      moment().diff(interval[1], 'years') > 0;
+      moment().year() - moment(interval[1]).year() > 0;
     const past_day =
-      moment().diff(interval[1], 'days') > 0;
+      moment().day() - moment(interval[1]).day() > 0;
 
     if (range > TWO_DAYS) {
       return moment(time).format(`${past_year ? 'YYYY/MM/DD' : 'MM/DD'}`);
