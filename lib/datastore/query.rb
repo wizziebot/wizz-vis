@@ -75,8 +75,9 @@ module Datastore
         metric = [*@options['metrics']].first&.to_sym || @aggregators.first.name.to_sym
         @query.topn(@dimensions.first.name.to_sym, metric, @limit)
       elsif group_by?
+        metrics = @options['metrics'] && [*@options['metrics']] || @aggregators.map(&:name)
         @query.group_by(*@dimensions.map(&:name))
-        @query.limit(@limit, @dimensions.map { |d| [d.name, :desc] })
+        @query.limit(@limit, metrics.map { |m| [m, :descending] })
       else
         # timeserie
       end

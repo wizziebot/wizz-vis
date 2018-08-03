@@ -14,6 +14,7 @@ import WidgetLocation from './widgets/WidgetLocation';
 import WidgetHeatmap from './widgets/WidgetHeatmap';
 import WidgetTable from './widgets/WidgetTable';
 import WidgetPlane from './widgets/WidgetPlane';
+import WidgetPlaneLocation from './widgets/WidgetPlaneLocation';
 import WidgetPlaneRoute from './widgets/WidgetPlaneRoute';
 import WidgetChord from './widgets/WidgetChord';
 import WidgetSankey from './widgets/WidgetSankey';
@@ -44,6 +45,7 @@ export default class WidgetBase extends React.Component {
       WidgetHeatmap,
       WidgetTable,
       WidgetPlane,
+      WidgetPlaneLocation,
       WidgetPlaneRoute,
       WidgetChord,
       WidgetSankey,
