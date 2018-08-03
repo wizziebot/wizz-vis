@@ -33,12 +33,17 @@ export default class WidgetImage extends React.Component {
     }
 
     return (
-      <img
-        ref={(image) => { this.image = image; }}
-        style={style}
-        src={this.imageURL}
-        onLoad={this.onLoad}
-      />
+      <div>
+        <img
+          ref={(image) => { this.image = image; }}
+          style={style}
+          src={this.imageURL}
+          onLoad={this.onLoad}
+        />
+        <div style={style}>
+          {this.props.children}
+        </div>
+      </div>
     )
   }
 }
