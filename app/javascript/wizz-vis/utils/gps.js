@@ -54,6 +54,31 @@ export default {
   },
 
   /**
+   * Convert point from latitude-longitude reference to x-y referenced
+   * by a square using matrices for transformation and offset.
+   *
+   * @param {number} latitude
+   * @param {number} longitude
+   * @param {number} width
+   * @param {number} height
+   * @param {Matrix} m_trans
+   * @param {Matrix} m_offset
+   * @returns {Object} x and y entries
+   */
+  latlngToPoint(latitude, longitude, width, height, m_trans, m_offset) {
+    var points =
+      math.multiply(m_trans,
+                    math.subtract(math.matrix([[longitude], [latitude]]),
+                                  m_offset)
+      );
+
+    return {
+      x: points.get([0, 0]),
+      y: points.get([1, 0])
+    };
+  },
+
+  /**
    * Convert point from latitude-longitude reference to percentages referenced
    * by a square using matrices for transformation and offset.
    *
