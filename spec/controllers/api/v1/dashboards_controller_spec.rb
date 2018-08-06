@@ -5,7 +5,7 @@ RSpec.describe Api::V1::DashboardsController, type: :controller do
   let(:aggregators) { datasource.aggregators }
   let(:dashboard) { create(:dashboard) }
   let(:widget) do
-    create(:widget_serie,
+    create(:widget,
            datasource: datasource,
            aggregators: aggregators.first(1))
   end

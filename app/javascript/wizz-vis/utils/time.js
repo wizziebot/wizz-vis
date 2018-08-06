@@ -10,6 +10,11 @@ export default {
     return moment(time);
   },
 
+  difference(time_1, time_2) {
+    const difference = moment(time_1).diff(moment(time_2));
+    return Math.abs(difference);
+  },
+
   simple_format(time){
     return moment(time).format('YYYY-MM-DD HH:mm');
   },
@@ -17,13 +22,19 @@ export default {
   format(time, interval) {
     const range =
       moment(interval[1]).diff(moment(interval[0]));
+    const past_year =
+      moment().year() - moment(interval[1]).year() > 0;
+    const past_day =
+      moment().day() - moment(interval[1]).day() > 0;
 
     if (range > TWO_DAYS) {
-      return moment(time).format('MM/DD');
+      return moment(time).format(`${past_year ? 'YYYY/MM/DD' : 'MM/DD'}`);
     } else if (range > ONE_DAY) {
-      return moment(time).format('MM/DD HH:mm');
+      return moment(time).format(`${past_year ? 'YYYY/MM/DD HH:mm' : 'MM/DD HH:mm'}`);
     } else {
-      return moment(time).format('HH:mm');
+      return moment(time).format(
+        `${past_year ? 'YYYY/MM/DD HH:mm' : past_day ? 'MM/DD HH:mm' : 'HH:mm'}`
+      );
     }
   },
 

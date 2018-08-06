@@ -13,7 +13,7 @@ module Datastore
 
       @datasource = Druid::DataSource.new(datasource, ENV['DRUID_URL'])
       @query = Druid::Query::Builder.new
-      @interval = properties[:interval]
+      @intervals = properties[:intervals]
       @granularity = properties[:granularity] || 'all'
       @limit = properties[:limit] || 5
       @dimensions = dimensions
@@ -62,7 +62,7 @@ module Datastore
 
     def build
       @query.query.context.timeout = DRUID_TIMEOUT
-      @query.interval(*@interval)
+      @query.intervals(@intervals)
       @query.granularity(@granularity)
 
       set_aggregators
@@ -75,8 +75,9 @@ module Datastore
         metric = [*@options['metrics']].first&.to_sym || @aggregators.first.name.to_sym
         @query.topn(@dimensions.first.name.to_sym, metric, @limit)
       elsif group_by?
+        metrics = @options['metrics'] && [*@options['metrics']] || @aggregators.map(&:name)
         @query.group_by(*@dimensions.map(&:name))
-        @query.limit(@limit, @dimensions.map { |d| [d.name, :desc] })
+        @query.limit(@limit, metrics.map { |m| [m, :descending] })
       else
         # timeserie
       end

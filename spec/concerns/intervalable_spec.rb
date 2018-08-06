@@ -43,17 +43,20 @@ shared_examples_for 'intervalable' do
   describe 'current intervals' do
     it 'returns current day' do
       object = FactoryBot.create(model.to_s.underscore.to_sym, range: 'current_day')
-      expect(object.interval).to eq([@time_now.beginning_of_day, @time_now.end_of_day])
+      expect(object.interval).to eq([@time_now.beginning_of_day,
+                                     @time_now.tomorrow.beginning_of_day])
     end
 
     it 'returns current week' do
       object = FactoryBot.create(model.to_s.underscore.to_sym, range: 'current_week')
-      expect(object.interval).to eq([@time_now.beginning_of_week, @time_now.end_of_week])
+      expect(object.interval).to eq([@time_now.beginning_of_week,
+                                     (@time_now + 1.week).beginning_of_week])
     end
 
     it 'returns current month' do
       object = FactoryBot.create(model.to_s.underscore.to_sym, range: 'current_month')
-      expect(object.interval).to eq([@time_now.beginning_of_month, @time_now.end_of_month])
+      expect(object.interval).to eq([@time_now.beginning_of_month,
+                                     (@time_now + 1.month).beginning_of_month])
     end
   end
 

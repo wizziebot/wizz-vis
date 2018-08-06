@@ -90,6 +90,10 @@ jobs:
               zcat caches/${APP_NAME}.tgz | docker load
             fi
       - run:
+          name: Include commit file
+          command: |
+            git log --format="%H" -n 1 > COMMIT
+      - run:
           name: Build application Docker image
           command: |
             docker build -t ${APP_NAME} .

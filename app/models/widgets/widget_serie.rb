@@ -7,6 +7,12 @@ class WidgetSerie < Widget
   validate :validate_aggregators
   validate :validate_empty_dimensions
 
+  def data
+    result = { data: super() }
+    result[:compare] = compare_data if compare?
+    result
+  end
+
   private
 
   def validate_aggregators

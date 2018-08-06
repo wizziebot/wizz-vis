@@ -7,6 +7,33 @@ import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Format from './../../utils/format';
 import Info from './../Info';
+import ResumeValue from './../ResumeValue';
+import Time from './../../utils/time';
+
+class CompareValue extends React.Component {
+  getStyle() {
+    if (this.props.bottomAbsolute) {
+      return {
+        position: 'absolute',
+        bottom: 0,
+        fontSize: this.props.fontSize
+      };
+    } else {
+      return {
+        fontSize: this.props.fontSize
+      };
+    }
+  }
+
+  render () {
+    return (
+      <div className="value-compare" style={this.getStyle()}>
+        <ResumeValue show_total={false} total={this.props.total}
+          total_compared={this.props.totalCompared} />
+      </div>
+    );
+  }
+}
 
 export default class WidgetValue extends React.Component {
   constructor(props) {
@@ -18,22 +45,41 @@ export default class WidgetValue extends React.Component {
     return this.props.options.metrics || this.props.aggregators[0].name;
   }
 
-  getValue() {
+  getValues() {
+    const start_time = Time.moment(this.props.interval[0]);
+
+    return this.props.data.filter((d) => {
+      return Time.moment(d.timestamp) >= start_time;
+    });
+  }
+
+  getCompareValues() {
+    if (this.props.compare_interval == undefined)
+      return [];
+
+    const end_time = Time.moment(this.props.compare_interval[1]);
+
+    return this.props.data.filter((d) => {
+      return Time.moment(d.timestamp) <= end_time;
+    });
+  }
+
+  getValue(data) {
     const value_type = this.props.options.value || 'current';
-    const data_length = this.props.data.length;
+    const data_length = data.length;
 
     if (data_length == 0) {
       return 0;
     } else if (value_type == 'max') {
-      return Math.max(...this.props.data.map(d => d[this.aggregator]));
+      return Math.max(...data.map(d => d[this.aggregator]));
     } else if (value_type == 'min') {
-      return Math.min(...this.props.data.map(d => d[this.aggregator]));
+      return Math.min(...data.map(d => d[this.aggregator]));
     } else if (value_type == 'average') {
-      return this.props.data.map(d => d[this.aggregator]).reduce((a,b) => a + b, 0) / data_length;
+      return data.map(d => d[this.aggregator]).reduce((a,b) => a + b, 0) / data_length;
     } else if (value_type == 'total') {
-      return this.props.data.map(d => d[this.aggregator]).reduce((a,b) => a + b, 0);
+      return data.map(d => d[this.aggregator]).reduce((a,b) => a + b, 0);
     } else {
-      return this.props.data[data_length - 1][this.aggregator];
+      return data[data_length - 1][this.aggregator];
     }
   }
 
@@ -100,7 +146,7 @@ export default class WidgetValue extends React.Component {
             }
           },
           data:[
-            {value: this.getValue()}
+            {value: this.getValue(this.getValues())}
           ]
         }
       ]
@@ -113,6 +159,7 @@ export default class WidgetValue extends React.Component {
     if(this.props.error || this.props.data.length == 0) {
       return(<Info error={this.props.error} />)
     } else {
+      const data = this.getValues();
       let element = null,
           serie = null;
 
@@ -129,14 +176,14 @@ export default class WidgetValue extends React.Component {
           className='gauge' />;
       } else {
         element = <div className='value'>
-          { Format.prefix(this.getValue(), 2) }
+          { Format.prefix(this.getValue(data), 2) }
         </div>;
       }
 
       if(this.showSerie()) {
         const color = this.props.options.serie.color || Colors.get(0);
         serie = <ResponsiveContainer>
-          <AreaChart data={this.props.data}
+          <AreaChart data={data}
                 margin={{top: 0, right: 0, left: 5, bottom: 0}}>
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -151,12 +198,22 @@ export default class WidgetValue extends React.Component {
         </ResponsiveContainer>
       }
 
+      const total = this.getValue(data);
+      const total_compared = this.getValue(this.getCompareValues());
+
       return (
         <div className='widget-value'>
           <div className='card horizontal'>
             <div className='card-stacked' style={{ fontSize: this.getFontSize() }}>
               <div className='card-content center-align valign-wrapper'>
                 {element}
+                {
+                  this.props.compare_interval ?
+                    <CompareValue bottomAbsolute={this.showGauge()}
+                      fontSize={this.getFontSize()} total={total}
+                      totalCompared={total_compared} />
+                    : null
+                }
               </div>
               <div className='card-serie'>
                 {serie}

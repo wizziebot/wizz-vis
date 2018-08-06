@@ -20,6 +20,8 @@ module Datastore
       case aggregator_type
       when 'approx_histogram_fold'
         histograms(query, aggs, opts)
+      when 'theta_sketch'
+        aggs.each { |agg| query.theta_sketch(agg, agg) }
       else
         query.send(aggregator_type, aggs)
       end

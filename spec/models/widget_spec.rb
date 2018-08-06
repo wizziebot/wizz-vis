@@ -47,7 +47,7 @@ RSpec.describe Widget, type: :model do
 
       let(:datasource) { create(:datasource_with_relations) }
       let(:widget) do
-        create(:widget_serie, aggregators: datasource.aggregators.first(1))
+        create(:widget, aggregators: datasource.aggregators.first(1))
       end
 
       it 'obtain empty array' do

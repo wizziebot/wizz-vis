@@ -28,7 +28,7 @@ class Widget < ApplicationRecord
   def data(override_filters = nil, override_options = {})
     query = Datastore::Query.new(
       datasource: datasource.name,
-      properties: attributes.merge(interval: interval).merge(override_options),
+      properties: attributes.merge(intervals: intervals).merge(override_options),
       dimensions: dimensions,
       aggregators: aggregator_widgets.includes(:aggregator, :filters),
       post_aggregators: post_aggregators,
@@ -43,5 +43,12 @@ class Widget < ApplicationRecord
 
   def validate_interval
     errors.add(:range, 'must be set') if range.nil? && start_time.nil? && end_time.nil?
+  end
+
+  def compare_data
+    intervals.map do |i|
+      Widget.instance_method(:data)
+            .bind(self).call([], granularity: 'all', intervals: [i])
+    end.flatten
   end
 end

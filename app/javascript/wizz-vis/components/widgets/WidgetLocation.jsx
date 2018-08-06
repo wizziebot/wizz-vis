@@ -49,7 +49,10 @@ export default class WidgetLocation extends React.Component {
         {
           position: d[this.state.coordinate_dimension].split(',')
                     .map((e) => (parseFloat(e))),
-          label: d[this.state.grouped_dimension]
+          label: {
+            dimension: d[this.state.grouped_dimension],
+            aggregator: d[this.state.aggregator]
+          }
         }
       ))
     );
@@ -114,7 +117,10 @@ export default class WidgetLocation extends React.Component {
                 position={ element.position }
                 key={ index }>
                 <Popup>
-                  <span>{ element.label }</span>
+                  <span>
+                    <b>{this.state.grouped_dimension}:</b> { element.label.dimension }<br/>
+                    <b>{this.state.aggregator}:</b> { element.label.aggregator }
+                  </span>
                 </Popup>
               </Marker>
             ))

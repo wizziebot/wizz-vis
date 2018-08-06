@@ -4,7 +4,7 @@ RSpec.describe Api::V1::WidgetsController, type: :controller do
   let(:datasource) { create(:datasource_with_relations) }
   let(:aggregator) { datasource.aggregators.first }
   let(:widget) do
-    create(:widget_serie, datasource: datasource, aggregators: [aggregator])
+    create(:widget, datasource: datasource, aggregators: [aggregator])
   end
   let(:valid_attributes) do
     {
