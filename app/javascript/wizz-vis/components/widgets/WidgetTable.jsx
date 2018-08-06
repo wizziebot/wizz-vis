@@ -7,6 +7,10 @@ import Theme from './../../utils/theme';
 import Format from './../../utils/format';
 import Info from './../Info';
 import castArray from 'lodash/castArray';
+import find from 'lodash/find';
+import pick from 'lodash/pick';
+import cloneDeep from 'lodash/cloneDeep';
+import ResumeValue from './../ResumeValue';
 
 const HEADER_HEIGHT = 80;
 
@@ -19,7 +23,36 @@ export default class WidgetTable extends React.Component {
     this.header = [];
   }
 
-  formatData(data) {
+  data() {
+    return this.props.data.data || [];
+  }
+
+  compare() {
+    return this.props.data.compare || [];
+  }
+
+  formatData() {
+    // Prevent to change the data props, for resizes.
+    let data = cloneDeep(this.data());
+
+    if (this.compare().length > 0) {
+      data.map((actual_data) => {
+        // Selects the item from compare data which dimension values are equal to
+        // the ones in the actual data, in order to calculate increments.
+        var comp_data = find(this.compare(), pick(actual_data, this.dimensions));
+
+        // Calculates the increments(by aggregator) and updates the array of data
+        // to show. If there are no past values to compare, interpret that the
+        // values are equal to zero, so an increase of 100% is shown.
+        this.aggregators.map((agg) => {
+          actual_data[agg] =
+            <ResumeValue
+              show_total total={actual_data[agg]}
+              total_compared={comp_data === undefined ? 0 : comp_data[agg]} />
+        });
+      });
+    }
+
     return data.map((d) =>
       Format.formatColumns(d)
     );
@@ -59,7 +92,7 @@ export default class WidgetTable extends React.Component {
   }
 
   render () {
-    if(this.props.error || this.props.data.length == 0) {
+    if(this.props.error || this.data().length == 0) {
       return(<Info error={this.props.error} />)
     } else {
       const theme = {
@@ -77,7 +110,7 @@ export default class WidgetTable extends React.Component {
       this.setDimensions();
       this.setHeader();
 
-      const data = this.formatData(this.props.data);
+      const data = this.formatData();
 
       return (
         <div className="widget_table">
