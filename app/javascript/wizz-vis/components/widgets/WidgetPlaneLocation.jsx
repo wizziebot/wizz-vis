@@ -110,6 +110,10 @@ export default class WidgetPlane extends React.Component {
     return {x, y};
   }
 
+  get keepRatio() {
+    return this.props.options.keep_ratio;
+  }
+
   get imageURL() {
     return this.props.options.image;
   }
@@ -180,47 +184,47 @@ export default class WidgetPlane extends React.Component {
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <WidgetImage
-          keepRatio={this.props.options.keep_ratio}
+          keepRatio={this.keepRatio}
           image={this.imageURL}
           onLoad={this.handleImageLoaded.bind(this)}
-          ref={(node) => node ? this.image = node.image : null}
-        />
-        <Stage width={this.props.width} height={this.props.height}>
-          <Layer ref="layer">
-            {
-              data.map((element, index) => (
-                <Circle
-                  key={index}
-                  {...element}
-                  stroke="black"
-                  fill="#8a8acb"
-                  strokeWidth={1}
-                  radius={10}
-                  onMouseOver={(e) => this.showTooltip(e)}
-                  onMouseOut={(e) => this.hideTooltip(e)}
+          ref={(node) => node ? this.image = node.image : null}>
+          <Stage width={this.client_width} height={this.client_height}>
+            <Layer ref="layer">
+              {
+                data.map((element, index) => (
+                  <Circle
+                    key={index}
+                    {...element}
+                    stroke="black"
+                    fill="#8a8acb"
+                    strokeWidth={1}
+                    radius={10}
+                    onMouseOver={(e) => this.showTooltip(e)}
+                    onMouseOut={(e) => this.hideTooltip(e)}
+                  />
+                ))
+              }
+              <Label visible={false} ref="tooltip">
+                <Tag
+                  fill="white"
+                  pointerDirection="down"
+                  pointerWidth={10}
+                  pointerHeight={10}
+                  cornerRadius={5}
+                  shadowColor="black"
+                  shadowBlur={10}
+                  shadowOffset={10}
+                  shadowOpacity={0.5}
                 />
-              ))
-            }
-            <Label visible={false} ref="tooltip">
-              <Tag
-                fill="white"
-                pointerDirection="down"
-                pointerWidth={10}
-                pointerHeight={10}
-                cornerRadius={5}
-                shadowColor="black"
-                shadowBlur={10}
-                shadowOffset={10}
-                shadowOpacity={0.5}
-              />
-              <Text
-                text=""
-                padding={5}
-                fill="black"
-              />
-            </Label>
-          </Layer>
-        </Stage>
+                <Text
+                  text=""
+                  padding={5}
+                  fill="black"
+                />
+              </Label>
+            </Layer>
+          </Stage>
+        </WidgetImage>
       </div>
     )
   }
