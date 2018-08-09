@@ -28,8 +28,8 @@ class CompareValue extends React.Component {
   render () {
     return (
       <div className="value-compare" style={this.getStyle()}>
-        <ResumeValue show_total={false} total={this.props.total}
-          total_compared={this.props.totalCompared} />
+        <ResumeValue showTotal={false} actualData={this.props.total}
+          compareData={this.props.totalCompared} />
       </div>
     );
   }

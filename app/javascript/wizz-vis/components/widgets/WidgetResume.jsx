@@ -11,17 +11,6 @@ export default class WidgetResume extends React.Component {
     super(props);
   }
 
-  getValue(data, aggregator, compare) {
-    const aggregator_key = Compare.metric_name(aggregator, compare);
-    if (data.length == 0) {
-      return 0;
-    } else {
-      return data.map(
-        d => d[aggregator_key]
-      ).reduce((a,b) => a + (b || 0), 0);
-    }
-  }
-
   getHeight() {
     return this.props.aggregators.length * 8 + '%';
   }
@@ -31,17 +20,13 @@ export default class WidgetResume extends React.Component {
       <div className='widget-resume' style = {{ height: this.getHeight() }} >
         {
           this.props.aggregators.map((aggregator) => {
-            //const total = this.getValue(this.props.data, aggregator);
-            const total = this.props.data[1][aggregator];
-            //const total_compared = this.getValue(this.props.data, aggregator, this.props.compare);
-            const total_compared = this.props.data[0][aggregator];
-            const increment = total - total_compared;
-            const percent = Format.prefix(Math.abs(increment) * 100 / total, 1);
+            const actual_data = this.props.data[1][aggregator];
+            const compare_data = this.props.data[0][aggregator];
 
             return(
               <div key={'resume-' + aggregator}>
                 <span>Number of {aggregator}: </span>
-                <ResumeValue show_total total={total} total_compared={total_compared} />
+                <ResumeValue showTotal actualData={actual_data} compareData={compare_data} />
               </div>
             )
           })
