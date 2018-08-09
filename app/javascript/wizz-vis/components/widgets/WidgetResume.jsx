@@ -20,13 +20,13 @@ export default class WidgetResume extends React.Component {
       <div className='widget-resume' style = {{ height: this.getHeight() }} >
         {
           this.props.aggregators.map((aggregator) => {
-            const total = this.props.data[1][aggregator];
-            const total_compared = this.props.data[0][aggregator];
+            const actual_data = this.props.data[1][aggregator];
+            const compare_data = this.props.data[0][aggregator];
 
             return(
               <div key={'resume-' + aggregator}>
                 <span>Number of {aggregator}: </span>
-                <ResumeValue show_total total={total} total_compared={total_compared} />
+                <ResumeValue showTotal actualData={actual_data} compareData={compare_data} />
               </div>
             )
           })
