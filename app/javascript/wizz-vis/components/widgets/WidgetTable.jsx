@@ -47,8 +47,8 @@ export default class WidgetTable extends React.Component {
         this.aggregators.map((agg) => {
           actual_data[agg] =
             <ResumeValue
-              show_total total={actual_data[agg]}
-              total_compared={comp_data === undefined ? 0 : comp_data[agg]} />
+              showTotal actualData={actual_data[agg]}
+              compareData={comp_data === undefined ? 0 : comp_data[agg]} />
         });
       });
     }

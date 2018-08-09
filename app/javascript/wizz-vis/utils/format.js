@@ -9,6 +9,8 @@ export default {
       return (value / 1e6).toFixed(decimals) + " M";
     } else if (value > 1e3) {
       return (value / 1e3).toFixed(decimals) + " K";
+    } else if (Number.isInteger(value)) {
+      return value;
     } else {
       return value.toFixed(decimals);
     }

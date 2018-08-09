@@ -138,9 +138,16 @@ jobs:
           command: |
             docker tag ${APP_NAME}:latest gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:latest
       - run:
-          name: Push latest image to registry
+          name: Push latest image to Google Cloud Registry
           command: |
-            gcloud docker -- push gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:latest
+            gcloud auth configure-docker --quiet
+            docker push gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:latest
+      - run:
+          name: Push lastest image to Docker Hub
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker tag ${APP_NAME}:latest ${DOCKER_ORGANIZATION}/${APP_NAME}:latest
+            docker push ${DOCKER_ORGANIZATION}/${APP_NAME}:latest
 
   tagged-deploy:
     <<: *gcloud-configuration
@@ -163,9 +170,17 @@ jobs:
           command: |
             docker tag ${APP_NAME}:latest gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:stable
       - run:
-          name: Push stable to registry
+          name: Push stable to Google Cloud Registry
           command: |
-            gcloud docker -- push gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:stable
+            gcloud auth configure-docker --quiet
+            docker push gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:stable
+      - run:
+          name: Push stable and tagged image to Docker Hub
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker tag ${APP_NAME}:latest ${DOCKER_ORGANIZATION}/${APP_NAME}:stable
+            docker push ${DOCKER_ORGANIZATION}/${APP_NAME}:stable
+            docker tag ${DOCKER_ORGANIZATION}/${APP_NAME}:stable ${DOCKER_ORGANIZATION}/${APP_NAME}:${CIRCLE_TAG#?}
       - run:
           name: Tag versioned image in the registry
           command: |

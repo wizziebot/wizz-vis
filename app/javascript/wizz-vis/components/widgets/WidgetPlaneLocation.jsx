@@ -7,6 +7,9 @@ import gps_utils from './../../utils/gps';
 import Time from './../../utils/time';
 import Format from './../../utils/format';
 import castArray from 'lodash/castArray';
+import sortBy from 'lodash/sortBy';
+
+const DEFAULT_MARKER_COLOR = "#8a8acb";
 
 export default class WidgetPlane extends React.Component {
   constructor(props) {
@@ -62,6 +65,10 @@ export default class WidgetPlane extends React.Component {
 
     this.aggregators = (this.props.options.metrics && castArray(this.props.options.metrics)) ||
                        this.props.aggregators.map((a) => (a.name));
+  }
+
+  getMainAggregator() {
+    return this.props.options.threshold_metric || this.aggregators[0];
   }
 
   transformData(data) {
@@ -175,6 +182,26 @@ export default class WidgetPlane extends React.Component {
     this.refs.layer.batchDraw();
   }
 
+  getColorFromThresholds(value) {
+    const threshold = sortBy(this.props.options.thresholds, (t) => t[0])
+                      .reverse()
+                      .find((e) => value >= e[0]);
+    if (threshold) return threshold[1];
+    return DEFAULT_MARKER_COLOR;
+  }
+
+  getMarkerColor(marker) {
+    if (this.props.options.thresholds == undefined)
+      return DEFAULT_MARKER_COLOR;
+
+    const main_aggregator = marker.aggregators.find((a) => (a.name == this.getMainAggregator()));
+    if (main_aggregator) {
+      return this.getColorFromThresholds(main_aggregator.value);
+    } else {
+      return DEFAULT_MARKER_COLOR;
+    }
+  }
+
   render () {
     if(this.props.error)
       return(<Info error={this.props.error} />)
@@ -196,7 +223,7 @@ export default class WidgetPlane extends React.Component {
                     key={index}
                     {...element}
                     stroke="black"
-                    fill="#8a8acb"
+                    fill={ this.getMarkerColor(element) }
                     strokeWidth={1}
                     radius={10}
                     onMouseOver={(e) => this.showTooltip(e)}

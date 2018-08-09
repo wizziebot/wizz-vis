@@ -8,27 +8,47 @@ export default class WidgetResume extends React.Component {
     super(props);
   }
 
-  getColor(increment) {
-    return increment > 0 ? 'green' : 'red';
+  getColor(difference) {
+    if (difference == 0) {
+      return 'inherited';
+    } else if (difference > 0) {
+      return 'green';
+    } else {
+      return 'red';
+    }
   }
 
-  getIcon(increment) {
-    return increment > 0 ? ' \u25B2 ' : ' \u25BC ';
+  getIcon(difference) {
+    if (difference == 0) {
+      return ' = ';
+    } else if (difference > 0) {
+      return ' \u25B2 ';
+    } else {
+      return ' \u25BC ';
+    }
+  }
+
+  getPercentText(value, difference) {
+    if(value == 0){
+      return ' (new)';
+    } else {
+      const percent = Format.prefix(Math.abs(difference) * 100 / value, 1);
+      return ` (${percent}%)`;
+    }
   }
 
   render () {
-    const increment = this.props.total - this.props.total_compared;
-    const percent = Format.prefix(Math.abs(increment) * 100 / this.props.total, 1);
+    const difference = this.props.actualData - this.props.compareData;
 
     return (
       <span>
           {
-            this.props.show_total ? Format.prefix(this.props.total, 2) :
+            this.props.showTotal ? Format.prefix(this.props.actualData, 2) :
             null
           }
-          <span className='compare' style={{ color: this.getColor(increment) }}>
-            { this.getIcon(increment) +
-              Format.prefix(Math.abs(increment), 2) + ' (' + percent + '%)'
+          <span className='compare' style={{ color: this.getColor(difference) }}>
+            { this.getIcon(difference) +
+              Format.prefix(Math.abs(difference), 2) + this.getPercentText(this.props.compareData, difference)
             }
           </span>
       </span>
