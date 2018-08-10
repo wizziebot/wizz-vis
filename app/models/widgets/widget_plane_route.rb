@@ -1,4 +1,12 @@
 class WidgetPlaneRoute < Widget
+  # ==========================================================
+  # Validations
+  # ==========================================================
+  validates :granularity, exclusion: { in: %w[all],
+    message: "%{value} is not allowed." }
+  validate :validate_dimensions
+  validate :validate_aggregators
+
   # Return an array of waypoints with the format:
   # { timestamp: "2017-11-06T21:09:00.000Z",
   #   coordinate: ["30.29068285", "-97.723049717"] }
@@ -18,5 +26,15 @@ class WidgetPlaneRoute < Widget
     waypoints.map do |k, v|
       { timestamp: k, coordinate: v.split(',') }
     end
+  end
+
+  private
+
+  def validate_dimensions
+    errors.add(:dimensions, 'should contain one coordinate dimension') unless dimensions.any?(&:coordinate?)
+  end
+
+  def validate_aggregators
+    errors.add(:aggregators, 'at least one is needed') if aggregators.size.zero?
   end
 end
