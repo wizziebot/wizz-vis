@@ -1,6 +1,6 @@
 FactoryBot.define do
-  factory :widget_plane, class: WidgetPlane do
-    title 'Widget Plane'
+  factory :widget_image, class: WidgetImage do
+    title 'Widget Image'
     row 0
     col 4
     size_x 4

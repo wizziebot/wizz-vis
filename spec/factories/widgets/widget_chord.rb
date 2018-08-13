@@ -1,6 +1,6 @@
 FactoryBot.define do
-  factory :widget_plane, class: WidgetPlane do
-    title 'Widget Plane'
+  factory :widget_chord, class: WidgetChord do
+    title 'Widget Chord'
     row 0
     col 4
     size_x 4
