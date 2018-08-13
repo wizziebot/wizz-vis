@@ -60,7 +60,7 @@ export default class WidgetValue extends React.Component {
     const end_time = Time.moment(this.props.compare_interval[1]);
 
     return this.props.data.filter((d) => {
-      return Time.moment(d.timestamp) <= end_time;
+      return Time.moment(d.timestamp) < end_time;
     });
   }
 
