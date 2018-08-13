@@ -9,6 +9,9 @@ FactoryBot.define do
         create(:dimension, name: 'coordinates', datasource: datasource)
         create(:aggregator, name: 'aggregator_a', datasource: datasource)
         create(:aggregator, name: 'aggregator_b', datasource: datasource)
+        create(:aggregator, name: 'histogram',
+                            aggregator_type: 'approxHistogramFold',
+                            datasource: datasource)
       end
     end
   end
