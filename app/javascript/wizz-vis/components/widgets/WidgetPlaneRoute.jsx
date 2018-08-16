@@ -99,11 +99,14 @@ export default class WidgetPlaneRoute extends React.Component {
           image={this.imageURL}
           onLoad={this.handleImageLoaded.bind(this)}
           ref={(node) => node ? this.image = node.image : null}>
-          <PlaneRoute
-            width={this.client_width}
-            height={this.client_height}
-            data={data}
-          />
+          {
+            data.length > 0 &&
+              <PlaneRoute
+                width={this.client_width}
+                height={this.client_height}
+                data={data}
+              />
+          }
         </WidgetImage>
       </div>
     )
