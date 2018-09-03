@@ -39,5 +39,9 @@ export default {
     } else {
       return value;
     }
+  },
+
+  estimateFontSize(width = 100, height = 100) {
+    return (width < height) ? width / 12 : height / 12;
   }
 };

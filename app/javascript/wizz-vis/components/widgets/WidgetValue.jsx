@@ -84,8 +84,7 @@ export default class WidgetValue extends React.Component {
   }
 
   getFontSize() {
-    return (this.props.width < this.props.height) ?
-      this.props.width / 12 : this.props.height / 12;
+    return Format.estimateFontSize(this.props.width, this.props.height);
   }
 
   showGauge(){
