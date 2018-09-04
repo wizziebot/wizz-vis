@@ -1,13 +1,15 @@
 /* jshint esversion: 6 */
 export default {
   prefix(value, decimals = 0) {
-    if (value > 1e12) {
+    if (!isFinite(value)){
+      return value;
+    } else if (Math.abs(value) > 1e12) {
       return (value / 1e12).toFixed(decimals) + " T";
-    } else if (value > 1e9) {
+    } else if (Math.abs(value) > 1e9) {
       return (value / 1e9).toFixed(decimals) + " G";
-    } else if (value > 1e6) {
+    } else if (Math.abs(value) > 1e6) {
       return (value / 1e6).toFixed(decimals) + " M";
-    } else if (value > 1e3) {
+    } else if (Math.abs(value) > 1e3) {
       return (value / 1e3).toFixed(decimals) + " K";
     } else if (Number.isInteger(value)) {
       return value;
