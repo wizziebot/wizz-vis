@@ -266,7 +266,7 @@ GEM
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
     ruby_dep (1.5.0)
-    rubyzip (1.2.1)
+    rubyzip (1.2.2)
     safe_yaml (1.0.4)
     sass (3.5.6)
       sass-listen (~> 4.0.0)
@@ -377,6 +377,7 @@ DEPENDENCIES
   puma (~> 3.11)
   rails (~> 5.2.0)
   react_on_rails (= 10.0.2)
+  redis (~> 4.0)
   rspec-rails (~> 3.7)
   ruby-druid!
   sass-rails (~> 5.0)

@@ -5,6 +5,7 @@ import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import cs from 'classnames';
 import Theme from './../../utils/theme';
 import Info from './../Info';
+import get from 'lodash/get';
 
 export default class WidgetHeatmap extends React.Component {
   constructor(props) {
@@ -59,6 +60,46 @@ export default class WidgetHeatmap extends React.Component {
     });
   }
 
+  getMax(data) {
+    const value_type = get(this.props, 'options.max_value') || 'max';
+    const data_length = data.length;
+
+    if (data_length == 0)
+      return 0;
+
+    if (value_type === 'average') {
+      return data.map(d => d.aggregator).reduce((a,b) => a + b, 0) / data_length;
+    } else if (Number.parseFloat(value_type)) {
+      return Number.parseFloat(value_type);
+    } else {
+      return Math.max(...data.map(d => d.aggregator));
+    }
+  }
+
+  get maxZoom() {
+    return get(this.props, 'options.max_zoom') || 1;
+  }
+
+  get blur() {
+    return get(this.props, 'options.blur') || 10;
+  }
+
+  get radius() {
+    return get(this.props, 'options.radius') || 20;
+  }
+
+  get gradient() {
+    const gradient = {
+      0.4: 'blue',
+      0.6: 'cyan',
+      0.7: 'lime',
+      0.8: 'yellow',
+      1.0: 'red'
+    };
+
+    return get(this.props, 'options.gradient') || gradient;
+  }
+
   render () {
     const cssClass = cs({ 'widget-error': this.state.error });
 
@@ -79,7 +120,12 @@ export default class WidgetHeatmap extends React.Component {
             points={ data }
             longitudeExtractor={m => m.position[1]}
             latitudeExtractor={m => m.position[0]}
-            intensityExtractor={m => m.aggregator} />
+            intensityExtractor={m => m.aggregator}
+            gradient={this.gradient}
+            radius={parseFloat(this.radius)}
+            blur={parseFloat(this.blur)}
+            max={parseFloat(this.getMax(data))}
+            maxZoom={parseFloat(this.maxZoom)} />
           <AttributionControl
             position="bottomleft"
           />

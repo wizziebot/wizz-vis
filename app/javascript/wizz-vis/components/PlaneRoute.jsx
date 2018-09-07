@@ -91,6 +91,9 @@ export default class PlaneRoute extends React.Component {
     const start_point = this.startPoint();
     const end_point = this.endPoint();
 
+    if(this.props.width == 0 || this.props.height == 0)
+      return null;
+
     return(
       <Stage width={this.props.width} height={this.props.height}>
         <Layer ref="layer">

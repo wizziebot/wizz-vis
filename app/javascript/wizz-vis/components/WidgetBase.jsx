@@ -22,6 +22,7 @@ import WidgetMultiserie from './widgets/WidgetMultiserie';
 import WidgetImage from './widgets/WidgetImage';
 import WidgetRoute from './widgets/WidgetRoute';
 import WidgetHistogram from './widgets/WidgetHistogram';
+import WidgetText from './widgets/WidgetText';
 
 import Errors from './../utils/errors';
 
@@ -52,7 +53,8 @@ export default class WidgetBase extends React.Component {
       WidgetMultiserie,
       WidgetImage,
       WidgetRoute,
-      WidgetHistogram
+      WidgetHistogram,
+      WidgetText
     };
   }
 

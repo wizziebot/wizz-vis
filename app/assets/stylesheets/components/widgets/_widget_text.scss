@@ -1,0 +1,21 @@
+.widget-text {
+  height: 99%;
+  width: 99%;
+
+  .card {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    box-shadow: none;
+    border-bottom: none;
+
+    .card-content {
+      width: 100%;
+      font-size: 3em;
+      font-weight: 700;
+      z-index: 1;
+      flex-direction: column;
+    }
+  }
+}
