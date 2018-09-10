@@ -89,7 +89,7 @@ export default class WidgetPlane extends React.Component {
             return {name: dim.name, value: d[dim.name]};
           }),
           aggregators: this.aggregators.map((agg) => {
-            return {name: agg, value: Format.prefix(d[agg], 2)};
+            return {name: agg, real_value: d[agg], value: Format.prefix(d[agg], 2)};
           }),
         };
       }, this)
@@ -196,7 +196,7 @@ export default class WidgetPlane extends React.Component {
 
     const main_aggregator = marker.aggregators.find((a) => (a.name == this.getMainAggregator()));
     if (main_aggregator) {
-      return this.getColorFromThresholds(main_aggregator.value);
+      return this.getColorFromThresholds(main_aggregator.real_value);
     } else {
       return DEFAULT_MARKER_COLOR;
     }
