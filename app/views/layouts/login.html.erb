@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <%= render partial: 'layouts/head' %>
+
+  <body class="primary-color">
+    <div class="section"></div>
+    <center>
+      <div class="container">
+        <div class="row">
+          <div class="col l4 offset-l4 m6 offset-m3 s12">
+            <%= image_tag asset_path('logo_white.png'), class: 'responsive-img' %>
+          </div>
+        </div>
+      </div>
+      <div class="section"></div>
+      <div class="container">
+        <div id="login-form" class="row z-depth-1 white">
+          <%= yield %>
+        </div>
+      </div>
+    </center>
+
+    <% flash.each do |message_type, message| %>
+      <%= javascript_tag "Materialize.toast('#{escape_javascript(message)}', 4000)" %>
+    <% end %>
+  </body>
+</html>
