@@ -10,6 +10,9 @@
     <%= breadcrumbs separator: " &rsaquo; " %>
     <ul id="nav-mobile" class="side-nav margin-ts">
       <li><%= link_to 'Dashboards', dashboards_path %></li>
+      <% if current_user %>
+        <li><%= link_to 'Sign Out', destroy_user_session_path %></li>
+      <% end %>
     </ul>
   </div>
 </nav>
