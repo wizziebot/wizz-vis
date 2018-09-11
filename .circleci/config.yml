@@ -23,13 +23,13 @@ jobs:
           POSTGRES_PASSWORD: test_password
     working_directory: /wizz-vis
     steps:
-      - checkout
       - run:
           name: Dependencies Install
           command: |
               apt-get update; \
               apt-get install -y --no-install-recommends build-essential \
                 git curl gnupg2 ruby-dev libpq-dev nodejs yarn wget
+      - checkout
       - run:
           name: install dockerize
           command: |
