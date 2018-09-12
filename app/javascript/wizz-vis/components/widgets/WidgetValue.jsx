@@ -1,14 +1,15 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactEcharts from 'echarts-for-react';
 import { ResponsiveContainer, AreaChart, Area } from 'recharts';
 import Colors from './../../utils/colors';
-import Theme from './../../utils/theme';
 import Format from './../../utils/format';
 import Info from './../Info';
 import ResumeValue from './../ResumeValue';
 import Time from './../../utils/time';
+import * as common from './../../props';
 
 class CompareValue extends React.Component {
   getStyle() {
@@ -223,4 +224,35 @@ export default class WidgetValue extends React.Component {
       )
     }
   }
-}
+};
+
+WidgetValue.propTypes = {
+  ...common.BASE,
+  ...common.SIZE,
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  compare_interval: PropTypes.array,
+  interval: PropTypes.arrayOf(PropTypes.string),
+  options: PropTypes.shape({
+    ...common.COMPARE,
+    gauge: PropTypes.shape({
+      max: PropTypes.number,
+      show: PropTypes.bool,
+      thresholds: PropTypes.arrayOf(PropTypes.array)
+    }),
+    serie: PropTypes.shape({
+      show: PropTypes.bool,
+      color: PropTypes.string
+    }),
+    value: PropTypes.string,
+    background: PropTypes.shape({
+      color: PropTypes.string
+    })
+  })
+};
+
+CompareValue.propTypes = {
+  bottomAbsolute: PropTypes.bool,
+  fontSize: PropTypes.number,
+  total: PropTypes.number,
+  totalCompared: PropTypes.number
+};

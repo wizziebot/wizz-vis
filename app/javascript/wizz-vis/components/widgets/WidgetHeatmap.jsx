@@ -1,11 +1,13 @@
 /*jshint esversion: 6 */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Map, Marker, Popup, TileLayer, AttributionControl } from 'react-leaflet';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import cs from 'classnames';
 import Theme from './../../utils/theme';
 import Info from './../Info';
 import get from 'lodash/get';
+import * as common from './../../props';
 
 export default class WidgetHeatmap extends React.Component {
   constructor(props) {
@@ -137,4 +139,17 @@ export default class WidgetHeatmap extends React.Component {
       </div>
     );
   }
-}
+};
+
+WidgetHeatmap.propTypes = {
+  ...common.BASE,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.shape({
+    max: PropTypes.string,
+    maxZoom: PropTypes.number,
+    blur: PropTypes.number,
+    radius: PropTypes.number
+  })
+};

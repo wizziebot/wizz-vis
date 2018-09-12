@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class WidgetDrilldown extends React.Component {
   constructor(props) {
@@ -31,3 +32,14 @@ export default class WidgetDrilldown extends React.Component {
     )
   }
 }
+
+WidgetDrilldown.propTypes = {
+  widget_id: PropTypes.number,
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      url: PropTypes.string,
+      name: PropTypes.string,
+      type: PropTypes.string
+    })
+  )
+};

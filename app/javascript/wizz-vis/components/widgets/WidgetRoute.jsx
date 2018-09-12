@@ -1,12 +1,14 @@
 /* jshint esversion: 6 */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Map, TileLayer, AttributionControl } from 'react-leaflet';
 import L from 'leaflet';
 import cs from 'classnames';
 import Theme from './../../utils/theme';
 import Info from './../Info';
 import Routing from '../Routing';
+import * as common from './../../props';
 
 export default class WidgetRoute extends React.Component {
   constructor(props) {
@@ -45,4 +47,13 @@ export default class WidgetRoute extends React.Component {
       </div>
     );
   }
-}
+};
+
+WidgetRoute.propTypes = {
+  ...common.BASE,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  options: PropTypes.shape({
+    routing_profile: PropTypes.oneOf(['driving', 'walking', 'cycling']),
+    distance_unit: PropTypes.oneOf(['km', 'mi'])
+  })
+};

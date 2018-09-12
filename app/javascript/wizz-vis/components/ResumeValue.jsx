@@ -2,8 +2,9 @@
 
 import React from 'react';
 import Format from './../utils/format';
+import PropTypes from 'prop-types';
 
-export default class WidgetResume extends React.Component {
+export default class ResumeValue extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -54,4 +55,10 @@ export default class WidgetResume extends React.Component {
       </span>
     )
   }
-}
+};
+
+ResumeValue.propTypes = {
+  actualData: PropTypes.number.isRequired,
+  compareData: PropTypes.number.isRequired,
+  showTotal: PropTypes.bool.isRequired
+};

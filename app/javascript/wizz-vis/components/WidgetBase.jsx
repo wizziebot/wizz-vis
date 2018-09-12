@@ -26,6 +26,28 @@ import WidgetText from './widgets/WidgetText';
 
 import Errors from './../utils/errors';
 
+import PropTypes from 'prop-types';
+
+const components = {
+  WidgetSerie,
+  WidgetBar,
+  WidgetPie,
+  WidgetValue,
+  WidgetLocation,
+  WidgetHeatmap,
+  WidgetTable,
+  WidgetPlane,
+  WidgetPlaneLocation,
+  WidgetPlaneRoute,
+  WidgetChord,
+  WidgetSankey,
+  WidgetMultiserie,
+  WidgetImage,
+  WidgetRoute,
+  WidgetHistogram,
+  WidgetText
+};
+
 export default class WidgetBase extends React.Component {
   constructor(props) {
     super(props);
@@ -35,26 +57,6 @@ export default class WidgetBase extends React.Component {
       attributes: {},
       error: null,
       reloadTimestamp: null
-    };
-
-    this.components = {
-      WidgetSerie,
-      WidgetBar,
-      WidgetPie,
-      WidgetValue,
-      WidgetLocation,
-      WidgetHeatmap,
-      WidgetTable,
-      WidgetPlane,
-      WidgetPlaneLocation,
-      WidgetPlaneRoute,
-      WidgetChord,
-      WidgetSankey,
-      WidgetMultiserie,
-      WidgetImage,
-      WidgetRoute,
-      WidgetHistogram,
-      WidgetText
     };
   }
 
@@ -142,7 +144,7 @@ export default class WidgetBase extends React.Component {
   }
 
   render () {
-    const Type = this.components[this.props.type || 'WidgetSerie'];
+    const Type = components[this.props.type || 'WidgetSerie'];
     const color = this.background('color');
 
     const style = {
@@ -180,4 +182,14 @@ export default class WidgetBase extends React.Component {
       </div>
     )
   }
-}
+};
+
+WidgetBase.propTypes = {
+  id: PropTypes.number.isRequired,
+  title: PropTypes.string,
+  options: PropTypes.object,
+  locked: PropTypes.bool.isRequired,
+  reloadTimestamp: PropTypes.number,
+  remove: PropTypes.func,
+  type: PropTypes.oneOf(Object.keys(components))
+};

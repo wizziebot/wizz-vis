@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Stage, Layer, Circle, Label, Tag, Text } from 'react-konva';
 import WidgetImage from './WidgetImage';
 import Info from './../Info';
@@ -8,10 +9,11 @@ import Time from './../../utils/time';
 import Format from './../../utils/format';
 import castArray from 'lodash/castArray';
 import sortBy from 'lodash/sortBy';
+import * as common from './../../props';
 
 const DEFAULT_MARKER_COLOR = "#8a8acb";
 
-export default class WidgetPlane extends React.Component {
+export default class WidgetPlaneLocation extends React.Component {
   constructor(props) {
     super(props);
     this.getImgSize = this.getImgSize.bind(this);
@@ -255,4 +257,16 @@ export default class WidgetPlane extends React.Component {
       </div>
     )
   }
-}
+};
+
+WidgetPlaneLocation.propTypes = {
+  ...common.BASE,
+  ...common.SIZE,
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.shape({
+    ...common.PLANE,
+    threshold_metric: PropTypes.string,
+    thresholds: PropTypes.arrayOf(PropTypes.array)
+  })
+};

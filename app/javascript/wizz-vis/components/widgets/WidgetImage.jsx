@@ -1,5 +1,6 @@
 /* jshint esversion: 6 */
 import React from 'react';
+import PropTypes from 'prop-types';
 import get from 'lodash/get';
 
 export default class WidgetImage extends React.Component {
@@ -46,4 +47,12 @@ export default class WidgetImage extends React.Component {
       </div>
     )
   }
-}
+};
+
+WidgetImage.propTypes = {
+  options: PropTypes.shape({
+    image: PropTypes.string,
+    keep_ratio: PropTypes.bool,
+    opacity: PropTypes.string
+  })
+};

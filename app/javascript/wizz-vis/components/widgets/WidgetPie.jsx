@@ -1,11 +1,13 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ResponsiveContainer, PieChart, Pie, Legend, Tooltip, Cell } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Format from './../../utils/format';
 import Info from './../Info';
+import * as common from './../../props';
 
 export default class WidgetPie extends React.Component {
   constructor(props) {
@@ -97,4 +99,12 @@ export default class WidgetPie extends React.Component {
       )
     }
   }
-}
+};
+
+WidgetPie.propTypes = {
+  ...common.BASE,
+  options: PropTypes.object,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired
+};

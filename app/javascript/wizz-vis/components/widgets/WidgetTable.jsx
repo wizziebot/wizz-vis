@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DataTables from 'material-ui-datatables';
 import Theme from './../../utils/theme';
@@ -11,6 +12,7 @@ import find from 'lodash/find';
 import pick from 'lodash/pick';
 import cloneDeep from 'lodash/cloneDeep';
 import ResumeValue from './../ResumeValue';
+import * as common from './../../props';
 
 const HEADER_HEIGHT = 80;
 
@@ -135,4 +137,15 @@ export default class WidgetTable extends React.Component {
       );
     }
   }
-}
+};
+
+WidgetTable.propTypes = {
+  ...common.BASE,
+  ...common.SIZE,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.shape({
+    ...common.COMPARE
+  })
+};

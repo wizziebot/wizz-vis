@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
          LineChart, Line, AreaChart, Area, BarChart, Bar,
          ReferenceLine, Label } from 'recharts';
@@ -9,6 +10,7 @@ import Theme from './../../utils/theme';
 import Time from './../../utils/time';
 import Format from './../../utils/format';
 import Info from './../Info';
+import * as common from './../../props';
 
 export default class WidgetMultiserie extends React.Component {
   constructor(props) {
@@ -156,4 +158,17 @@ export default class WidgetMultiserie extends React.Component {
       )
     }
   }
-}
+};
+
+WidgetMultiserie.propTypes = {
+  ...common.BASE,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  interval: PropTypes.arrayOf(PropTypes.string),
+  options: PropTypes.shape({
+    ...common.THRESHOLDS,
+    ...common.SERIE_TYPE,
+    stacked: PropTypes.bool
+  })
+};

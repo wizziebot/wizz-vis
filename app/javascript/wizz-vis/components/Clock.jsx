@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class Clock extends React.Component {
   constructor(props){
     super(props);
-    this.state = { currentCount: this.props.interval || 10 }
+    this.state = { currentCount: this.props.interval }
   }
 
   timer() {
@@ -12,7 +13,7 @@ export default class Clock extends React.Component {
     })
     if(this.state.currentCount < 0) {
       this.props.clockReload()
-      this.setState({ currentCount: this.props.interval || 10 })
+      this.setState({ currentCount: this.props.interval })
     }
   }
 
@@ -27,4 +28,9 @@ export default class Clock extends React.Component {
   render() {
     return(null);
   }
-}
+};
+
+Clock.propTypes = {
+  clockReload: PropTypes.func.isRequired,
+  interval: PropTypes.number.isRequired
+};

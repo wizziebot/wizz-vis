@@ -1,12 +1,14 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
          Tooltip, Legend, ReferenceLine, Label } from 'recharts';
 import Colors from './../../utils/colors';
 import Theme from './../../utils/theme';
 import Format from './../../utils/format';
 import Info from './../Info';
+import * as common from './../../props';
 
 export default class WidgetBar extends React.Component {
   constructor(props) {
@@ -101,4 +103,15 @@ export default class WidgetBar extends React.Component {
       )
     }
   }
-}
+};
+
+WidgetBar.propTypes = {
+  ...common.BASE,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.shape({
+    ...common.THRESHOLDS,
+    color: PropTypes.string
+  })
+};

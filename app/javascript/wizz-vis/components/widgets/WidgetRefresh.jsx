@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class WidgetRefresh extends React.Component {
   constructor(props) {
@@ -22,4 +23,8 @@ export default class WidgetRefresh extends React.Component {
       </div>
     )
   }
-}
+};
+
+WidgetRefresh.propTypes = {
+  widget_id: PropTypes.number
+};

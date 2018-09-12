@@ -1,10 +1,12 @@
 /*jshint esversion: 6 */
 import React from 'react';
+import PropTypes from 'prop-types';
 import ArrayUtil from './../../utils/array';
 import gps_utils from './../../utils/gps';
 import WidgetImage from './WidgetImage';
 import PlaneRoute from './../PlaneRoute';
 import Info from './../Info';
+import * as common from './../../props';
 
 export default class WidgetPlaneRoute extends React.Component {
   constructor(props) {
@@ -111,4 +113,12 @@ export default class WidgetPlaneRoute extends React.Component {
       </div>
     )
   }
-}
+};
+
+WidgetPlaneRoute.propTypes = {
+  ...common.BASE,
+  ...common.SIZE,
+  options: PropTypes.shape({
+    ...common.PLANE
+  })
+};

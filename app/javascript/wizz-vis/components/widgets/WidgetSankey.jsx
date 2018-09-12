@@ -1,12 +1,14 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactEcharts from 'echarts-for-react';
 import Colors from './../../utils/colors';
 import Format from './../../utils/format';
 import Theme from './../../utils/theme';
 import Info from './../Info';
 import uniqBy from 'lodash/uniqBy';
+import * as common from './../../props';
 
 export default class WidgetSankey extends React.Component {
   constructor(props) {
@@ -194,4 +196,14 @@ export default class WidgetSankey extends React.Component {
       />
     )
   }
-}
+};
+
+WidgetSankey.propTypes = {
+  ...common.BASE,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.shape({
+    ordered_dimensions: PropTypes.arrayOf(PropTypes.string)
+  })
+};

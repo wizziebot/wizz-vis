@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Map, Marker, Popup, TileLayer, AttributionControl } from 'react-leaflet';
 import Theme from './../../utils/theme';
 import L from 'leaflet';
@@ -8,6 +9,7 @@ import uniqWith from 'lodash/uniqWith';
 import isEqual from 'lodash/isEqual';
 import cs from 'classnames';
 import Info from './../Info';
+import * as common from './../../props';
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
@@ -129,4 +131,12 @@ export default class WidgetLocation extends React.Component {
       </div>
     );
   }
-}
+};
+
+WidgetLocation.propTypes = {
+  ...common.BASE,
+  options: PropTypes.object,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired
+};

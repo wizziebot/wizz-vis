@@ -1,9 +1,11 @@
 /*jshint esversion: 6 */
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactHeatmap from '../../vendor/ReactHeatmap';
 import gps_utils from './../../utils/gps';
 import WidgetImage from './WidgetImage';
 import Info from './../Info';
+import * as common from './../../props';
 
 export default class WidgetPlane extends React.Component {
   constructor(props) {
@@ -109,4 +111,13 @@ export default class WidgetPlane extends React.Component {
       </div>
     )
   }
-}
+};
+
+WidgetPlane.propTypes = {
+  ...common.BASE,
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.shape({
+    ...common.PLANE
+  })
+};

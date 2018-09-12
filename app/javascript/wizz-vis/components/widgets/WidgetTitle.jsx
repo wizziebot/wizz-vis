@@ -5,6 +5,7 @@ import WidgetDrilldown from './WidgetDrilldown';
 import WidgetRefresh from './WidgetRefresh';
 import WidgetTrash from './WidgetTrash';
 import cs from 'classnames';
+import PropTypes from 'prop-types';
 
 export default class WidgetTitle extends React.Component {
   constructor(props) {
@@ -42,4 +43,17 @@ export default class WidgetTitle extends React.Component {
       </div>
     )
   }
-}
+};
+
+WidgetTitle.propTypes = {
+  title: PropTypes.string,
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      url: PropTypes.string,
+      name: PropTypes.string,
+      type: PropTypes.string
+    })
+  ),
+  locked: PropTypes.bool,
+  remove: PropTypes.func
+};

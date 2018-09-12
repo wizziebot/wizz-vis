@@ -7,6 +7,7 @@ import {Responsive, WidthProvider} from 'react-grid-layout';
 import WidgetBase from './WidgetBase';
 import Clock from './Clock';
 import reject from 'lodash/reject';
+import PropTypes from 'prop-types';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const BREAKPOINTS = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
@@ -118,4 +119,11 @@ export default class Dashboard extends React.Component {
     </div>
     )
   }
-}
+};
+
+Dashboard.propTypes = {
+  id: PropTypes.number.isRequired,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  interval: PropTypes.oneOf([30, 60, 300, 900, 1800, 3600, 7200]),
+  locked: PropTypes.bool
+};
