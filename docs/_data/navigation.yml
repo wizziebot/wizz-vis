@@ -1,0 +1,42 @@
+docs:
+  - title: Home
+    url: /
+  - title: Getting Started
+    children:
+      - title: Overview
+        url: /getting_started/overview
+      - title: Deploy
+        url: /getting_started/deploy
+
+  - title: Guides
+    children:
+      - title: Basic Concepts
+        url: /guides/basic_concepts
+      - title: Aggregators
+        url: /guides/aggregators
+      - title: Dashboards
+        url: /guides/dashboards
+      - title: Widgets
+        url: /guides/widgets
+      - title: Compare
+        url: /guides/compare
+      - title: Thresholds
+        url: /guides/thresholds
+      - title: Drill Down
+        url: /guides/drill_down
+
+  - title: API
+    children:
+      - title: Endpoints
+        url: /api/endpoints
+      - title: Examples
+        url: /api/examples
+
+  - title: Development
+    children:
+      - title: Docker Compose
+        url: /development/docker-compose
+      - title: From Scratch
+        url: /development/from-scratch
+      - title: Testing
+        url: /development/testing
