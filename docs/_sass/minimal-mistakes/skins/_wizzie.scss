@@ -27,6 +27,13 @@ figure a {
   margin-right: auto;
 }
 
+@media (min-width: 64em) {
+  .sidebar__right.sticky {
+    overflow-y: auto;
+    height: calc(100vh - 2em - 2em);
+  }
+}
+
 @media (min-width: 80em) {
   .sidebar {
     width: calc(250px - 1em);
