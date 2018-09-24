@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Users
-  class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     def doorkeeper
       oauth_data = request.env['omniauth.auth']
       @user = User.find_or_create_for_doorkeeper_oauth(oauth_data)
