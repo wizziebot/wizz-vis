@@ -6,6 +6,8 @@ import gps_utils from './../../utils/gps';
 import WidgetImage from './WidgetImage';
 import Info from './../Info';
 import * as common from './../../props';
+import get from 'lodash/get';
+import Graph from './../../utils/graph';
 
 export default class WidgetPlane extends React.Component {
   constructor(props) {
@@ -91,11 +93,39 @@ export default class WidgetPlane extends React.Component {
     this.img_height = image.naturalHeight;
   }
 
+  get gradient() {
+    const gradient = {
+      0.0: 'lightblue',
+      0.4: 'blue',
+      0.6: 'cyan',
+      0.7: 'lime',
+      0.8: 'yellow',
+      1.0: 'red'
+    };
+
+    return get(this.props, 'options.gradient') || gradient;
+  }
+
+  getMax(data) {
+    const data_length = data.length;
+
+    if (data_length == 0)
+      return 0;
+
+    return Math.max(...data.map(d => d.value));
+  }
+
   render () {
     if(this.props.error)
       return(<Info error={this.props.error} />)
 
     const data = this.transformData(this.props.data);
+
+    if(data.length > 0)
+      Graph.legend({
+        max: parseFloat(this.getMax(data)),
+        gradient: this.gradient
+      }, '.plane.legend#legend_' + this.props.id);
 
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -108,6 +138,7 @@ export default class WidgetPlane extends React.Component {
       <ReactHeatmap
         data={data}
       />
+      <div className='plane legend' id={ 'legend_' + this.props.id }></div>
       </div>
     )
   }

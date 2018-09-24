@@ -6,6 +6,7 @@ import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import cs from 'classnames';
 import Theme from './../../utils/theme';
 import Info from './../Info';
+import LegendControl from './../Legend';
 import get from 'lodash/get';
 import * as common from './../../props';
 
@@ -92,6 +93,7 @@ export default class WidgetHeatmap extends React.Component {
 
   get gradient() {
     const gradient = {
+      0.0: 'lightblue',
       0.4: 'blue',
       0.6: 'cyan',
       0.7: 'lime',
@@ -134,6 +136,11 @@ export default class WidgetHeatmap extends React.Component {
           <TileLayer
             url={Theme.map(this.props.theme).url}
             attribution={Theme.map(this.props.theme).attribution}
+          />
+          <LegendControl
+            max = { parseFloat(this.getMax(data)) }
+            gradient = { this.gradient }
+            id = { this.props.id }
           />
         </Map>
       </div>

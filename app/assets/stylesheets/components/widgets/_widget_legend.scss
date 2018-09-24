@@ -1,0 +1,22 @@
+.legend {
+  .axis text {
+    font: 10px sans-serif;
+  }
+
+  .axis line, .axis path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  svg{
+    padding: 0px 5px 0px 5px;
+  }
+
+  &.plane {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+  }
+}
