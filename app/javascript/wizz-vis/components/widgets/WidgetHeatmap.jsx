@@ -72,8 +72,8 @@ export default class WidgetHeatmap extends React.Component {
 
     if (value_type === 'average') {
       return data.map(d => d.aggregator).reduce((a,b) => a + b, 0) / data_length;
-    } else if (Number.parseFloat(value_type)) {
-      return Number.parseFloat(value_type);
+    } else if (parseFloat(value_type)) {
+      return parseFloat(value_type);
     } else {
       return Math.max(...data.map(d => d.aggregator));
     }
