@@ -67,10 +67,6 @@ gem 'mini_racer', platforms: :ruby
 
 gem 'swagger-blocks'
 
-gem 'devise'
-gem 'omniauth'
-gem 'omniauth-oauth2'
-
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and
   # get a debugger console
@@ -99,4 +95,8 @@ group :test do
   gem 'shoulda-matchers', '~> 3.1'
   gem 'simplecov', require: false
   gem 'webmock', '~> 3.3'
+end
+
+Dir.glob(File.join(File.dirname(__FILE__), 'plugins', '*')) do |plugin_path|
+  gem plugin_path.split('/').last, path: plugin_path
 end
