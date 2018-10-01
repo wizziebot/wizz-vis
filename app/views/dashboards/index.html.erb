@@ -1,5 +1,20 @@
 <% breadcrumb :dashboards %>
-
+<%= content_for :search_bar do %>
+  <div class='center col m7 s8 l6'>
+    <%= form_tag(dashboards_path, method: :get, remote: true) do %>
+      <div class='input-field col s12'>
+        <i class='material-icons prefix'>search</i>
+        <input type='text' name='search' placeholder='Search' />
+      </div>
+    <% end %>
+  </div>
+<% end %>
+<%= content_for :breadcrumb_class do %>
+  hide-on-small-only
+<% end %>
+<%= content_for :row_class do %>
+  col l3 m5 s2
+<% end %>
 <div class="container">
   <div class="card">
     <div class="card-title">Dashboards
@@ -21,9 +36,7 @@
           <%= render @dashboards %>
         </tbody>
       </table>
-      <div class="right-align">
-        <%= paginate @dashboards %>
-      </div>
+      <%= render partial: 'pagination', locals: { dashboards: @dashboards } %>
     </div>
   </div>
 </div>

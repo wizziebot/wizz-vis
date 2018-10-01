@@ -5,7 +5,7 @@ class DashboardsController < ApplicationController
   # GET /dashboards
   # GET /dashboards.json
   def index
-    @dashboards = Dashboard.all.order(:name).page params[:page]
+    @dashboards = Dashboard.search(params[:search]).order(:name).page params[:page]
   end
 
   # GET /dashboards/1

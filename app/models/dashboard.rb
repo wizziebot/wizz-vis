@@ -18,4 +18,15 @@ class Dashboard < ApplicationRecord
   # ==========================================================
   validates :name, presence: true
   validates :theme, inclusion: { in: %w[light dark] }
+
+  def self.search(search)
+    if search
+      where(
+        'name ILIKE ?',
+        "%#{search.split.join('%')}%"
+      )
+    else
+      all
+    end
+  end
 end
