@@ -1,6 +1,6 @@
 module Api
   module V1
-    class DocsController < Api::V1::BaseController
+    class DocsController < ApplicationController
       include Swagger::Blocks
 
       swagger_root do
