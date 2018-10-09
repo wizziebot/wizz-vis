@@ -1,4 +1,5 @@
 require 'rails_helper'
+require Rails.root.join 'spec/concerns/intervalable_spec'
 
 RSpec.describe Widget, type: :model do
   describe 'associations' do
@@ -14,6 +15,10 @@ RSpec.describe Widget, type: :model do
     it { is_expected.to validate_presence_of(:col) }
     it { is_expected.to validate_presence_of(:size_x) }
     it { is_expected.to validate_presence_of(:size_y) }
+  end
+
+  describe 'intervalable' do
+    it_behaves_like 'intervalable'
   end
 
   describe '#data' do

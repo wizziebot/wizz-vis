@@ -101,6 +101,8 @@ The possible values are:
 * previous_week
 * previous_month
 
+These are the predefined ranges. Also, we can use `last` ranges with the format `last_x_y`, where `x` should be a float number and `y` one of `seconds`, `minutes`, `hours`, `days`, `weeks` or `months`.
+
 ### start_time and end_time
 
 Used to include a fixed interval.  If `range` is setted, these attributes are ignored.
@@ -633,7 +635,7 @@ We can set the optional discard values option by specifying a value between `pre
 }
 ```
 
-We use the widget limit attribute to specify the numBuckets. And the default value for the histogram type is 'equalBuckets', so to configure numBuckets you'll only need:
+We use the widget limit attribute to specify the numBuckets. And the default value for the histogram type is 'equalBuckets', so to configure numBuckets we'll only need:
 
 ```json
 "limit": 5,
