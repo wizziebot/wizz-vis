@@ -17,14 +17,9 @@ module Datastore
     end
 
     def set_aggregator(aggregator_type, aggs, opts = {})
-      case aggregator_type
-      when 'approx_histogram_fold'
-        histograms(query, aggs, opts)
-      when 'theta_sketch'
-        aggs.each { |agg| query.theta_sketch(agg, agg) }
-      else
-        query.send(aggregator_type, aggs)
-      end
+      send(aggregator_type, aggs, opts)
+    rescue NoMethodError
+      query.send(aggregator_type, aggs)
     end
 
     private
@@ -40,6 +35,22 @@ module Datastore
 
     def options
       @options ||= {}
+    end
+
+    def approx_histogram_fold(aggs, opts)
+      histograms(query, aggs, opts)
+    end
+
+    def theta_sketch(aggs, _opts)
+      aggs.each { |agg| query.theta_sketch(agg, agg) }
+    end
+
+    def string_last_fold(aggs, _opts)
+      query.send('string_last', aggs)
+    end
+
+    def string_first_fold(aggs, _opts)
+      query.send('string_first', aggs)
     end
 
     def histograms(query, aggs, opts)
