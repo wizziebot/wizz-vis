@@ -74,9 +74,9 @@ export default {
     return discard_values === 'next' ? histogram.reverse() : histogram;
   },
 
-  legend(props, name) {
+  legend(props, name, width) {
     const grades = Object.keys(props.gradient).sort(function(a, b){return a - b});
-    var w = 250, h = 50;
+    var w = Math.min(width, 250), h = 50;
     if (d3.select(name) != undefined)
       d3.select(name).select('svg').remove();
 
@@ -102,13 +102,13 @@ export default {
     });
 
     key.append('rect')
-      .attr('width', w - 30)
+      .attr('width', w - 40)
       .attr('height', h - 40)
       .style('fill', 'url(#gradient)')
       .attr('transform', 'translate(0,20)');
 
     var y = d3.scaleLinear()
-      .range([220, 0])
+      .range([w - 40, 0])
       .domain([props.max, 0]);
 
     var yAxis = d3.axisBottom()

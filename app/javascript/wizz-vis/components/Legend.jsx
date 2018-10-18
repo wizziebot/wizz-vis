@@ -19,7 +19,7 @@ export default class LegendControl extends MapControl {
     legend.update = function (props) {
       div.innerHTML = '';
       div.id = 'legend_' + props.id;
-      var legend = Graph.legend(props, '.legend#legend_' + props.id);
+      var legend = Graph.legend(props, '.legend#legend_' + props.id, props.width);
     };
 
     this.leafletElement = legend;

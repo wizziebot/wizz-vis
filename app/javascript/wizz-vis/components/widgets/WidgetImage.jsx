@@ -41,9 +41,13 @@ export default class WidgetImage extends React.Component {
           src={this.imageURL}
           onLoad={this.onLoad}
         />
-        <div style={style}>
-          {this.props.children}
-        </div>
+        {
+          this.props.width > 0 && this.props.height > 0 ?
+            <div style={{...style, width: this.props.width, height: this.props.height}}>
+              {this.props.children}
+            </div>
+          : null
+        }
       </div>
     )
   }

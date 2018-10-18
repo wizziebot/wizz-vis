@@ -137,11 +137,16 @@ export default class WidgetHeatmap extends React.Component {
             url={Theme.map(this.props.theme).url}
             attribution={Theme.map(this.props.theme).attribution}
           />
-          <LegendControl
-            max = { parseFloat(this.getMax(data)) }
-            gradient = { this.gradient }
-            id = { this.props.id }
-          />
+          {
+            data.length > 0 ?
+              <LegendControl
+                max = { parseFloat(this.getMax(data)) }
+                gradient = { this.gradient }
+                id = { this.props.id }
+                width = { this.props.width }
+              />
+            : null
+          }
         </Map>
       </div>
     );

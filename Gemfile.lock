@@ -372,6 +372,7 @@ DEPENDENCIES
   material_icons (~> 2.2)
   materialize-sass (~> 0.100.2)
   mini_racer
+  nokogiri (~> 1.8.5)
   pg (~> 1.0)
   pry-byebug (~> 3.6)
   puma (~> 3.11)

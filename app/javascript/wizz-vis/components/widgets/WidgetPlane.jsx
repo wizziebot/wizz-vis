@@ -12,12 +12,16 @@ import Graph from './../../utils/graph';
 export default class WidgetPlane extends React.Component {
   constructor(props) {
     super(props);
-    this.getImgSize = this.getImgSize.bind(this);
+
+    this.image = {
+      clientWidth: 0,
+      clientHeight: 0,
+      naturalWidth: 0,
+      naturalHeight: 0
+    };
 
     this.aggregator = '';
     this.coordinate_dimension = '';
-    this.img_width = 0;
-    this.img_height = 0;
   }
 
   componentDidMount() {
@@ -37,7 +41,6 @@ export default class WidgetPlane extends React.Component {
   // The forceUpdate is needed because sometimes the data is caculated before
   // the image is loaded.
   handleImageLoaded() {
-    this.getImgSize();
     this.forceUpdate();
   }
 
@@ -69,28 +72,24 @@ export default class WidgetPlane extends React.Component {
   }
 
   translatePoint(latitude, longitude) {
-    const width = this.img_width;
-    const height = this.img_height;
+    if(this.image.naturalWidth == 0 || this.image.naturalHeight == 0)
+      return {x: 0, y: 0};
 
     const {m_trans, m_offset} =
       gps_utils.latlngToPointMatrices(this.props.options.gps_markers,
-                                      width,
-                                      height);
+                                      this.image.naturalWidth,
+                                      this.image.naturalHeight);
 
-    var {x, y} = gps_utils.latlngToPercent(latitude, longitude, width, height,
-                                          m_trans, m_offset);
+    var {x, y} = gps_utils.latlngToPercent(latitude, longitude,
+                                           this.image.naturalWidth,
+                                           this.image.naturalHeight,
+                                           m_trans, m_offset);
 
     return {x, y};
   }
 
   getImageURL() {
     return this.props.options.image;
-  }
-
-  getImgSize() {
-    const image = this.image;
-    this.img_width = image.naturalWidth;
-    this.img_height = image.naturalHeight;
   }
 
   get gradient() {
@@ -125,19 +124,19 @@ export default class WidgetPlane extends React.Component {
       Graph.legend({
         max: parseFloat(this.getMax(data)),
         gradient: this.gradient
-      }, '.plane.legend#legend_' + this.props.id);
+      }, '.plane.legend#legend_' + this.props.id, this.props.width);
 
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <WidgetImage
+          width={this.image.clientWidth}
+          height={this.image.clientHeight}
           keepRatio={this.props.options.keep_ratio}
           image={this.getImageURL()}
           onLoad={this.handleImageLoaded.bind(this)}
-          ref={(node) => node ? this.image = node.image : null}
-        />
-      <ReactHeatmap
-        data={data}
-      />
+          ref={(node) => node ? this.image = node.image : null}>
+          <ReactHeatmap data={data} />
+        </WidgetImage>
       <div className='plane legend' id={ 'legend_' + this.props.id }></div>
       </div>
     )

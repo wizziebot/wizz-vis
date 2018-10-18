@@ -1,4 +1,19 @@
+.leaflet-right {
+  .legend.leaflet-control {
+    margin-right: 0px;
+  }
+}
+
 .legend {
+  max-width: 100%;
+
+  &.plane {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+  }
+
   .axis text {
     font: 10px sans-serif;
   }
@@ -11,12 +26,5 @@
 
   svg{
     padding: 0px 5px 0px 5px;
-  }
-
-  &.plane {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 10px;
   }
 }
