@@ -9,7 +9,7 @@ Analytics platform for time series metrics using Druid. Create dashboards and sh
 
 Wizz-Vis is the web inteface used by Wizzie Data Platform (WDP).
 
-[Website](https://wizzie.io) | [Twitter](https://twitter.com/wizzieio)
+[Docs](https://wizzie-io.github.io/wizz-vis/) | [Website](https://wizzie.io) | [Twitter](https://twitter.com/wizzieio)
 
 ![screenshot_1](https://user-images.githubusercontent.com/748159/45296104-43175f00-b501-11e8-961b-c9d3b6b589bf.png)
 
