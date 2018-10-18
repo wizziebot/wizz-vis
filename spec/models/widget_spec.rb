@@ -1,5 +1,4 @@
 require 'rails_helper'
-require Rails.root.join 'spec/concerns/intervalable_spec'
 
 RSpec.describe Widget, type: :model do
   describe 'associations' do
