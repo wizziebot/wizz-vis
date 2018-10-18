@@ -20,6 +20,13 @@ export default class WidgetPlaneRoute extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.height !== this.props.height ||
+        prevProps.width !== this.props.width) {
+      this.forceUpdate();
+    }
+  }
+
   // We have to wait until the image is loaded to retrieve the real width
   // and real height of the image.
   // The forceUpdate is needed because sometimes the data is caculated before
@@ -28,19 +35,12 @@ export default class WidgetPlaneRoute extends React.Component {
     this.forceUpdate();
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.height !== this.props.height ||
-        prevProps.width !== this.props.width) {
-      this.forceUpdate();
-    }
-  }
-
   transformData(data) {
-    const data_unique = ArrayUtil.uniqueInOrder(data, 'coordinate');
+    const data_unique = ArrayUtil.uniqueInOrder(data, 'coordinates');
 
     return (
       data_unique.map(function(d) {
-        const {x, y} = gps_utils.translatePoint(...d.coordinate,
+        const {x, y} = gps_utils.translatePoint(...d.coordinates,
                                                 this.image,
                                                 this.props.options.gps_markers);
         return {

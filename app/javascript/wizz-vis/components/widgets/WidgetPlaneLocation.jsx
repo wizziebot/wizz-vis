@@ -7,6 +7,7 @@ import Info from './../Info';
 import gps_utils from './../../utils/gps';
 import Time from './../../utils/time';
 import Format from './../../utils/format';
+import Locatable from './../../models/locatable';
 import castArray from 'lodash/castArray';
 import sortBy from 'lodash/sortBy';
 import * as common from './../../props';
@@ -24,13 +25,13 @@ export default class WidgetPlaneLocation extends React.Component {
       naturalHeight: 0
     };
 
-    this.coordinate_dimension = '';
+    this.coordinate_field = '';
     this.aggregators = [];
     this.grouped_dimensions = [];
   }
 
   componentDidMount() {
-    this.setDimensionsAggregator();
+    this.setDimensionsAggregators();
   }
 
   componentDidUpdate(prevProps) {
@@ -40,7 +41,7 @@ export default class WidgetPlaneLocation extends React.Component {
     } else if (prevProps.aggregators !== this.props.aggregators ||
                prevProps.dimensions !== this.props.dimensions ||
                prevProps.options.metrics !== this.props.options.metrics) {
-      this.setDimensionsAggregator();
+      this.setDimensionsAggregators();
     }
   }
 
@@ -52,22 +53,11 @@ export default class WidgetPlaneLocation extends React.Component {
     this.forceUpdate();
   }
 
-  setDimensionsAggregator() {
-    const coordinate_dimension =
-      this.props.dimensions.find((e) => (
-        /coordinate|latlong|latlng/.test(e.name)
-      ));
-
-    this.coordinate_dimension = coordinate_dimension.name;
-
-    this.grouped_dimensions = this.props.dimensions.filter((e) => (
-      e.name !== coordinate_dimension.name
-    ));
-
-    this.aggregators = (this.props.options.metrics && castArray(this.props.options.metrics)) ||
-                       this.props.aggregators.map((a) => (a.name)).concat(
-                         this.props.post_aggregators.map((a) => (a.output_name))
-                       );
+  setDimensionsAggregators() {
+    [this.coordinate_field, this.grouped_dimensions, this.aggregators] =
+      Locatable.getDimensionsAggregators(this.props.dimensions,
+                                         this.props.aggregators,
+                                         this.props.options);
   }
 
   getMainAggregator() {
@@ -77,11 +67,11 @@ export default class WidgetPlaneLocation extends React.Component {
   transformData(data) {
     return (
       data.filter((d) =>
-        d[this.coordinate_dimension] !== null &&
-        d[this.coordinate_dimension] !== "NaN,NaN"
+        d[this.coordinate_field] !== null &&
+        d[this.coordinate_field] !== "NaN,NaN"
       ).map((d) => {
-        let latitude = d[this.coordinate_dimension].split(',')[0];
-        let longitude = d[this.coordinate_dimension].split(',')[1];
+        let latitude = d[this.coordinate_field].split(',')[0];
+        let longitude = d[this.coordinate_field].split(',')[1];
 
         let {x, y} = gps_utils.translatePoint(latitude, longitude,
                                               this.image,
