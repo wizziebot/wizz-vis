@@ -1,8 +1,10 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import { connect } from 'react-redux';
 import { ResponsiveContainer } from 'recharts';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import cs from 'classnames';
 
 import WidgetTitle from './widgets/WidgetTitle';
@@ -25,6 +27,7 @@ import WidgetHistogram from './widgets/WidgetHistogram';
 import WidgetText from './widgets/WidgetText';
 
 import Errors from './../utils/errors';
+import Format from './../utils/format';
 
 import PropTypes from 'prop-types';
 
@@ -48,7 +51,7 @@ const components = {
   WidgetText
 };
 
-export default class WidgetBase extends React.Component {
+class WidgetBase extends React.Component {
   constructor(props) {
     super(props);
 
@@ -64,19 +67,11 @@ export default class WidgetBase extends React.Component {
     this.fetchData();
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.reloadTimestamp !== prevState.reloadTimestamp) {
-      return {
-        reloadTimestamp: nextProps.reloadTimestamp
-      };
-    }
-
-    // No state update necessary
-    return null;
-  }
-
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.reloadTimestamp !== prevProps.reloadTimestamp) {
+    if (this.props.reloadTimestamp !== prevProps.reloadTimestamp ||
+        this.props.range !== prevProps.range ||
+        this.props.startTime !== prevProps.startTime ||
+        this.props.endTime !== prevProps.endTime) {
       this.fetchData();
     }
   }
@@ -85,7 +80,16 @@ export default class WidgetBase extends React.Component {
     let button = $('.preloader-wrapper[widget_id="' + this.props.id + '"]');
     button.addClass('active');
     return (
-      fetch('/widgets/' + this.props.id + '/data.json')
+      fetch(
+        Format.buildUrl(
+          '/widgets/' + this.props.id + '/data.json',
+          {
+            range: this.props.range || '',
+            start_time: this.props.startTime || '',
+            end_time: this.props.endTime || ''
+          },
+          'widget'
+        ))
         .then(response => Errors.handleErrors(response))
         .then(widget => {
           if(widget.data && JSON.stringify(widget.data) !== JSON.stringify(this.state.$$data) ||
@@ -131,12 +135,12 @@ export default class WidgetBase extends React.Component {
 
   contentHeight () {
     if (this.refs.content !== undefined)
-      return this.refs.content.clientHeight
+      return this.refs.content.clientHeight;
   }
 
   contentWidth () {
     if (this.refs.content !== undefined)
-      return this.refs.content.clientWidth
+      return this.refs.content.clientWidth;
   }
 
   background (property) {
@@ -191,5 +195,19 @@ WidgetBase.propTypes = {
   locked: PropTypes.bool.isRequired,
   reloadTimestamp: PropTypes.number,
   remove: PropTypes.func,
-  type: PropTypes.oneOf(Object.keys(components))
+  type: PropTypes.oneOf(Object.keys(components)),
+  range: PropTypes.string,
+  startTime: PropTypes.string,
+  endTime: PropTypes.string
 };
+
+function mapStateToProps(state) {
+  return {
+    range: state.setRanges.range,
+    startTime: state.setRanges.startTime,
+    endTime: state.setRanges.endTime,
+    reloadTimestamp: state.reloadTimestamp
+  };
+}
+
+export default connect(mapStateToProps)(WidgetBase);

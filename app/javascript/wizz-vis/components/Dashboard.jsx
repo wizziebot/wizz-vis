@@ -23,8 +23,7 @@ export default class Dashboard extends React.Component {
       $$widgets: [],
       layout: null,
       fetchWidgetsError: null,
-      updateLayoutError: null,
-      reloadTimestamp: null
+      updateLayoutError: null
     };
   }
 
@@ -71,10 +70,6 @@ export default class Dashboard extends React.Component {
       !this.props.locked;
   }
 
-  fireReload () {
-    this.setState({ reloadTimestamp: Date.now() });
-  }
-
   removeItem (widget_id) {
     this.setState({
       $$widgets: reject(this.state.$$widgets, { id: widget_id }),
@@ -91,7 +86,6 @@ export default class Dashboard extends React.Component {
                                 <WidgetBase {...w}
                                 locked={this.props.locked}
                                 theme={this.props.theme}
-                                reloadTimestamp={this.state.reloadTimestamp}
                                 remove={ this.removeItem.bind(this, w.id) } />
                               </div>);
                     });
@@ -99,7 +93,7 @@ export default class Dashboard extends React.Component {
     return (
     <div ref='dashboard'>
       { this.props.interval ?
-          <Clock clockReload={ this.fireReload.bind(this) } interval={ this.props.interval }/>
+          <Clock interval={ this.props.interval } />
           : null
       }
       <ResponsiveReactGridLayout

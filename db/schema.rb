@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_24_112351) do
+ActiveRecord::Schema.define(version: 2018_10_08_100636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,9 @@ ActiveRecord::Schema.define(version: 2018_09_24_112351) do
     t.string "theme"
     t.integer "interval"
     t.boolean "locked", default: false
+    t.string "range"
+    t.datetime "start_time"
+    t.datetime "end_time"
   end
 
   create_table "datasources", force: :cascade do |t|
