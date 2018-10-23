@@ -25,11 +25,11 @@ module Api
 
       # A list of all classes that have swagger_* declarations.
       SWAGGERED_CLASSES = [
-        DatasourcesController,
-        DashboardsController,
-        DimensionsController,
-        AggregatorsController,
-        WidgetsController,
+        Api::V1::DatasourcesController,
+        Api::V1::DashboardsController,
+        Api::V1::DimensionsController,
+        Api::V1::AggregatorsController,
+        Api::V1::WidgetsController,
         Docs::Datasource,
         Docs::Aggregator,
         Docs::Dimension,
@@ -39,7 +39,7 @@ module Api
         Docs::Filter,
         Docs::ApiError,
         self
-      ]
+      ].freeze
 
       def index
         render json: Swagger::Blocks.build_root_json(SWAGGERED_CLASSES)
