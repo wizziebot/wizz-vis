@@ -383,10 +383,20 @@ Also, we can set the size, color and behavior of each point through the `options
     <a href="{{ '/assets/images/widgets/location.png' | relative_url }}"><img src="{{ '/assets/images/widgets/location.png' | relative_url }}"></a>
 </figure>
 
-It will represent a GroupBy query. In addition to the required attributes, we have to set:
+There are two ways to represent this widget. One of them using the coordinates as a dimension and another one using the coordinates as a aggregator.
 
-* dimensions (two, one representing coordinates and another to tag the marker)
-* aggregators (one)
+In the dimension way, we have to set, apart to the required attributes:
+
+* dimensions (two or more, one representing [coordinates](#coordinates) and the others to tag the marker)
+* aggregators (at least one)
+* granularity (one different to `all`)
+* limit
+
+In the aggregator way, we have to set, apart to the required attributes:
+
+* dimensions (at least one)
+* aggregators (at least one, one representing [coordinates](#coordinates) as stringLast or stringFirst aggregator)
+* granularity (`all`)
 * limit
 
 ### WidgetPlaneLocation
@@ -397,10 +407,20 @@ It will represent a GroupBy query. In addition to the required attributes, we ha
 
 Similar to WidgetLocation, but representing the markers over an image instead of a map.
 
-It will represent a GroupBy query. In addition to the required attributes, we have to set:
+There are two ways to represent this widget. One of them using the coordinates as a dimension and another one using the coordinates as a aggregator.
 
-* dimensions (at least two, one representing coordinates and another to tag the marker)
+In the dimension way, we have to set, apart to the required attributes:
+
+* dimensions (two or more, one representing [coordinates](#coordinates) and the others to tag the marker)
 * aggregators (at least one)
+* granularity (one different to `all`)
+* limit
+
+In the aggregator way, we have to set, apart to the required attributes:
+
+* dimensions (at least one)
+* aggregators (at least one, one representing [coordinates](#coordinates) as stringLast or stringFirst aggregator)
+* granularity (`all`)
 * limit
 
 It needs GPS markers to convert the latitude-longitude data to x-y points. Al least, three gps markers have to be configured.
@@ -518,7 +538,7 @@ It will represent a Timeserie query for each value obtained from a TopN query. I
 
 * dimensions (one)
 * aggregators (one)
-* granularity (one different to all)
+* granularity (one different to `all`)
 * limit
 
 We can select between three types of chart. It can be configured through `options` attribute with one of these values:
@@ -539,11 +559,20 @@ This widget also has the [threshold]({{ '/guides/thresholds' | relative_url }}) 
     <a href="{{ '/assets/images/widgets/route.png' | relative_url }}"><img src="{{ '/assets/images/widgets/route.png' | relative_url }}"></a>
 </figure>
 
-It will represent a GroupBy query. In addition to the required attributes, we have to set:
+There are two ways to represent this widget. One of them using the coordinates as a dimension and another one using the coordinates as a aggregator.
 
-* dimensions (two, one representing coordinates and another that represent the asset)
+In the dimension way, we have to set, apart to the required attributes:
+
+* dimensions (two, one representing [coordinates](#coordinates) and another to represent the asset)
 * aggregators (one)
-* granularity (different to `all`)
+* granularity (one different to `all`)
+* limit
+
+In the aggregator way, we have to set, apart to the required attributes:
+
+* dimensions (one representing the asset)
+* aggregators (one representing [coordinates](#coordinates) as stringLast or stringFirst aggregator)
+* granularity (`all`)
 * limit
 
 We support three different routing profiles:
@@ -576,11 +605,20 @@ It can be set in the options attribute:
     <a href="{{ '/assets/images/widgets/plane_route.png' | relative_url }}"><img src="{{ '/assets/images/widgets/plane_route.png' | relative_url }}"></a>
 </figure>
 
-It will represent a GroupBy query. In addition to the required attributes, we have to set:
+There are two ways to represent this widget. One of them using the coordinates as a dimension and another one using the coordinates as a aggregator.
 
-* dimensions (two, one representing coordinates and another that represent the asset)
+In the dimension way, we have to set, apart to the required attributes:
+
+* dimensions (two, one representing [coordinates](#coordinates) and another to represent the asset)
 * aggregators (one)
-* granularity (different to `all`)
+* granularity (one different to `all`)
+* limit
+
+In the aggregator way, we have to set, apart to the required attributes:
+
+* dimensions (one representing the asset)
+* aggregators (one representing [coordinates](#coordinates) as stringLast or stringFirst aggregator)
+* granularity (`all`)
 * limit
 
 It needs GPS markers to convert the latitude-longitude data to x-y points. Al least, three gps markers have to be configured.
@@ -672,3 +710,9 @@ Also, the attributes that can be configured using options field are:
   "fontSize": "42px"
 }
 ```
+
+## Misc
+
+### Coordinates
+
+The dimensions and aggregators could represent coordinates in the format `latitude,longitude`, i.e. `37.3509227,-6.0607913`. They have to be named using the regexp `/coordinate|latlong|latlng/`.
