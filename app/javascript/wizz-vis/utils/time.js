@@ -22,7 +22,7 @@ function hasTime(datetime) {
 }
 
 function diffDates(startDate, endDate, compare) {
-  return startDate.diff(endDate, compare) !== 0;
+  return startDate[compare]() !== endDate[compare]();
 }
 
 function dateFormat(start, end, showYear) {
@@ -30,7 +30,7 @@ function dateFormat(start, end, showYear) {
     return [start.format(FORMAT_WITH_YEAR), end.format(FORMAT_WITH_YEAR)].join(' - ');
   } else {
     const fmt = showYear ? FORMAT_WITH_YEAR : FORMAT_WITHOUT_YEAR;
-    if (diffDates(start, end, 'month') || start.date() !== end.date()) {
+    if (diffDates(start, end, 'month') || diffDates(start, end, 'date')) {
       return [start.format(FORMAT_WITHOUT_YEAR), end.format(fmt)].join(' - ');
     } else {
       return start.format(fmt);

@@ -25,15 +25,21 @@ class Widget < ApplicationRecord
   validates :row, :col, :size_x, :size_y, presence: true
 
   def range
-    super || options&.[]('range')
+    override_interval? ? super : options&.[]('range')
   end
 
   def start_time
-    super || options&.[]('start_time')
+    override_interval? ? super : options&.[]('start_time')
   end
 
   def end_time
-    super || options&.[]('end_time')
+    override_interval? ? super : options&.[]('end_time')
+  end
+
+  # If the widget has set one of these attributes, it will use them
+  # to calculate the time interval instead the one inherited from dashboard.
+  def override_interval?
+    %w[range start_time end_time].any? { |k| attributes[k] }
   end
 
   def data(override_filters = nil, override_options = {})

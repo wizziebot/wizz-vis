@@ -170,6 +170,8 @@ class WidgetBase extends React.Component {
           links={this.props.options.links}
           locked={this.props.locked}
           remove={this.removeWidget.bind(this)}
+          intervalAttributes={this.props.interval_attributes}
+          overrideInterval={this.props['override_interval?']}
         />
         <div className='widget-content' ref='content'>
           { this.background('image') ?
@@ -198,7 +200,13 @@ WidgetBase.propTypes = {
   type: PropTypes.oneOf(Object.keys(components)),
   range: PropTypes.string,
   startTime: PropTypes.string,
-  endTime: PropTypes.string
+  endTime: PropTypes.string,
+  intervalAttributes: PropTypes.shape({
+    range: PropTypes.string,
+    start_time: PropTypes.string,
+    end_time: PropTypes.string
+  }),
+  overrideInterval: PropTypes.bool
 };
 
 function mapStateToProps(state) {

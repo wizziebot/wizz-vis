@@ -1,5 +1,4 @@
 .menu-range {
-  width: calc(10%);
 
   div.ellipsis {
     white-space: nowrap;
@@ -7,6 +6,7 @@
     text-overflow: ellipsis;
     cursor: pointer;
   }
+
   .dropdown-content {
     top: 64px !important;
     width: 280px !important;
