@@ -24,6 +24,8 @@ docs:
         url: /guides/thresholds
       - title: Drill Down
         url: /guides/drill_down
+      - title: Time Selector
+        url: /guides/time_selector
 
   - title: API
     children:
