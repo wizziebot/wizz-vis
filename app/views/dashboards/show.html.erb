@@ -1,17 +1,17 @@
 <% breadcrumb :dashboard, @dashboard %>
 <%= content_for :nav_entries do %>
-  <%= react_component("ControlsApp", props: { dashboard_id: @dashboard.id }.to_json, prerender: false) %>
-  <div class='nav-entries col s1 right'>
-    <div class='right'>
-      <%= link_to edit_dashboard_path(@dashboard), class: 'nav-entry' do %>
-        <%= mi.edit %>
-        <div class="margin-ls button-text">EDIT</div>
-      <% end %>
-    </div>
+  <div class='nav-entries'>
+    <%= react_component("ControlsApp", props: { dashboard_id: @dashboard.id }.to_json, prerender: false) %>
+    <%= link_to edit_dashboard_path(@dashboard), class: 'nav-entry col right' do %>
+      <%= mi.edit %>
+      <div class="margin-ls button-text">EDIT</div>
+    <% end %>
   </div>
 <% end %>
 <%= content_for :row_class do %>
   col s8
 <% end %>
-
-<%= react_component("DashboardApp", props: @dashboard.to_json, prerender: false) %>
+<div id='fsSection'>
+  <%= primary_logo('brand-logo menu-smooth-scroll fs-logo') %>
+  <%= react_component("DashboardApp", props: @dashboard.to_json, prerender: false) %>
+</div>

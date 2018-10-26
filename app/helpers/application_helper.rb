@@ -10,8 +10,8 @@ module ApplicationHelper
     end
   end
 
-  def primary_logo
-    link_to root_path, class: 'brand-logo menu-smooth-scroll' do
+  def primary_logo(classname='brand-logo menu-smooth-scroll')
+    link_to root_path, class: classname do
       if ENV['PRIMARY_LOGO_URL']
         image_tag(ENV['PRIMARY_LOGO_URL'])
       else

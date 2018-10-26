@@ -23,6 +23,11 @@ export default class Controls extends React.Component {
             <i className="material-icons">autorenew</i>
           </a>
         </div>
+        <div className='nav-entry col right'>
+          <a href="#" id='fsBtn'>
+            <i className="material-icons">fullscreen</i>
+          </a>
+        </div>
         <MenuRange id={this.props.dashboard_id} />
       </div>
     );

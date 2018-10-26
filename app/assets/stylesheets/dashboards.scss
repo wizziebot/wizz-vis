@@ -1,4 +1,8 @@
 body {
+  &.light {
+      background-color: #fff;
+  }
+
   &.dark {
     background-color: #141414;
 
@@ -7,6 +11,38 @@ body {
 
       li > a {
         color: #d8d9da;
+      }
+    }
+  }
+
+  &.light div#fsSection {
+    background-color: #fff;
+  }
+
+  &.dark div#fsSection {
+    background-color: #141414;
+  }
+
+  div#fsSection {
+
+    &.fullscreen {
+      overflow-y: scroll;
+    }
+
+    .fs-logo {
+      display: none;
+
+      img {
+        width: 8%;
+        opacity: 0.6;
+        position: fixed;
+        right: 15px;
+        bottom: 15px;
+        z-index: 999;
+
+        &:hover {
+          opacity: 0;
+        }
       }
     }
   }
