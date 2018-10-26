@@ -18,7 +18,7 @@ module Intervalable
   end
 
   def interval
-    @time_now = Time.now
+    @time_now ||= Time.now
 
     case range
     when /last_/

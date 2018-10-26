@@ -46,8 +46,10 @@ class RelativeRange extends React.Component {
   }
 
   acceptRange() {
-    this.props.updateDashboard(this.state);
-    this.props.actions.updateRanges(this.state);
+    if (this.state.range) {
+      this.props.updateDashboard(this.state);
+      this.props.actions.updateRanges(this.state);
+    }
   }
 
   render() {

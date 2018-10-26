@@ -23,8 +23,10 @@ class FixedRange extends React.Component {
   }
 
   acceptRange() {
-    this.props.actions.updateRanges(this.state);
-    this.props.updateDashboard(this.state);
+    if (this.state.startTime && this.state.endTime) {
+      this.props.actions.updateRanges(this.state);
+      this.props.updateDashboard(this.state);
+    }
   }
 
   setEndTime(endTime) {
@@ -49,17 +51,21 @@ class FixedRange extends React.Component {
         <div className="date-range-input">
           <div className="label">Start</div>
           <Kronos date={this.state.startTime} onChangeDateTime={this.setStartTime}
-            calendarStyle={{lineHeight: '20px'}} />
+            calendarStyle={{lineHeight: '20px'}} max={this.state.endTime}
+            preventClickOnDateTimeOutsideRange={true} />
           <Kronos time={this.state.startTime} onChangeDateTime={this.setStartTime}
-            hideOutsideDateTimes format={'HH:mm'} options={{format: {hour: 'HH:mm'}}} />
+            format={'HH:mm'} options={{format: {hour: 'HH:mm'}}}
+            preventClickOnDateTimeOutsideRange={true} />
         </div>
 
         <div className="date-range-input">
           <div className="label">End</div>
           <Kronos date={this.state.endTime} onChangeDateTime={this.setEndTime}
-            calendarStyle={{lineHeight: '20px'}} />
-          <Kronos time={this.state.endTime} format={'HH:mm'} hideOutsideDateTimes
-            onChangeDateTime={this.setEndTime} options={{format: {hour: 'HH:mm'}}} />
+            calendarStyle={{lineHeight: '20px'}} preventClickOnDateTimeOutsideRange={true}
+            min={this.state.startTime} />
+          <Kronos time={this.state.endTime} format={'HH:mm'}
+            onChangeDateTime={this.setEndTime} options={{format: {hour: 'HH:mm'}}}
+            preventClickOnDateTimeOutsideRange={true} />
         </div>
 
         <div className="divider"></div>
