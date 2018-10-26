@@ -33,7 +33,7 @@ module Intervalable
   end
 
   def compare_interval
-    return unless compare?
+    return unless compare? && interval.any?
     [
       interval[0] - compare_difference,
       interval[1] - compare_difference
