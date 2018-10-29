@@ -702,6 +702,9 @@ HTTP 200 OK
     "theme": "light",
     "interval": null,
     "locked": false,
+    "range": "last_1_hour",
+    "start_time": null,
+    "end_time": null,
     "widgets": [
       {
         "id": 1,
@@ -788,6 +791,9 @@ HTTP 200 OK
     "theme": "light",
     "interval": null,
     "locked": false,
+    "range": "last_1_hour",
+    "start_time": null,
+    "end_time": null,
     "widgets": [
       {
         "id": 6,
@@ -846,6 +852,9 @@ HTTP 200 OK
   "theme": "light",
   "interval": null,
   "locked": false,
+  "range": "last_1_hour",
+  "start_time": null,
+  "end_time": null,
   "widgets": [
     {
       "id": 6,
@@ -895,6 +904,9 @@ POST /dashboards
 | `theme` *Optional* | Dashboard's theme: `light` or `dark` (defaults to `light`)  |
 | `interval` *Optional* | Automatic reload for the dashboard in seconds: `30`, `60`, `300`, `900`, `1800`, `3600`, `7200` or `null` (defaults to `null`, with no reload) |
 | `locked` *Optional* | Allow modify the dashboard's layout: `true` or `false` |
+| `range` *Optional* | Attribute used to set the time interval to represent. Visit [range]({{ '/guides/widgets#range' | relative_url }}) to check the possible values. |
+| `start_time` *Optional* | Used to include a fixed interval. If range is setted, these attributes are ignored. |
+| `end_time` *Optional* | Used to include a fixed interval. If range is setted, these attributes are ignored. |
 | `widgets` *Optional* | Array of widgets. |
 
 ##### Response
@@ -909,6 +921,9 @@ HTTP 200 OK
   "theme": "light",
   "interval": null,
   "locked": false,
+  "range": "last_1_hour",
+  "start_time": null,
+  "end_time": null,
   "widgets": [
     {
       "id": 6,
@@ -962,6 +977,9 @@ PATCH /dashboards/{id}
 | `theme` *Optional* | Dashboard's theme: `light` or `dark` (defaults to `light`)  |
 | `interval` *Optional* | Automatic reload for the dashboard in seconds: `30`, `60`, `300`, `900`, `1800`, `3600`, `7200` or `null` (defaults to `null`, with no reload) |
 | `locked` *Optional* | Allow modify the dashboard's layout: `true` or `false` |
+| `range` *Optional* | Attribute used to set the time interval to represent. Visit [range]({{ '/guides/widgets#range' | relative_url }}) to check the possible values. |
+| `start_time` *Optional* | Used to include a fixed interval. If range is setted, these attributes are ignored. |
+| `end_time` *Optional* | Used to include a fixed interval. If range is setted, these attributes are ignored. |
 
 ##### Response
 ```
@@ -975,6 +993,9 @@ HTTP 200 OK
   "theme": "light",
   "interval": null,
   "locked": false,
+  "range": "last_1_hour",
+  "start_time": null,
+  "end_time": null,
   "widgets": [
     {
       "id": 6,
