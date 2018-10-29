@@ -17,6 +17,15 @@ module Docs
       property :interval do
         key :type, :integer
       end
+      property :range do
+        key :type, :string
+      end
+      property :start_time do
+        key :type, :string
+      end
+      property :end_time do
+        key :type, :string
+      end
       property :widgets do
         key :type, :array
         items do

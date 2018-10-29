@@ -92,6 +92,9 @@ module Api
               theme: 'light',
               interval: 30,
               locked: false,
+              range: 'last_1_hour',
+              start_time: '',
+              end_time: '',
               widgets: [
                 {
                   type: 'WidgetValue',
@@ -257,7 +260,8 @@ module Api
       def dashboard_params
         params[:widgets_attributes] = params.delete(:widgets)
         params.permit(
-          :name, :theme, :interval, :locked, :widgets_attributes
+          :name, :theme, :interval, :locked, :widgets_attributes,
+          :range, :start_time, :end_time
         ).tap do |dashboard|
           dashboard[:widgets_attributes] = (params[:widgets_attributes] || []).map do |w|
             w.permit(
