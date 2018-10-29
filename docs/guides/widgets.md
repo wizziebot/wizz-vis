@@ -338,9 +338,9 @@ This widget also has the [compare]({{ '/guides/compare' | relative_url }}) featu
     <a href="{{ '/assets/images/widgets/table.png' | relative_url }}"><img src="{{ '/assets/images/widgets/table.png' | relative_url }}"></a>
 </figure>
 
-It will represent a TopN query. In addition to the required attributes, we have to set:
+It will represent a TopN or GroupBy query. In addition to the required attributes, we have to set:
 
-* dimensions (one)
+* dimensions (at least one)
 * aggregators (at least one)
 * limit
 
@@ -348,12 +348,10 @@ This widget also has the [compare]({{ '/guides/compare' | relative_url }}) featu
 
 If the table use more than one aggregator, we can select which ones use the compare feature through the `compare` option at `options` attribute:
 
-```
-"options": {
-  "compare": {
-    "range": "previous_period",
-    "aggregators": ["events"]
-  }
+```json
+"compare": {
+  "range": "previous_period",
+  "aggregators": ["events"]
 }
 ```
 
@@ -367,6 +365,7 @@ If the `aggregators` option is not included, all aggregators used in the table w
 
 * dimensions (one, representing coordinates)
 * aggregators (one)
+* granularity (`all`)
 * limit
 
 Also, we can set the size, color and behavior of each point through the `options` attribute.
@@ -440,9 +439,14 @@ It needs GPS markers to convert the latitude-longitude data to x-y points. Al le
 
 x-y points are references for a image point starting at top-left corner of the image.
 
+To keep the proportions of the used image, we have to use `keep_ratio` property.
+
+The `options` attribute would be as follows:
+
 ```json
 {
   "image": "https://www.bookingtaxibarcelona.com/wp-content/uploads/2015/03/fira-gran-via-map.png",
+  "keep_ratio": true,
   "gps_markers": [
     { "x": 261, "y": 208, "latitude": 41.355151, "longitude": 2.127733 },
     { "x": 530, "y": 217, "latitude": 41.357172, "longitude": 2.130533 },
@@ -478,15 +482,21 @@ Similar to WidgetHeatmap, but representing the data over an image instead of a m
 
 * dimensions (one, representing coordinates)
 * aggregators (one)
+* granularity (`all`)
 * limit
 
 It needs GPS markers to convert the latitude-longitude data to x-y points. Al least, three gps markers have to be configured.
 
 x-y points are references for a image point starting at top-left corner of the image.
 
+To keep the proportions of the used image, we have to use `keep_ratio` property.
+
+The `options` attribute would be as follows:
+
 ```json
 {
   "image": "https://www.bookingtaxibarcelona.com/wp-content/uploads/2015/03/fira-gran-via-map.png",
+  "keep_ratio": true,
   "gps_markers": [
     { "x": 261, "y": 208, "latitude": 41.355151, "longitude": 2.127733 },
     { "x": 530, "y": 217, "latitude": 41.357172, "longitude": 2.130533 },
@@ -554,7 +564,7 @@ It will represent a Timeserie query for each value obtained from a TopN query. I
 * granularity (one different to `all`)
 * limit
 
-We can select between three types of chart. It can be configured through `options` attribute with one of these values:
+We can select between three types of chart. It can be configured through `options` attribute, setting the `type` property, with one of these values:
 
 * line
 * area
@@ -565,6 +575,19 @@ By default, if no value is provided, `line` will be used.
 We can set the `stacked` property to true or false if we want the graphs to be stacked.
 
 This widget also has the [threshold]({{ '/guides/thresholds' | relative_url }}) feature available.
+
+`options` attribute example:
+
+```json
+{
+  "type": "area",
+  "stacked": true,
+  "thresholds": [
+    { "value": 200000000, "color": "red", "label": "Threshold 1" },
+    { "value": 100000000, "color": "#000000", "label": "Threshold 2" }
+  ]
+}
+```
 
 ### WidgetRoute
 
@@ -638,9 +661,14 @@ It needs GPS markers to convert the latitude-longitude data to x-y points. Al le
 
 x-y points are references for a image point starting at top-left corner of the image.
 
+To keep the proportions of the used image, we have to use `keep_ratio` property.
+
+The `options` attribute would be as follows:
+
 ```json
 {
   "image": "https://www.bookingtaxibarcelona.com/wp-content/uploads/2015/03/fira-gran-via-map.png",
+  "keep_ratio": true,
   "gps_markers": [
     { "x": 261, "y": 208, "latitude": 41.355151, "longitude": 2.127733 },
     { "x": 530, "y": 217, "latitude": 41.357172, "longitude": 2.130533 },
@@ -653,7 +681,7 @@ x-y points are references for a image point starting at top-left corner of the i
 
 This is a special widget, because no Druid query will be done. However, required attributes have to be set.
 
-Also, the attributes that can be configured using options field are:
+Also, the attributes that can be configured using `options` field are:
 
 ```json
 {
@@ -662,6 +690,8 @@ Also, the attributes that can be configured using options field are:
   "opacity": "1"
 }
 ```
+
+To keep the proportions of the used image, we have to use `keep_ratio` property.
 
 ### WidgetHistogram
 
