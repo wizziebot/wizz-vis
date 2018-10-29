@@ -74,12 +74,6 @@ export default class WidgetLocation extends React.Component {
     );
   }
 
-  setAggregator() {
-    this.setState({
-      aggregator: this.props.options.metrics || this.props.aggregators[0].name
-    });
-  }
-
   getBounds(data) {
     const bounds = uniqWith(data.map((e) => (e.position)), isEqual);
 

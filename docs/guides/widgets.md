@@ -346,6 +346,19 @@ It will represent a TopN query. In addition to the required attributes, we have 
 
 This widget also has the [compare]({{ '/guides/compare' | relative_url }}) feature available.
 
+If the table use more than one aggregator, we can select which ones use the compare feature through the `compare` option at `options` attribute:
+
+```
+"options": {
+  "compare": {
+    "range": "previous_period",
+    "aggregators": ["events"]
+  }
+}
+```
+
+If the `aggregators` option is not included, all aggregators used in the table will show the compare info.
+
 ### WidgetHeatmap
 
 <figure>

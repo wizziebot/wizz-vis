@@ -43,7 +43,8 @@ export const THRESHOLDS = {
 export const COMPARE = {
   compare: PropTypes.shape({
     range: PropTypes.string,
-    amount: PropTypes.number
+    amount: PropTypes.number,
+    aggregators: PropTypes.arrayOf(PropTypes.string)
   })
 };
 
