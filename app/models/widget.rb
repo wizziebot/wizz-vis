@@ -29,13 +29,15 @@ class Widget < ApplicationRecord
   end
 
   def start_time
+    return super if override_interval?
     global_start_time = options&.[]('start_time')
-    override_interval? ? super : (global_start_time.present? && Time.parse(global_start_time))
+    Time.parse(global_start_time) if global_start_time.present?
   end
 
   def end_time
+    return super if override_interval?
     global_end_time = options&.[]('end_time')
-    override_interval? ? super : (global_end_time.present? && Time.parse(global_end_time))
+    Time.parse(global_end_time) if global_end_time.present?
   end
 
   # If the widget has set one of these attributes, it will use them
