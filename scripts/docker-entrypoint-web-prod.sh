@@ -1,8 +1,8 @@
 #!/bin/bash
-set -e
-
 echo -e "\nCreating database"
 env RAILS_ENV=$RAILS_ENV bundle exec rake db:create
+
+set -e
 
 echo -e "\nRunning migrations"
 env RAILS_ENV=$RAILS_ENV bundle exec rake db:migrate
