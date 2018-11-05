@@ -39,6 +39,7 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "webpack-bundle-analyzer": "^3.0.3",
     "webpack-dev-server": "^2.11.1"
   }
 }

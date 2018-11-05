@@ -1,3 +1,5 @@
-const environment = require('./environment')
+/* jshint esversion: 6 */
 
-module.exports = environment.toWebpackConfig()
+const environment = require('./environment');
+
+module.exports = environment.toWebpackConfig();

@@ -1,5 +1,12 @@
 /*jshint esversion: 6 */
-var math = require('mathjs');
+
+const core = require('mathjs/core');
+const math = core.create();
+
+math.import(require('mathjs/lib/type/matrix'));
+math.import(require('mathjs/lib/function/arithmetic/multiply'));
+math.import(require('mathjs/lib/function/arithmetic/subtract'));
+math.import(require('mathjs/lib/function/matrix/inv'));
 
 export default {
   /**

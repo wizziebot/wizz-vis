@@ -2,7 +2,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactEcharts from 'echarts-for-react';
+
+import ReactEchartsCore from 'echarts-for-react/lib/core';
+import echarts from 'echarts/lib/echarts';
+import 'echarts/lib/chart/sankey';
+import 'echarts/lib/component/tooltip';
+
 import Colors from './../../utils/colors';
 import Format from './../../utils/format';
 import Theme from './../../utils/theme';
@@ -185,7 +190,8 @@ export default class WidgetSankey extends React.Component {
       return(<Info error={this.props.error} />)
 
     return (
-      <ReactEcharts
+      <ReactEchartsCore
+        echarts={echarts}
         option={ this.sankeyOptions(data) }
         style={
           { position: 'absolute',

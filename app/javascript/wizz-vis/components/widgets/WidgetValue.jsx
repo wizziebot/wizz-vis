@@ -2,7 +2,11 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactEcharts from 'echarts-for-react';
+
+import ReactEchartsCore from 'echarts-for-react/lib/core';
+import echarts from 'echarts/lib/echarts';
+import 'echarts/lib/chart/gauge';
+
 import { ResponsiveContainer, AreaChart, Area } from 'recharts';
 import Colors from './../../utils/colors';
 import Format from './../../utils/format';
@@ -164,7 +168,8 @@ export default class WidgetValue extends React.Component {
           serie = null;
 
       if(this.showGauge()) {
-        element = <ReactEcharts
+        element = <ReactEchartsCore
+          echarts={echarts}
           option={ this.gaugeOptions() }
           style={
             { position: 'absolute',
