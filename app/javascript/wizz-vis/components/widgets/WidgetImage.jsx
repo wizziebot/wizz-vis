@@ -50,7 +50,7 @@ export default class WidgetImage extends React.Component {
             />
         }
         {
-          this.props.width > 0 && this.props.height > 0 ?
+          this.props.width > 0 && this.props.height > 0 && (this.props.children !== undefined) ?
             <div style={{...style, width: this.props.width, height: this.props.height}}>
               {this.props.children}
             </div>
