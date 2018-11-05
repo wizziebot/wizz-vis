@@ -63,6 +63,10 @@ class WidgetBase extends React.Component {
     };
   }
 
+  componentDidCatch(error, info) {
+    this.setState({ error: error.message });
+  }
+
   componentDidMount() {
     this.fetchData();
   }
