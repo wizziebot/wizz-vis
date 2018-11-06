@@ -1,5 +1,7 @@
 /* jshint esversion: 6 */
 
+import castArray from 'lodash/castArray';
+
 export default {
   getDimensionsAggregators(dimensions, aggregators, options) {
     const coordinate_dimension =
