@@ -26,6 +26,8 @@ import WidgetRoute from './widgets/WidgetRoute';
 import WidgetHistogram from './widgets/WidgetHistogram';
 import WidgetText from './widgets/WidgetText';
 
+import ErrorBoundary from './ErrorBoundary';
+
 import Errors from './../utils/errors';
 import Format from './../utils/format';
 
@@ -61,10 +63,6 @@ class WidgetBase extends React.Component {
       error: null,
       reloadTimestamp: null
     };
-  }
-
-  componentDidCatch(error, info) {
-    this.setState({ error: error.message });
   }
 
   componentDidMount() {
@@ -184,10 +182,12 @@ class WidgetBase extends React.Component {
                 opacity = { this.background('opacity') }
               /> : null
           }
-          <Type {...this.props} {...this.state.attributes}
-            data={this.state.$$data} error={this.state.error}
-            height={this.contentHeight()}
-            width={this.contentWidth()} />
+          <ErrorBoundary>
+            <Type {...this.props} {...this.state.attributes}
+              data={this.state.$$data} error={this.state.error}
+              height={this.contentHeight()}
+              width={this.contentWidth()} />
+          </ErrorBoundary>
         </div>
       </div>
     )
