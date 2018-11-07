@@ -146,6 +146,7 @@ module Api
             key :example,
                 datasource_name: '69be4185-001a-4146-be33-0b72cf4b0959_flow',
                 title: '',
+                dashboard_id: 1,
                 range: 'last_1_hour',
                 start_time: '',
                 end_time: '',
@@ -353,7 +354,7 @@ module Api
       def widget_params_update
         params.permit(
           :type, :title, :row, :col, :size_x, :size_y, :range, :start_time,
-          :end_time, :granularity, :limit
+          :end_time, :granularity, :limit, :dashboard_id
         ).tap do |attr|
           if params[:datasource_name]
             attr[:datasource_id] = Datasource.find_by(name: params[:datasource_name]).id
