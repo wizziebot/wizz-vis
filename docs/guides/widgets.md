@@ -242,7 +242,7 @@ This widget also has the [compare]({{ '/guides/compare' | relative_url }}) and [
 It will represent a TopN query. In addition to the required attributes, we have to set:
 
 * dimensions (one)
-* aggregators (at least one)
+* aggregators (one)
 * granularity (set to `all`)
 * limit
 

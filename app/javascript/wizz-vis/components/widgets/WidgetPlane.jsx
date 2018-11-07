@@ -8,6 +8,7 @@ import Info from './../Info';
 import * as common from './../../props';
 import get from 'lodash/get';
 import Graph from './../../utils/graph';
+import castArray from 'lodash/castArray';
 
 export default class WidgetPlane extends React.Component {
   constructor(props) {
@@ -51,7 +52,7 @@ export default class WidgetPlane extends React.Component {
       ));
 
     this.coordinate_dimension = coordinate_dimension.name;
-    this.aggregator = this.props.options.metrics || this.props.aggregators[0].name;
+    this.aggregator = castArray(this.props.options.metrics)[0] || this.props.aggregators[0].name;
   }
 
   transformData(data) {

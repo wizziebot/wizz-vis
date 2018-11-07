@@ -1,4 +1,5 @@
 /* jshint esversion: 6 */
+
 export default {
   prefix(value, decimals = 0) {
     if (!isFinite(value)){

@@ -14,6 +14,7 @@ import Info from './../Info';
 import ResumeValue from './../ResumeValue';
 import Time from './../../utils/time';
 import * as common from './../../props';
+import castArray from 'lodash/castArray';
 
 class CompareValue extends React.Component {
   getStyle() {
@@ -47,7 +48,7 @@ export default class WidgetValue extends React.Component {
   }
 
   getAggregator() {
-    return this.props.options.metrics || this.props.aggregators[0].name;
+    return castArray(this.props.options.metrics)[0] || this.props.aggregators[0].name;
   }
 
   getValues() {

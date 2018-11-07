@@ -14,6 +14,7 @@ import Theme from './../../utils/theme';
 import Info from './../Info';
 import uniqBy from 'lodash/uniqBy';
 import * as common from './../../props';
+import castArray from 'lodash/castArray';
 
 export default class WidgetSankey extends React.Component {
   constructor(props) {
@@ -50,7 +51,7 @@ export default class WidgetSankey extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.options.metrics || this.props.aggregators[0].name
+      aggregator: castArray(this.props.options.metrics)[0] || this.props.aggregators[0].name
     });
   }
 

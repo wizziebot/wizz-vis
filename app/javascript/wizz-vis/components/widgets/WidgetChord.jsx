@@ -8,6 +8,7 @@ import Format from './../../utils/format';
 import Colors from './../../utils/colors';
 import Info from './../Info';
 import * as common from './../../props';
+import castArray from 'lodash/castArray';
 
 export default class WidgetChord extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class WidgetChord extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.options.metrics || this.props.aggregators[0].name
+      aggregator: castArray(this.props.options.metrics)[0] || this.props.aggregators[0].name
     });
   }
 

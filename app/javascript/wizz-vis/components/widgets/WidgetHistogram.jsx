@@ -10,6 +10,7 @@ import Format from './../../utils/format';
 import graph_utils from './../../utils/graph';
 import Info from './../Info';
 import * as common from './../../props';
+import castArray from 'lodash/castArray';
 
 export default class WidgetHistogram extends React.Component {
   constructor(props) {
@@ -36,7 +37,7 @@ export default class WidgetHistogram extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.options.metrics || this.props.aggregators[0].name
+      aggregator: castArray(this.props.options.metrics)[0] || this.props.aggregators[0].name
     });
   }
 
