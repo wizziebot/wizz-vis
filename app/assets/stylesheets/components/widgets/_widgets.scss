@@ -82,6 +82,8 @@
 
   .widget-title {
     flex: auto;
+    display: flex;
+    flex-direction: row;
     height: 30px;
     line-height: 30px;
     font-weight: 600;
@@ -89,6 +91,10 @@
 
     &.locked {
       cursor: default;
+    }
+
+    .drilldown {
+      z-index: 9999;
     }
 
     .options {
