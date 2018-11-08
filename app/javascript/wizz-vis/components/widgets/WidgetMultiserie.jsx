@@ -71,7 +71,7 @@ export default class WidgetMultiserie extends React.Component {
   }
 
   minTickGap() {
-    if(this.props.data.length < 2) return 0;
+    if(this.props.data.values.length < 2) return 0;
 
     let time_1 = this.props.data.values[0].timestamp,
         time_2 = this.props.data.values[1].timestamp;
