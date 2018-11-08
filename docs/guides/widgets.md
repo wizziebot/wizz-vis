@@ -445,6 +445,9 @@ The `options` attribute would be as follows:
 
 ```json
 {
+  "max_value": "max" | "average" | Number, (default: "max")
+  "opacity": 0.5, (default: 1)
+  "radius": 15, (default: 40)
   "image": "https://www.bookingtaxibarcelona.com/wp-content/uploads/2015/03/fira-gran-via-map.png",
   "keep_ratio": true,
   "gps_markers": [

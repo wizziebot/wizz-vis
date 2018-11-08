@@ -107,12 +107,27 @@ export default class WidgetPlane extends React.Component {
   }
 
   getMax(data) {
+    const value_type = get(this.props, 'options.max_value') || 'max';
     const data_length = data.length;
 
     if (data_length == 0)
       return 0;
 
-    return Math.max(...data.map(d => d.value));
+    if (value_type === 'average') {
+      return data.map(d => d.value).reduce((a,b) => a + b, 0) / data_length;
+    } else if (parseFloat(value_type)) {
+      return parseFloat(value_type);
+    } else {
+      return Math.max(...data.map(d => d.value));
+    }
+  }
+
+  get radius() {
+    return get(this.props, 'options.radius') || 40;
+  }
+
+  get opacity() {
+    return get(this.props, 'options.opacity') || 1;
   }
 
   render () {
@@ -136,7 +151,13 @@ export default class WidgetPlane extends React.Component {
           image={this.getImageURL()}
           onLoad={this.handleImageLoaded.bind(this)}
           ref={(node) => node ? this.image = node.image : null}>
-          <ReactHeatmap data={data} />
+          <div style={{width: '100%', height: '100%', opacity: this.opacity}}>
+            <ReactHeatmap
+              data={data}
+              radius={parseFloat(this.radius)}
+              max={parseFloat(this.getMax(data))}
+            />
+          </div>
         </WidgetImage>
       <div className='plane legend' id={ 'legend_' + this.props.id }></div>
       </div>
