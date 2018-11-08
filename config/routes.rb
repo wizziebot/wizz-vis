@@ -1,8 +1,6 @@
-Rails.application.routes.draw do
-  require 'sidekiq/web'
-  require 'sidekiq/cron/web'
-  mount Sidekiq::Web => '/sidekiq'
+# frozen_string_literal: true
 
+Rails.application.routes.draw do
   resources :widgets, except: :index do
     get :data, on: :member
   end
@@ -12,24 +10,7 @@ Rails.application.routes.draw do
     put :layout, to: 'dashboards#update_layout', on: :member
   end
 
-  namespace :api do
-    namespace :v1 do
-      resources :docs, only: :index
-
-      resources :datasources, only: %i[index show] do
-        resources :dimensions, only: :index
-        resources :aggregators, only: :index
-      end
-
-      resources :dashboards do
-        resources :widgets, only: :index
-      end
-
-      resources :widgets, only: %i[show create update destroy] do
-        get :data, on: :member
-      end
-    end
-  end
+  draw :api
 
   root to: 'dashboards#index'
 end
