@@ -14,6 +14,10 @@ RSpec.describe Widget, type: :model do
     it { is_expected.to validate_presence_of(:col) }
     it { is_expected.to validate_presence_of(:size_x) }
     it { is_expected.to validate_presence_of(:size_y) }
+    it { is_expected.to validate_numericality_of(:row).is_greater_than_or_equal_to(0) }
+    it { is_expected.to validate_numericality_of(:col).is_greater_than_or_equal_to(0) }
+    it { is_expected.to validate_numericality_of(:size_x).is_greater_than(0) }
+    it { is_expected.to validate_numericality_of(:size_y).is_greater_than(0) }
   end
 
   describe 'intervalable' do

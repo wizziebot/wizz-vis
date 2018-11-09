@@ -23,6 +23,8 @@ class Widget < ApplicationRecord
   # Validations
   # ==========================================================
   validates :row, :col, :size_x, :size_y, presence: true
+  validates :row, :col, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :size_x, :size_y, numericality: { only_integer: true, greater_than: 0 }
 
   def range
     override_interval? ? super : options&.[]('range')
