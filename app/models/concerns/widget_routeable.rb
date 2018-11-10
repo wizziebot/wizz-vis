@@ -1,6 +1,5 @@
 module WidgetRouteable
   extend ActiveSupport::Concern
-  include ActiveModel::Validations
 
   included do
     # ==========================================================

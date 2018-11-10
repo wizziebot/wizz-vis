@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WidgetPlaneLocation < Widget
-  include WidgetMarkerable
+  include WidgetLocatable
 end
