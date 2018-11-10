@@ -20,6 +20,7 @@ RUN mkdir -p $INSTALL_PATH
 WORKDIR $INSTALL_PATH
 
 COPY Gemfile Gemfile.lock ./
+COPY plugins ./plugins
 
 RUN gem install bundler
 RUN bundle install --jobs $(nproc) --retry 2

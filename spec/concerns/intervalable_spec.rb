@@ -19,6 +19,11 @@ shared_examples_for 'intervalable' do
       expect(object.interval).to eq([@time_now - 1.hour, @time_now])
     end
 
+    it 'returns last 1.5 hour' do
+      object = FactoryBot.create(model.to_s.underscore.to_sym, range: 'last_1.5_hour')
+      expect(object.interval).to eq([@time_now - 1.5.hour, @time_now])
+    end
+
     it 'returns last 6 hours' do
       object = FactoryBot.create(model.to_s.underscore.to_sym, range: 'last_6_hours')
       expect(object.interval).to eq([@time_now - 6.hours, @time_now])
@@ -37,6 +42,16 @@ shared_examples_for 'intervalable' do
     it 'returns last 30 days' do
       object = FactoryBot.create(model.to_s.underscore.to_sym, range: 'last_30_days')
       expect(object.interval).to eq([@time_now - 30.days, @time_now])
+    end
+
+    it 'fails for invalid format' do
+      object = FactoryBot.build(model.to_s.underscore.to_sym, range: 'last_')
+      expect(object).to_not be_valid
+    end
+
+    it 'fails for invalid range' do
+      object = FactoryBot.build(model.to_s.underscore.to_sym, range: 'last_1_nanosecond')
+      expect(object).to_not be_valid
     end
   end
 

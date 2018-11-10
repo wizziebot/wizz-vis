@@ -92,6 +92,9 @@ module Api
               theme: 'light',
               interval: 30,
               locked: false,
+              range: 'last_1_hour',
+              start_time: '',
+              end_time: '',
               widgets: [
                 {
                   type: 'WidgetValue',
@@ -255,7 +258,8 @@ module Api
       # options is a schemaless json, so it's neccessary to permit
       # all its fields.
       def dashboard_params
-        params.permit(:name, :theme, :interval, :locked).tap do |attr|
+        params.permit(:name, :theme, :interval, :locked, :range,
+                      :start_time, :end_time).tap do |attr|
           attr[:widgets_attributes] = (params[:widgets] || []).map do |w|
             w.permit(:type, :title, :row, :col, :size_x, :size_y, :range, :start_time,
                      :end_time, :granularity, :limit, :datasource_name,

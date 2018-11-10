@@ -1,13 +1,19 @@
 /*jshint esversion: 6 */
 import React, { Component } from 'react';
-import { Map, Marker, Popup, TileLayer, AttributionControl } from 'react-leaflet';
+import PropTypes from 'prop-types';
+import { Map, TileLayer, AttributionControl } from 'react-leaflet';
+import WidgetMarker from '../WidgetMarker';
+import WidgetPopup from '../WidgetPopup';
 import Theme from './../../utils/theme';
+import Format from './../../utils/format';
+import Locatable from './../../models/locatable';
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
 import uniqWith from 'lodash/uniqWith';
 import isEqual from 'lodash/isEqual';
 import cs from 'classnames';
 import Info from './../Info';
+import * as common from './../../props';
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
@@ -19,16 +25,13 @@ export default class WidgetLocation extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      aggregator: '',
-      grouped_dimension: '',
-      coordinate_dimension: ''
-    };
+    this.coordinate_field = '';
+    this.aggregators = [];
+    this.grouped_dimensions = [];
   }
 
   componentDidMount() {
-    this.setAggregator();
-    this.setDimensions();
+    this.setDimensionsAggregators();
   }
 
   componentDidUpdate(prevProps) {
@@ -38,44 +41,37 @@ export default class WidgetLocation extends React.Component {
     if (prevProps.aggregators !== this.props.aggregators ||
       prevProps.dimensions !== this.props.dimensions ||
       prevProps.options.metrics !== this.props.options.metrics){
-      this.setAggregator();
-      this.setDimensions();
+      this.setDimensionsAggregators();
     }
+  }
+
+  setDimensionsAggregators() {
+    [this.coordinate_field, this.grouped_dimensions, this.aggregators] =
+      Locatable.getDimensionsAggregators(this.props.dimensions,
+                                         this.props.aggregators,
+                                         this.props.options);
   }
 
   transformData(data) {
     return (
-      data.map((d) => (
-        {
-          position: d[this.state.coordinate_dimension].split(',')
+      data.filter((d) =>
+        d[this.coordinate_field] !== null &&
+        d[this.coordinate_field] !== "NaN,NaN"
+      ).map((d) => {
+        return {
+          position: d[this.coordinate_field].split(',')
                     .map((e) => (parseFloat(e))),
           label: {
-            dimension: d[this.state.grouped_dimension],
-            aggregator: d[this.state.aggregator]
+            dimensions: this.grouped_dimensions.map((dim) => {
+              return {name: dim.name, value: d[dim.name]};
+            }),
+            aggregators: this.aggregators.map((agg) => {
+              return {name: agg, real_value: d[agg], value: Format.prefix(d[agg], 2)};
+            })
           }
-        }
-      ))
+        };
+      }, this)
     );
-  }
-
-  setAggregator() {
-    this.setState({
-      aggregator: this.props.options.metrics || this.props.aggregators[0].name
-    });
-  }
-
-  setDimensions() {
-    const coordinate_dimension =
-      this.props.dimensions.find((e) => (
-        /coordinate|latlong|latlng/.test(e.name)
-      ));
-    this.setState({ coordinate_dimension: coordinate_dimension.name });
-
-    const grouped_dimension =
-      this.props.dimensions.find((e) => (
-        e.name !== coordinate_dimension.name
-      ));
-    this.setState({ grouped_dimension: grouped_dimension.name });
   }
 
   getBounds(data) {
@@ -113,20 +109,24 @@ export default class WidgetLocation extends React.Component {
           />
           {
             data.map((element, index) => (
-              <Marker
-                position={ element.position }
-                key={ index }>
-                <Popup>
-                  <span>
-                    <b>{this.state.grouped_dimension}:</b> { element.label.dimension }<br/>
-                    <b>{this.state.aggregator}:</b> { element.label.aggregator }
-                  </span>
-                </Popup>
-              </Marker>
+              <WidgetMarker element={element} key={index}>
+                <WidgetPopup
+                  dimensions={element.label.dimensions}
+                  aggregators={element.label.aggregators}
+                />
+              </WidgetMarker>
             ))
           }
         </Map>
       </div>
     );
   }
-}
+};
+
+WidgetLocation.propTypes = {
+  ...common.BASE,
+  options: PropTypes.object,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired
+};

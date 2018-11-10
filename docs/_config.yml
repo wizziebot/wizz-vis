@@ -1,0 +1,47 @@
+# Site theme
+remote_theme: "mmistakes/minimal-mistakes"
+minimal_mistakes_skin: "wizzie"
+
+# Site Settings
+locale: "en-US"
+title: 'Wizz-Vis'
+title_separator: "-"
+name: 'Wizzie Analytics'
+baseurl: '/wizz-vis'
+description: 'Analytics platform for time series metrics'
+repository: 'wizzie-io/wizz-vis'
+
+# Site search
+search: true
+search_provider: google
+search_full_content: true
+
+google:
+  search_engine_id: 002146541631830954339:i3msg_pefhu
+  instant_search: true
+
+google_site_verification: MjIfY0_y_7qIgMjaLFMggPJaLitLhygQ3eodF9Y5ITY
+
+# Social Sharing
+twitter:
+  username: &twitter "wizzieio"
+og_image: '/assets/images/logo.png'
+
+defaults:
+  # _docs
+  - scope:
+      path: ""
+    values:
+      toc_sticky: true
+      sidebar:
+        nav: "docs"
+
+# Site Footer
+footer:
+  links:
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/wizzieio"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/wizzie-io"

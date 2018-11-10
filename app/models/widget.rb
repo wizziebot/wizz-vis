@@ -22,8 +22,31 @@ class Widget < ApplicationRecord
   # ==========================================================
   # Validations
   # ==========================================================
-  validates :granularity, :row, :col, :size_x, :size_y, presence: true
-  validate :validate_interval
+  validates :row, :col, :size_x, :size_y, presence: true
+  validates :row, :col, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :size_x, :size_y, numericality: { only_integer: true, greater_than: 0 }
+
+  def range
+    override_interval? ? super : options&.[]('range')
+  end
+
+  def start_time
+    return super if override_interval?
+    global_start_time = options&.[]('start_time')
+    Time.parse(global_start_time) if global_start_time.present?
+  end
+
+  def end_time
+    return super if override_interval?
+    global_end_time = options&.[]('end_time')
+    Time.parse(global_end_time) if global_end_time.present?
+  end
+
+  # If the widget has set one of these attributes, it will use them
+  # to calculate the time interval instead the one inherited from dashboard.
+  def override_interval?
+    %w[range start_time end_time].any? { |k| attributes[k] }
+  end
 
   def data(override_filters = nil, override_options = {})
     query = Datastore::Query.new(
@@ -41,14 +64,10 @@ class Widget < ApplicationRecord
 
   private
 
-  def validate_interval
-    errors.add(:range, 'must be set') if range.nil? && start_time.nil? && end_time.nil?
-  end
-
   def compare_data
     intervals.map do |i|
       Widget.instance_method(:data)
-            .bind(self).call([], granularity: 'all', intervals: [i])
+            .bind(self).call(nil, granularity: 'all', intervals: [i])
     end.flatten
   end
 end

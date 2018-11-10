@@ -1,6 +1,6 @@
 class WidgetsController < ApplicationController
   before_action :set_dashboard, only: [:index]
-  before_action :set_widget, only: [:show, :edit, :update, :destroy, :data]
+  before_action :set_widget, only: %i[show edit update destroy data]
 
   # GET /widgets
   # GET /widgets.json
@@ -64,6 +64,7 @@ class WidgetsController < ApplicationController
 
   # Get /widgets/1/data.json
   def data
+    @widget.options.merge!(widget_params) if widget_params
     render json: {
       data: @widget.data,
       attributes: WidgetSerializer.new(@widget).as_json
@@ -75,17 +76,21 @@ class WidgetsController < ApplicationController
   end
 
   private
-    def set_dashboard
-      @dashboard = Dashboard.find(params[:dashboard_id])
-    end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_widget
-      @widget = Widget.find(params[:id])
-    end
+  def set_dashboard
+    @dashboard = Dashboard.find(params[:dashboard_id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def widget_params
-      params.require(:widget).permit(:name, :title, :row, :col, :size_x, :size_y, :dashboard_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_widget
+    @widget = Widget.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def widget_params
+    params.require(:widget).permit(
+      :name, :title, :row, :col, :size_x, :size_y, :dashboard_id,
+      :range, :start_time, :end_time
+    )
+  end
 end

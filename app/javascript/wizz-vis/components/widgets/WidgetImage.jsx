@@ -1,5 +1,7 @@
 /* jshint esversion: 6 */
 import React from 'react';
+import PropTypes from 'prop-types';
+import ImageLink from './../ImageLink';
 import get from 'lodash/get';
 
 export default class WidgetImage extends React.Component {
@@ -34,16 +36,36 @@ export default class WidgetImage extends React.Component {
 
     return (
       <div>
-        <img
-          ref={(image) => { this.image = image; }}
-          style={style}
-          src={this.imageURL}
-          onLoad={this.onLoad}
-        />
-        <div style={style}>
-          {this.props.children}
-        </div>
+        {
+          (this.props.options || {})["image-link"] !== undefined ?
+            <ImageLink imageURL={this.imageURL}
+                       linkURL={this.props.options["image-link"].url}
+                       linkType={this.props.options["image-link"].type}
+                       style={style} /> :
+            <img
+              ref={(image) => { this.image = image; }}
+              style={style}
+              src={this.imageURL}
+              onLoad={this.onLoad}
+            />
+        }
+        {
+          this.props.width > 0 && this.props.height > 0 && (this.props.children !== undefined) ?
+            <div style={{...style, width: this.props.width, height: this.props.height}}>
+              {this.props.children}
+            </div>
+          : null
+        }
       </div>
     )
   }
-}
+};
+
+WidgetImage.propTypes = {
+  options: PropTypes.shape({
+    image: PropTypes.string,
+    keep_ratio: PropTypes.bool,
+    opacity: PropTypes.string,
+    imageLink: PropTypes.object
+  })
+};

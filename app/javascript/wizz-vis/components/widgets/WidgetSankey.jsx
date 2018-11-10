@@ -1,12 +1,20 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
-import ReactEcharts from 'echarts-for-react';
+import PropTypes from 'prop-types';
+
+import ReactEchartsCore from 'echarts-for-react/lib/core';
+import echarts from 'echarts/lib/echarts';
+import 'echarts/lib/chart/sankey';
+import 'echarts/lib/component/tooltip';
+
 import Colors from './../../utils/colors';
 import Format from './../../utils/format';
 import Theme from './../../utils/theme';
 import Info from './../Info';
 import uniqBy from 'lodash/uniqBy';
+import * as common from './../../props';
+import castArray from 'lodash/castArray';
 
 export default class WidgetSankey extends React.Component {
   constructor(props) {
@@ -43,7 +51,7 @@ export default class WidgetSankey extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.options.metrics || this.props.aggregators[0].name
+      aggregator: castArray(this.props.options.metrics)[0] || this.props.aggregators[0].name
     });
   }
 
@@ -183,7 +191,8 @@ export default class WidgetSankey extends React.Component {
       return(<Info error={this.props.error} />)
 
     return (
-      <ReactEcharts
+      <ReactEchartsCore
+        echarts={echarts}
         option={ this.sankeyOptions(data) }
         style={
           { position: 'absolute',
@@ -194,4 +203,14 @@ export default class WidgetSankey extends React.Component {
       />
     )
   }
-}
+};
+
+WidgetSankey.propTypes = {
+  ...common.BASE,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.shape({
+    ordered_dimensions: PropTypes.arrayOf(PropTypes.string)
+  })
+};

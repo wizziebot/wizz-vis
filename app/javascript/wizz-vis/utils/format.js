@@ -1,4 +1,5 @@
 /* jshint esversion: 6 */
+
 export default {
   prefix(value, decimals = 0) {
     if (!isFinite(value)){
@@ -45,5 +46,15 @@ export default {
 
   estimateFontSize(width = 100, height = 100) {
     return (width < height) ? width / 12 : height / 12;
+  },
+
+  buildUrl(url, parameters, model) {
+    let new_url = url + '?';
+
+    for (const key in parameters) {
+      new_url += model + '[' + encodeURIComponent(key) + ']=' + encodeURIComponent(parameters[key]) + '&';
+    }
+    //chop off last '&' or '?'
+    return new_url.substring(0, new_url.length - 1);
   }
 };

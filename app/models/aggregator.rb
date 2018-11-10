@@ -10,4 +10,8 @@ class Aggregator < ApplicationRecord
   def histogram?
     aggregator_type == 'approxHistogramFold'
   end
+
+  def coordinate?
+    name =~ /coordinate|latlong|latlng/
+  end
 end

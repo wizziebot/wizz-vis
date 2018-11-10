@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class WidgetTrash extends React.Component {
   constructor(props) {
@@ -20,4 +21,9 @@ export default class WidgetTrash extends React.Component {
       )
     }
   }
-}
+};
+
+WidgetTrash.propTypes = {
+  isLocked: PropTypes.bool,
+  remove: PropTypes.func
+};

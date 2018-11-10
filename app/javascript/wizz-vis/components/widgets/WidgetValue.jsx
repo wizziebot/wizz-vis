@@ -1,14 +1,20 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
-import ReactEcharts from 'echarts-for-react';
+import PropTypes from 'prop-types';
+
+import ReactEchartsCore from 'echarts-for-react/lib/core';
+import echarts from 'echarts/lib/echarts';
+import 'echarts/lib/chart/gauge';
+
 import { ResponsiveContainer, AreaChart, Area } from 'recharts';
 import Colors from './../../utils/colors';
-import Theme from './../../utils/theme';
 import Format from './../../utils/format';
 import Info from './../Info';
 import ResumeValue from './../ResumeValue';
 import Time from './../../utils/time';
+import * as common from './../../props';
+import castArray from 'lodash/castArray';
 
 class CompareValue extends React.Component {
   getStyle() {
@@ -42,7 +48,7 @@ export default class WidgetValue extends React.Component {
   }
 
   getAggregator() {
-    return this.props.options.metrics || this.props.aggregators[0].name;
+    return castArray(this.props.options.metrics)[0] || this.props.aggregators[0].name;
   }
 
   getValues() {
@@ -163,7 +169,8 @@ export default class WidgetValue extends React.Component {
           serie = null;
 
       if(this.showGauge()) {
-        element = <ReactEcharts
+        element = <ReactEchartsCore
+          echarts={echarts}
           option={ this.gaugeOptions() }
           style={
             { position: 'absolute',
@@ -223,4 +230,35 @@ export default class WidgetValue extends React.Component {
       )
     }
   }
-}
+};
+
+WidgetValue.propTypes = {
+  ...common.BASE,
+  ...common.SIZE,
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  compare_interval: PropTypes.array,
+  interval: PropTypes.arrayOf(PropTypes.string),
+  options: PropTypes.shape({
+    ...common.COMPARE,
+    gauge: PropTypes.shape({
+      max: PropTypes.number,
+      show: PropTypes.bool,
+      thresholds: PropTypes.arrayOf(PropTypes.array)
+    }),
+    serie: PropTypes.shape({
+      show: PropTypes.bool,
+      color: PropTypes.string
+    }),
+    value: PropTypes.string,
+    background: PropTypes.shape({
+      color: PropTypes.string
+    })
+  })
+};
+
+CompareValue.propTypes = {
+  bottomAbsolute: PropTypes.bool,
+  fontSize: PropTypes.number,
+  total: PropTypes.number,
+  totalCompared: PropTypes.number
+};

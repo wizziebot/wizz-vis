@@ -3,16 +3,14 @@
     <%= nav_logos %>
   </div>
   <div class="nav-wrapper menu primary-color">
-    <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    <div class="nav-entries right">
+    <div class='row'>
+      <div class="<%= content_for?(:row_class) ? yield(:row_class) : 'col s12' %>">
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+        <%= breadcrumbs separator: " &rsaquo; ", class: yield(:breadcrumb_class) %>
+        <%= render partial: 'layouts/sidebar' %>
+      </div>
+      <%= yield :search_bar %>
       <%= yield :nav_entries %>
     </div>
-    <%= breadcrumbs separator: " &rsaquo; " %>
-    <ul id="nav-mobile" class="side-nav margin-ts">
-      <li><%= link_to 'Dashboards', dashboards_path %></li>
-      <% if current_user %>
-        <li><%= link_to 'Sign Out', destroy_user_session_path %></li>
-      <% end %>
-    </ul>
   </div>
 </nav>

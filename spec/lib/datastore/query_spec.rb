@@ -125,7 +125,7 @@ describe Datastore::Query do
   end
 
   context 'GroupBy query' do
-    let(:coordinate_dimension) {create(:coordinate)}
+    let(:coordinate_dimension) {create(:coordinate_dimension)}
     let(:query) do
       Datastore::Query.new(
         datasource: datasource.name,

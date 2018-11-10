@@ -6,4 +6,12 @@ RSpec.describe Aggregator, type: :model do
     it { is_expected.to have_many(:aggregator_widgets) }
     it { is_expected.to have_many(:widgets).through(:aggregator_widgets) }
   end
+
+  describe '#coordinate?' do
+    let(:coordinate_aggregator) { create(:coordinate_aggregator) }
+
+    it 'return valid coordinate aggregator' do
+      expect(coordinate_aggregator.coordinate?).to be_truthy
+    end
+  end
 end

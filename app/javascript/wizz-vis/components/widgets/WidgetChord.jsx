@@ -1,11 +1,14 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Chord } from '@nivo/chord';
 import graph_utils from './../../utils/graph';
 import Format from './../../utils/format';
 import Colors from './../../utils/colors';
 import Info from './../Info';
+import * as common from './../../props';
+import castArray from 'lodash/castArray';
 
 export default class WidgetChord extends React.Component {
   constructor(props) {
@@ -29,7 +32,7 @@ export default class WidgetChord extends React.Component {
 
   setAggregator() {
     this.setState({
-      aggregator: this.props.options.metrics || this.props.aggregators[0].name
+      aggregator: castArray(this.props.options.metrics)[0] || this.props.aggregators[0].name
     });
   }
 
@@ -41,8 +44,8 @@ export default class WidgetChord extends React.Component {
       this.state.aggregator
     );
 
-    if(this.state.error || matrix.value.length == 0) {
-      return(<Info error={this.state.error} />)
+    if(this.props.error || matrix.value.length == 0) {
+      return(<Info error={this.props.error} />)
     } else {
       let legend_width = 0,
           legends = [],
@@ -91,4 +94,15 @@ export default class WidgetChord extends React.Component {
       )
     }
   }
-}
+};
+
+WidgetChord.propTypes = {
+  ...common.BASE,
+  ...common.SIZE,
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.shape({
+    legend: PropTypes.bool,
+    origin: PropTypes.string,
+    destination: PropTypes.string
+  })
+};

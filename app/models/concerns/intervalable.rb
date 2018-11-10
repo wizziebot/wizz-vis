@@ -1,12 +1,24 @@
 module Intervalable
   extend ActiveSupport::Concern
 
+  RANGES = %w[second seconds minute minutes hour hours day days week weeks
+              month months].freeze
+
+  LAST_RANGE_REGEXP = /^last_(?<amount>(\d+(\.\d+)?))_(?<range>\w+)$/
+
+  # ==========================================================
+  # Validations
+  # ==========================================================
+  included do
+    validate :validate_range
+  end
+
   def compare?
     options&.[]('compare')
   end
 
   def interval
-    @time_now = Time.now
+    @time_now ||= Time.now
 
     case range
     when /last_/
@@ -21,7 +33,7 @@ module Intervalable
   end
 
   def compare_interval
-    return unless compare?
+    return unless compare? && interval.any?
     [
       interval[0] - compare_difference,
       interval[1] - compare_difference
@@ -36,20 +48,9 @@ module Intervalable
   private
 
   def interval_for_last
-    case range
-    when 'last_30_minutes'
-      [@time_now - 30.minutes, @time_now]
-    when 'last_1_hour'
-      [@time_now - 1.hour, @time_now]
-    when 'last_6_hours'
-      [@time_now - 6.hours, @time_now]
-    when 'last_1_day'
-      [@time_now - 1.day, @time_now]
-    when 'last_7_days'
-      [@time_now - 7.days, @time_now]
-    when 'last_30_days'
-      [@time_now - 30.days, @time_now]
-    end
+    m = range.match(LAST_RANGE_REGEXP)
+    start_time = @time_now - m[:amount].to_f.send(m[:range])
+    [start_time, @time_now]
   end
 
   def interval_for_current
@@ -81,5 +82,11 @@ module Intervalable
     else
       options['compare']['amount'].to_i.send(options['compare']['range'])
     end
+  end
+
+  def validate_range
+    return true unless range =~ /^last_/
+    m = range.match(LAST_RANGE_REGEXP)
+    errors.add(:range, 'invalid format') unless m && RANGES.include?(m[:range])
   end
 end

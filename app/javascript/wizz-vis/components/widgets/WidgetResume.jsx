@@ -4,7 +4,7 @@ import React from 'react';
 import Compare from './../../utils/compare';
 import Format from './../../utils/format';
 import ResumeValue from './../ResumeValue';
-
+import PropTypes from 'prop-types';
 
 export default class WidgetResume extends React.Component {
   constructor(props) {
@@ -34,4 +34,9 @@ export default class WidgetResume extends React.Component {
       </div>
     )
   }
-}
+};
+
+WidgetResume.propTypes = {
+  aggregators: PropTypes.array,
+  data: PropTypes.array
+};

@@ -7,7 +7,7 @@ RSpec.describe WidgetImage, type: :model do
 
   describe '#data' do
     it 'returns an empty array' do
-      expect(widget.data).to eq([])
+      expect(widget.data).to be_nil
     end
   end
 end

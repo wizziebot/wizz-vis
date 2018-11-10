@@ -5,6 +5,8 @@ import { Stage, Layer, Line, Circle, Label, Tag, Text } from 'react-konva';
 import flatten from 'lodash/flatten';
 import Colors from './../utils/colors';
 import Time from './../utils/time';
+import PropTypes from 'prop-types';
+import * as common from './../props';
 
 export default class PlaneRoute extends React.Component {
   constructor(props) {
@@ -150,4 +152,9 @@ export default class PlaneRoute extends React.Component {
       </Stage>
     )
   }
-}
+};
+
+PlaneRoute.propTypes = {
+  data: PropTypes.array,
+  ...common.SIZE
+};

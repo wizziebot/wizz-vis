@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class Info extends React.Component {
   constructor(props) {
@@ -31,4 +32,8 @@ export default class Info extends React.Component {
       return(<h5>No data points.</h5>)
     }
   }
-}
+};
+
+Info.propTypes = {
+  error: PropTypes.string
+};

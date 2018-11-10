@@ -1,0 +1,53 @@
+<style>
+  .btn, .btn-large {
+    background-color: <%= ENV['SECONDARY_COLOR'] %> !important;
+  }
+
+  .primary-color {
+    background-color: <%= ENV['PRIMARY_COLOR'] %> !important;
+  }
+
+  .primary-color-text {
+    color: <%= ENV['PRIMARY_COLOR'] %>;
+  }
+
+  .nav-entry.menu-range .dropdown-content .cont .date-range-input .header {
+    color: <%= ENV['PRIMARY_COLOR'] %> !important;
+  }
+
+  .nav-entry.menu-range .dropdown-content .cont .date-range-input .today {
+    color: <%= ENV['PRIMARY_COLOR'] %>;
+    border-color: <%= ENV['PRIMARY_COLOR'] %>;
+  }
+
+  .nav-entry.menu-range .dropdown-content .cont .date-range-input .selected {
+    background-color: <%= ENV['PRIMARY_COLOR'] %> !important;
+  }
+
+  .nav-entry.menu-range .dropdown-content .cont .date-range-input div[class^="today-"]:hover {
+    color: <%= ENV['PRIMARY_COLOR'] %> !important;
+    border-color: <%= ENV['PRIMARY_COLOR'] %>;
+  }
+
+  .nav-entry.menu-range .dropdown-content .cont .date-range-input .base:hover {
+    background-color: <%= ENV['PRIMARY_COLOR'] %>B5 !important;
+  }
+
+  .nav-entry.menu-range .dropdown-content .cont .date-range-input .hours::-webkit-scrollbar-thumb {
+    background-color: <%= ENV['PRIMARY_COLOR'] %>B5 !important;
+  }
+
+  .nav-entry.menu-range .dropdown-content .cont .date-range-input .title:hover {
+    color: <%= ENV['PRIMARY_COLOR'] %> !important;
+    border-color: <%= ENV['PRIMARY_COLOR'] %>;
+  }
+
+  .nav-entry.menu-range .dropdown-content .cont .date-range-input .arrow:hover {
+    color: <%= ENV['PRIMARY_COLOR'] %> !important;
+    border-color: <%= ENV['PRIMARY_COLOR'] %>;
+  }
+
+  .nav-entry.menu-range .dropdown-content .cont .date-range-input input:focus {
+    border-color: <%= ENV['PRIMARY_COLOR'] %>B5;
+  }
+</style>

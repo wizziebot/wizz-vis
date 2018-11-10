@@ -64,7 +64,7 @@ export default class Routing extends React.Component {
    * Create a route from the passed waypoints.
    *
    * @param {Object[]} points
-   * @param {number[]} points[].coordinate
+   * @param {number[]} points[].coordinates
    * @param {String} points[].timestamp
    * @param {number} routing_index
    * @returns {L.Routing.control}
@@ -72,7 +72,7 @@ export default class Routing extends React.Component {
   createRouting(points, routing_index) {
     const waypoints = points.map((waypoint) => {
       return new L.Routing.Waypoint(
-        waypoint.coordinate,
+        waypoint.coordinates,
         Time.simple_format(waypoint.timestamp)
       );
     });
@@ -189,8 +189,8 @@ export default class Routing extends React.Component {
     this.destroyRouting();
 
     if (this.props.map) {
-      // remove adjacent waypoints with same coordinate
-      const waypoints = ArrayUtil.uniqueInOrder(this.props.waypoints, 'coordinate');
+      // remove adjacent waypoints with same coordinates
+      const waypoints = ArrayUtil.uniqueInOrder(this.props.waypoints, 'coordinates');
       const waypoints_length = waypoints.length;
 
       this.routing = [];

@@ -7,6 +7,7 @@ import {Responsive, WidthProvider} from 'react-grid-layout';
 import WidgetBase from './WidgetBase';
 import Clock from './Clock';
 import reject from 'lodash/reject';
+import PropTypes from 'prop-types';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const BREAKPOINTS = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
@@ -22,8 +23,7 @@ export default class Dashboard extends React.Component {
       $$widgets: [],
       layout: null,
       fetchWidgetsError: null,
-      updateLayoutError: null,
-      reloadTimestamp: null
+      updateLayoutError: null
     };
   }
 
@@ -70,10 +70,6 @@ export default class Dashboard extends React.Component {
       !this.props.locked;
   }
 
-  fireReload () {
-    this.setState({ reloadTimestamp: Date.now() });
-  }
-
   removeItem (widget_id) {
     this.setState({
       $$widgets: reject(this.state.$$widgets, { id: widget_id }),
@@ -90,7 +86,6 @@ export default class Dashboard extends React.Component {
                                 <WidgetBase {...w}
                                 locked={this.props.locked}
                                 theme={this.props.theme}
-                                reloadTimestamp={this.state.reloadTimestamp}
                                 remove={ this.removeItem.bind(this, w.id) } />
                               </div>);
                     });
@@ -98,7 +93,7 @@ export default class Dashboard extends React.Component {
     return (
     <div ref='dashboard'>
       { this.props.interval ?
-          <Clock clockReload={ this.fireReload.bind(this) } interval={ this.props.interval }/>
+          <Clock interval={ this.props.interval } />
           : null
       }
       <ResponsiveReactGridLayout
@@ -118,4 +113,11 @@ export default class Dashboard extends React.Component {
     </div>
     )
   }
-}
+};
+
+Dashboard.propTypes = {
+  id: PropTypes.number.isRequired,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  interval: PropTypes.oneOf([30, 60, 300, 900, 1800, 3600, 7200]),
+  locked: PropTypes.bool
+};

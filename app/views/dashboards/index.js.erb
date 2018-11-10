@@ -1,0 +1,3 @@
+$('div table tbody').replaceWith("<tbody><%= escape_javascript(render(partial: 'dashboards/dashboard', collection: @dashboards)) %></tbody>");
+$('div#pagination').replaceWith("<%= escape_javascript(render(partial: 'dashboards/pagination', locals: { dashboards: @dashboards })) %>");
+$('div table tbody .dropdown-button').dropdown();

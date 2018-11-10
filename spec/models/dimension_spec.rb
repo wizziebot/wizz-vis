@@ -7,7 +7,7 @@ RSpec.describe Dimension, type: :model do
   end
 
   describe '#coordinate?' do
-    let(:coordinate_dimension) { create(:coordinate) }
+    let(:coordinate_dimension) { create(:coordinate_dimension) }
 
     it 'return valid coordinate dimension' do
       expect(coordinate_dimension.coordinate?).to be_truthy

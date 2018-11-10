@@ -1,5 +1,12 @@
 /*jshint esversion: 6 */
-var math = require('mathjs');
+
+const core = require('mathjs/core');
+const math = core.create();
+
+math.import(require('mathjs/lib/type/matrix'));
+math.import(require('mathjs/lib/function/arithmetic/multiply'));
+math.import(require('mathjs/lib/function/arithmetic/subtract'));
+math.import(require('mathjs/lib/function/matrix/inv'));
 
 export default {
   /**
@@ -101,5 +108,40 @@ export default {
       x: points.get([0, 0]) / width * 100,
       y: points.get([1, 0]) / height * 100
     };
-  }
+  },
+
+  /**
+   *
+   * Translate points from latitude and longitude system to x and y.
+   *
+   * @param {number} latitude
+   * @param {number} longitude
+   * @param {Object} image
+   * @param {number} image.naturalWidth
+   * @param {number} image.naturalHeight
+   * @param {number} image.clientWidth
+   * @param {number} image.clientHeight
+   * @param {Object[]} gps_points
+   * @param {number} gps_points[].x
+   * @param {number} gps_points[].y
+   * @param {number} gps_points[].latitude
+   * @param {number} gps_points[].longitude
+   * @returns {Object} x and y entries representing percentage
+   */
+   translatePoint(latitude, longitude, image, gps_points) {
+     if(image.naturalWidth == 0 || image.naturalHeight == 0)
+       return {x: 0, y: 0};
+
+     const {m_trans, m_offset} =
+       this.latlngToPointMatrices(gps_points, image.naturalWidth, image.naturalHeight);
+
+     var {x, y} = this.latlngToPoint(latitude, longitude, image.naturalWidth,
+                                     image.naturalHeigh, m_trans, m_offset);
+
+     // Transform the points to real image's width and height
+     x = x * image.clientWidth / image.naturalWidth;
+     y = y * image.clientHeight / image.naturalHeight;
+
+     return {x, y};
+   }
 };

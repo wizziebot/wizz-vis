@@ -33,4 +33,9 @@ FactoryBot.define do
     aggregator_type 'thetaSketch'
     association :datasource
   end
+
+  factory :coordinate_aggregator, class: Aggregator do
+    name 'client_latlng'
+    association :datasource
+  end
 end

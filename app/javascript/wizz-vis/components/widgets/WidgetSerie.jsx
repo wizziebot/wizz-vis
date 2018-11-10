@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
          LineChart, Line, AreaChart, Area, BarChart, Bar,
          ReferenceLine, Label } from 'recharts';
@@ -12,6 +13,7 @@ import Compare from './../../utils/compare';
 import Info from './../Info';
 import castArray from 'lodash/castArray';
 import WidgetResume from './WidgetResume';
+import * as common from './../../props';
 
 export default class WidgetSerie extends React.Component {
   constructor(props) {
@@ -218,4 +220,17 @@ export default class WidgetSerie extends React.Component {
       )
     }
   }
-}
+};
+
+WidgetSerie.propTypes = {
+  ...common.BASE,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  compare_interval: PropTypes.array,
+  interval: PropTypes.arrayOf(PropTypes.string),
+  options: PropTypes.shape({
+    ...common.THRESHOLDS,
+    ...common.COMPARE,
+    ...common.SERIE_TYPE
+  })
+};

@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DataTables from 'material-ui-datatables';
 import Theme from './../../utils/theme';
@@ -11,6 +12,7 @@ import find from 'lodash/find';
 import pick from 'lodash/pick';
 import cloneDeep from 'lodash/cloneDeep';
 import ResumeValue from './../ResumeValue';
+import * as common from './../../props';
 
 const HEADER_HEIGHT = 80;
 
@@ -31,6 +33,15 @@ export default class WidgetTable extends React.Component {
     return this.props.data.compare || [];
   }
 
+  get compare_aggregators() {
+    if ((this.props.options.compare || {}).aggregators == undefined)
+      return this.aggregators;
+
+    return this.aggregators.filter(aggregator =>
+      -1 !== (this.props.options.compare.aggregators || []).indexOf(aggregator)
+    );
+  }
+
   formatData() {
     // Prevent to change the data props, for resizes.
     let data = cloneDeep(this.data());
@@ -44,7 +55,7 @@ export default class WidgetTable extends React.Component {
         // Calculates the increments(by aggregator) and updates the array of data
         // to show. If there are no past values to compare, interpret that the
         // values are equal to zero, so an increase of 100% is shown.
-        this.aggregators.map((agg) => {
+        this.compare_aggregators.map((agg) => {
           actual_data[agg] =
             <ResumeValue
               showTotal actualData={actual_data[agg]}
@@ -135,4 +146,15 @@ export default class WidgetTable extends React.Component {
       );
     }
   }
-}
+};
+
+WidgetTable.propTypes = {
+  ...common.BASE,
+  ...common.SIZE,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  aggregators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  options: PropTypes.shape({
+    ...common.COMPARE
+  })
+};

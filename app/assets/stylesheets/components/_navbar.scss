@@ -23,6 +23,8 @@
   }
 
   &.menu {
+    font-weight: 400;
+
     .button-collapse {
       display: inline;
     }
@@ -30,6 +32,26 @@
     .side-nav {
       box-shadow: none;
       top: auto;
+    }
+
+    form {
+
+      .input-field {
+        color: $secondary-color;
+
+        input[type='text'],
+        input[type='text']:focus {
+          background: white;
+          margin: 0px;
+          padding-left: 45px;
+          border-bottom: 0px;
+          box-shadow: 0 0px 0 0;
+        }
+
+        .prefix {
+          font-size: 1.8rem;
+        }
+      }
     }
   }
 

@@ -4,7 +4,10 @@ class DashboardSerializer < ActiveModel::Serializer
     :name,
     :theme,
     :interval,
-    :locked
+    :locked,
+    :range,
+    :start_time,
+    :end_time
   )
 
   has_many :widgets

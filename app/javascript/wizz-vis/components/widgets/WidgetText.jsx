@@ -1,9 +1,11 @@
 /* jshint esversion: 6 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import Info from './../Info';
 import get from 'lodash/get';
 import Format from './../../utils/format';
+import * as common from './../../props';
 
 export default class WidgetText extends React.Component {
   get text() {
@@ -29,4 +31,13 @@ export default class WidgetText extends React.Component {
       </div>
     )
   }
-}
+};
+
+WidgetText.propTypes = {
+  ...common.BASE,
+  ...common.SIZE,
+  options: PropTypes.shape({
+    text: PropTypes.string,
+    fontSize: PropTypes.string
+  })
+};
