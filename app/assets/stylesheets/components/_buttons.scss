@@ -1,3 +1,12 @@
+i.btn {
+  padding: 0;
+
+  input[type=submit] {
+    height: 100%;
+    padding: 0 2rem;
+  }
+}
+
 .button-text {
   display: flex;
   flex-direction: row
