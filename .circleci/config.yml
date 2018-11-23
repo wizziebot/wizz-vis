@@ -6,6 +6,15 @@ gcloud-configuration: &gcloud-configuration
   environment:
     - APP_NAME: 'wizz-vis'
 
+aliases:
+  &build-enterprise |
+  printf "Triggering Wizz-Vis Enterprise build\n\n"
+  BUILD_INFO=$(curl -X POST -H -d \
+      "{}" \
+      "https://circleci.com/api/v1/project/$ORGANIZATION/$ENTERPRISE_PROJECT/tree/$CIRCLE_BRANCH?circle-token=$CIRCLE_TOKEN")
+  printf "\n\nBuild triggered\n\n"
+  printf "Follow the progress of the build on \nhttps://circleci.com/gh/$ORGANIZATION/$ENTERPRISE_PROJECT/tree/$CIRCLE_BRANCH"
+
 jobs:
   test:
     docker:
@@ -186,11 +195,28 @@ jobs:
           command: |
             gcloud container images add-tag gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:stable gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:${CIRCLE_TAG#?}
 
+  build-enterprise:
+    <<: *gcloud-configuration
+    steps:
+      - run:
+          name: Triggering Wizz-Vis Enterprise build
+          command: *build-enterprise
+
+  build-tagged-enterprise:
+    <<: *gcloud-configuration
+    steps:
+      - run:
+          name: Triggering Wizz-Vis Enterprise build
+          command: *build-enterprise
+
 workflows:
   version: 2
   build-n-deploy:
     jobs:
-      - test
+      - test:
+          filters:
+            tags:
+              only: /.*/
       - build:
           requires:
             - test
@@ -208,6 +234,20 @@ workflows:
       - tagged-deploy:
           requires:
             - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
+      - build-enterprise:
+          requires:
+            - deploy
+          filters:
+            branches:
+              only: master
+      - build-tagged-enterprise:
+          requires:
+            - tagged-deploy
           filters:
             branches:
               ignore: /.*/
